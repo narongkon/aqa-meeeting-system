@@ -1,0 +1,211 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+ 
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/vaadin-upload/vaadin-upload.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-meeting-setting-subproject">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+        </style>
+
+        <nylon-panel-card id="pc2">
+            <div slot="content">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-input always-float-label label="[[i18n.subproject_name]]" value="{{select.name}}"></paper-input>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu label="[[i18n.group]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                                <paper-item>สถานศึกษา</paper-item>
+                                <paper-item>brontosaurus</paper-item>
+                                <paper-item>carcharodontosaurus</paper-item>
+                                <paper-item>diplodocus</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu label="[[i18n.level]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                                <paper-item>พื้นฐาน</paper-item>
+                                <paper-item>brontosaurus</paper-item>
+                                <paper-item>carcharodontosaurus</paper-item>
+                                <paper-item>diplodocus</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu label="[[i18n.zone]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                                <paper-item>เหนือ</paper-item>
+                                <paper-item>ตะวันออก</paper-item>
+                                <paper-item>ตะวันออกเฉียงเหนือ</paper-item>
+                                <paper-item>กลาง</paper-item>
+                                <paper-item>ใต้</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu label="[[i18n.province]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                                <paper-item>กระบี่</paper-item>
+                                <paper-item>กรุงเทพมหานคร</paper-item>
+                                <paper-item>กาญจนบุรี</paper-item>
+                                <paper-item>กาฬสินธุ์</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-input always-float-label label="[[i18n.place]]" value="{{select.name}}"></paper-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu label="[[i18n.day]]" style="width: 15%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                                <paper-item>1</paper-item>
+                                <paper-item>2</paper-item>
+                                <paper-item>3</paper-item>
+                                <paper-item>4</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                        <paper-dropdown-menu label="[[i18n.month]]" style="width: 40%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                                <paper-item>มกราคม</paper-item>
+                                <paper-item>กุมภาพันธ์</paper-item>
+                                <paper-item>มีนาคม</paper-item>
+                                <paper-item>เมษายน</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                        <paper-dropdown-menu label="[[i18n.year]]" style="width: 40%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                                <paper-item>2559</paper-item>
+                                <paper-item>2560</paper-item>
+                                <paper-item>2561</paper-item>
+                                <paper-item>2562</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <vaadin-upload id="upload"></vaadin-upload>
+                    </div>
+                </div>
+            </div>
+
+
+            <app-toolbar slot="footer">
+                <div main-title></div>
+                <paper-button raised on-click="_closePanelRight">
+                    <iron-icon icon="clear"></iron-icon>&nbsp;&nbsp;[[i18n.cancel]]
+                </paper-button>
+                <paper-button raised class="btn-success" on-click="_saveData">
+                    <iron-icon icon="check"></iron-icon>&nbsp;&nbsp;[[i18n.save]]
+                </paper-button>
+            </app-toolbar>
+        </nylon-panel-card>
+
+
+
+    </template>
+
+    <script>
+        class pageMeetingSettingSubproject extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-meeting-setting-subproject';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeeting',
+                        observer: '_i18n'
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+
+                });
+            }
+
+            _i18n(e) {
+
+                let upload = this.$.upload
+
+                upload.i18n = {
+                    dropFiles: {
+                        one: e.drop_file_here,
+                        many: e.drop_file_here
+                    },
+                    addFiles: {
+                        one: e.select_file,
+                        many: e.upload_files
+                    },
+                    cancel: e.cancel,
+                    error: {
+                        tooManyFiles: 'Too Many Files.',
+                        fileIsTooBig: 'File is Too Big.',
+                        incorrectFileType: 'Incorrect File Type.'
+                    },
+                    uploading: {
+                        status: {
+                            connecting: 'Connecting...',
+                            stalled: 'Stalled.',
+                            processing: 'Processing File...',
+                            held: 'Queued'
+                        },
+                        remainingTime: {
+                            prefix: 'remaining time: ',
+                            unknown: 'unknown remaining time'
+                        },
+                        error: {
+                            serverUnavailable: 'Server Unavailable',
+                            unexpectedServerError: 'Unexpected Server Error',
+                            forbidden: 'Forbidden'
+                        }
+                    },
+                    units: {
+                        size: ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+                    }
+                };
+            }
+
+
+
+
+        }
+
+        window.customElements.define(pageMeetingSettingSubproject.is, pageMeetingSettingSubproject);
+    </script>
+</dom-module>

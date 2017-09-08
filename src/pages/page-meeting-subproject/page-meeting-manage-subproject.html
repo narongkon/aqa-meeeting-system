@@ -1,0 +1,98 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../components/nylon-panel-right/nylon-panel-right.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+
+
+<link rel="import" href="../../layout/shared-styles.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+
+<link rel="import" href="./page-meeting-setting-subproject.html">
+
+<dom-module id="page-meeting-manage-subproject">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+        </style>
+
+
+        <nylon-panel-right id="pr" title="[[i18n.manage]]">
+            <nylon-toolbar-selector slot="header">
+                <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
+                    <paper-tab page-name="page-1">[[i18n.setting]]</paper-tab>
+                    <paper-tab page-name="page-2">[[i18n.invite]]</paper-tab>
+                </paper-tabs>
+            </nylon-toolbar-selector>
+
+            <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
+                <div page-name="page-1"><page-meeting-setting-subproject></page-meeting-setting-subproject></div>
+                <div page-name="page-2">Two</div>
+                <div page-name="page-3">Three</div>
+                <div page-name="fallback">
+                    Change pages by typing 'page-1', 'page-2', or 'page-3' in the input above.
+                </div>
+            </iron-pages>
+
+        </nylon-panel-right>
+
+
+    </template>
+
+    <script>
+        class pageMeetingManageSubproject extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-meeting-manage-subproject';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeeting'
+                    },
+                    selected: {
+                        type: String,
+                        value: 'page-1'
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+
+            }
+
+            _closePanelRight() {
+                this.$.pr.close()
+            }
+
+            _saveData() {
+                if (!this.select.id || this.select.id == "") {
+                    Nylon.dispatch('view2AddData', this.select)
+                } else {
+                    Nylon.dispatch('view2EditData', this.select)
+                }
+            }
+
+            _delData(e) {
+                Nylon.dispatch('view2DelData', e.model.item.id)
+            }
+
+        }
+
+        window.customElements.define(pageMeetingManageSubproject.is, pageMeetingManageSubproject);
+    </script>
+</dom-module>

@@ -1,0 +1,144 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../layout/shared-styles.html">
+
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/page-meeting-project-i18n.html">
+
+
+<dom-module id="page-meeting-list-project">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+        </style>
+        <paper-dropdown-menu label="[[i18n.group]]">
+            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                <paper-item>สถานศึกษา</paper-item>
+                <paper-item>ผู้ประเมินภายนอก</paper-item>
+                <paper-item>ต้นสังกัด</paper-item>
+                <paper-item>ศูนย์เครือข่าย</paper-item>
+                <paper-item>สมาชิกเครือข่าย สมศ.</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-dropdown-menu label="[[i18n.level]]" id="uuu">
+            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                <paper-item>พื้นฐาน</paper-item>
+                <paper-item>brontosaurus</paper-item>
+                <paper-item>carcharodontosaurus</paper-item>
+                <paper-item>diplodocus</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>
+        <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
+
+            <app-toolbar slot="header">
+                <div main-title>[[i18n.project]]</div>
+                <paper-button raised class="btn-primary" on-click="_openPanelRight">
+                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;[[i18n.add]]
+                </paper-button>
+            </app-toolbar>
+            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+                <vaadin-grid-column width="50px" flex-grow="0">
+                    <template class="header"> # </template>
+                    <template> [[_index(index)]] </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.project_name]] </template>
+                    <template>
+                        <div><a href="meeting-system/[[item.id]]">[[item.name]]</a></div>
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.year]] </template>
+                    <template>
+                        <div>[[item.year]]</div>
+                    </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.manage]] </template>
+                    <template>
+                        <div>
+                            <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
+                            <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
+                            <a href="meeting-system/[[item.id]]">
+                                <paper-icon-button icon="list"></paper-icon-button>
+                            </a>
+                        </div>
+                    </template>
+                </vaadin-grid-column>
+            </vaadin-grid>
+        </nylon-panel-card>
+
+
+    </template>
+
+    <script>
+        class pageMeetingListProject extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-meeting-list-project'; }
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeeting'
+                    },
+                    data: {
+                        type: Object,
+                        statePath: 'meeting_project.data'
+                    }
+                }
+            }
+            ready() {
+                super.ready()
+                console.log(this.$.uuu.style.visibility = "visible")
+                
+            }
+
+            _selectData(e) {
+                Nylon.dispatch('meetingProjectSelectData', e.model.item.id)
+            }
+
+            _delData(e) {
+                Nylon.confirm({
+                    status: 'waring',
+                    title: 'ยืนยันการลบ',
+                    msg: 'หากต้องการลบให้กดปุ่ม ok'
+                }, (confirm) => {
+                    Nylon.dispatch('meetingProjectDelData', e.model.item.id)
+                })
+
+
+            }
+
+            _openPanelRight() {
+                Nylon.$['page-meeting-project'].$.manage_project.$.pr.open()
+                Nylon.$['page-meeting-project'].$.manage_project.select = { year: '2559' }
+            }
+
+            _index(i) {
+                return i + 1;
+            }
+
+            _listData() {
+                Nylon.$['page-meeting'].$.list_subproject.$.pr.open()
+            }
+
+
+        }
+        window.customElements.define(pageMeetingListProject.is, pageMeetingListProject);
+    </script>
+</dom-module>

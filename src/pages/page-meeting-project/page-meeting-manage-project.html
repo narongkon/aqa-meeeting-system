@@ -1,0 +1,134 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../components/nylon-panel-right/nylon-panel-right.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/page-meeting-project-i18n.html">
+
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-meeting-manage-project">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+        </style>
+
+        <nylon-panel-right id="pr" title="[[i18n.manage]]">
+            <nylon-toolbar-selector slot="header">
+                <paper-tabs selected="0" scrollable>
+                    <paper-tab>[[i18n.setting]]</paper-tab>
+                </paper-tabs>
+            </nylon-toolbar-selector>
+            <nylon-panel-card id="pc2" slot="content">
+                <div slot="content">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <paper-input always-float-label label="[[i18n.project_name]]" value="{{select.name}}"></paper-input>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <paper-dropdown-menu label="[[i18n.year]]" value="{{select.year}}" attr-for-selected="year" style="width: 40%;">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                                    <paper-item year="2559">2559</paper-item>
+                                    <paper-item year="2560">2560</paper-item>
+                                    <paper-item year="2561">2561</paper-item>
+                                    <paper-item year="2562">2562</paper-item>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6">
+                                <paper-dropdown-menu label="[[i18n.group]]" style="width: 100%;">
+                                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                                        <paper-item>สถานศึกษา</paper-item>
+                                        <paper-item>brontosaurus</paper-item>
+                                        <paper-item>carcharodontosaurus</paper-item>
+                                        <paper-item>diplodocus</paper-item>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6">
+                                <paper-dropdown-menu label="[[i18n.level]]" style="width: 100%;">
+                                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
+                                        <paper-item>พื้นฐาน</paper-item>
+                                        <paper-item>brontosaurus</paper-item>
+                                        <paper-item>carcharodontosaurus</paper-item>
+                                        <paper-item>diplodocus</paper-item>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </div>
+                        </div>
+                </div>
+                <app-toolbar slot="footer">
+                    <div main-title></div>
+                    <paper-button raised on-click="_closePanelRight">
+                        <iron-icon icon="clear"></iron-icon>&nbsp;&nbsp;[[i18n.cancel]]
+                    </paper-button>
+                    <paper-button raised class="btn-success" on-click="_saveData">
+                        <iron-icon icon="check"></iron-icon>&nbsp;&nbsp;[[i18n.save]]
+                    </paper-button>
+                </app-toolbar>
+            </nylon-panel-card>
+        </nylon-panel-right>
+
+    </template>
+
+    <script>
+        class pageMeetingManageProject extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-meeting-manage-project';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeeting'
+                    },
+                    select: {
+                        type: Object,
+                        statePath: 'meeting_project.select'
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+            }
+
+
+            _closePanelRight() {
+                this.$.pr.close()
+            }
+
+            _saveData() {
+                if (!this.select.id || this.select.id == "") {
+                    Nylon.dispatch('meetingProjectAddData', this.select)
+                } else {
+                    Nylon.dispatch('meetingProjectEditData', this.select)
+                }
+            }
+
+            _delData(e) {
+                Nylon.dispatch('view2DelData', e.model.item.id)
+            }
+
+        }
+
+        window.customElements.define(pageMeetingManageProject.is, pageMeetingManageProject);
+    </script>
+</dom-module>

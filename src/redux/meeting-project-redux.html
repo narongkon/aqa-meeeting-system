@@ -1,0 +1,124 @@
+<script>
+    Nylon.addReducer('meeting_project', function (state, action) {
+        state = state || {
+            count: 0,
+            select: {}
+        }
+
+        switch (action.type) {
+            case 'VIEW_2_ADD':
+                state.count = ++state.count
+                return state
+            case 'VIEW_2_DEL':
+                state.count = --state.count
+                return state
+            case 'MEETING_PROJECT_GET_DATA':
+                state.data = action.payload
+                return state
+            case 'MEETING_PROJECT_SELECT_DATA':
+                state.select = action.payload
+                return state
+            case 'MEETING_PROJECT_CLEAR_SELECT':
+                state.select = {}
+                return state
+            default:
+                return state
+        }
+        return state
+    })
+
+
+    Nylon.addAction({
+        view2Con:function(arg1){
+            return { type:arg1 }
+        },
+        meetingProjectGetData:function(){
+
+            var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({position:'top'})
+            
+            return dispatch => {
+                axios.get('/meeting/project').then( 
+                    res => {
+                        progress(()=>{
+                            dispatch({type:'MEETING_PROJECT_GET_DATA',payload:res.data})
+                        })
+                    }
+                )
+                .catch(
+                    err => {
+                        progress(()=>{
+                            console.log({err})
+                            Nylon.$['page-meeting'].$.list_project.$.pc1.notify({
+                                status:'error',
+                                msg:err.response.data.msg,
+                                position:'top'
+                            })
+                        })
+                    }
+                )
+            }
+
+        },
+        meetingProjectAddData:function(select){
+            return dispatch => {
+                var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
+                axios.post('/meeting/project',select).then(
+                    res => {
+                        Nylon.dispatch('meetingProjectGetData')
+                        progress( _ => {
+                            Nylon.$['page-meeting-project'].$.manage_project.$.pr.close()
+                            Nylon.store.dispatch({type:'MEETING_PROJECT_CLEAR_SELECT'})
+
+                            Nylon.toast({
+                                msg:'เพิ่มเสร็จสิ้น'
+                            })
+                        })
+                        
+
+                    }
+                )
+            }
+        },
+        meetingProjectDelData:function(id){
+            return dispatch => {
+                axios.delete(`/meeting/project/${id}`).then( 
+                    res => {
+                        Nylon.dispatch('meetingProjectGetData')
+                    }
+                )
+            }
+        },
+        meetingProjectSelectData:function(id){
+            return dispatch => {
+                axios.get(`/meeting/project/${id}`).then( 
+                    res => {
+                        dispatch({type:'MEETING_PROJECT_SELECT_DATA',payload:res.data})
+                        Nylon.$['page-meeting-project'].$.manage_project.$.pr.open()
+                    }
+                )
+            }
+        },
+        meetingProjectEditData:function(select){
+            var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
+
+            return dispatch => {
+                axios.put('/meeting/project',select).then(
+                    res => {
+
+                        progress(()=>{
+                            Nylon.dispatch('meetingProjectGetData')
+                            Nylon.$['page-meeting-project'].$.manage_project.$.pr.close()
+                            Nylon.store.dispatch({type:'MEETING_PROJECT_CLEAR_SELECT'})
+
+                            Nylon.toast({
+                                msg:'แก้ไขเสร็จสิ้น'
+                            })
+                        })
+                        
+                    }
+                )
+            }
+        }
+    })
+
+</script>

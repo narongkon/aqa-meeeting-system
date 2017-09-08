@@ -1,0 +1,45 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+
+<dom-module id="page-meeting-invite">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+        </style>
+
+        
+
+    </template>
+
+    <script>
+
+        class pageMeetingInvite extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-meeting-invite';
+            }
+
+            static get properties() {
+                return {
+                    
+                };
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function() {
+                    
+                });
+            }
+
+        }
+
+        window.customElements.define(pageMeetingInvite.is, pageMeetingInvite);
+    </script>
+</dom-module>
