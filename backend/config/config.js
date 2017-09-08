@@ -12,7 +12,7 @@ var config = {
         {host: 'rdb.codeunbug.com', port: 28015,user:'admin',password:'next@2017'}
         // {host: '192.168.10.15', port: 28015}
       ],
-      db:'initProject'
+      db:'aqa_meeting'
     },
 
     oauth:{
