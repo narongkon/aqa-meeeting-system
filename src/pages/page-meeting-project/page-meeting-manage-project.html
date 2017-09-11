@@ -117,13 +117,22 @@
                             group_project_id: null,
                             group_work_id: null
                         },
-                        statePath: 'meeting_project.select'
+                        statePath: 'meeting_project.select',
+                        observer: '_data_change'
                     }
                 };
             }
 
             ready() {
                 super.ready();
+            }
+
+            _data_change(){
+                if (this.data.group_project_id == 'C' || this.data.group_project_id == 'B') {
+                    this.$.dropdown_level.style.visibility = "visible";
+                } else {
+                    this.$.dropdown_level.style.visibility = "hidden";
+                }
             }
 
 

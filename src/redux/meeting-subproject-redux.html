@@ -35,9 +35,9 @@
         view2Con:function(arg1){
             return { type:arg1 }
         },
-        meetingSubprojectGetProject:function(id){
+        meetingSubprojectGetData:function(id){
             return dispatch => {
-                axios.get(`/meeting/subGetproject/${id}`).then( 
+                axios.get(`/meeting_subproject/Getproject/${id}`).then( 
                     res => {
                         dispatch({type:'MEETING_SUBPROJECT_GET_PROJECT',payload:res.data})
                     }

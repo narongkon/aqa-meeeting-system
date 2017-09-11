@@ -41,7 +41,7 @@
         meetingProjectGetGroup: function () {
 
             return dispatch => {
-                axios.get('/meeting_project/project/group').then(
+                axios.get('/meeting_project/group').then(
                     res => {
                         dispatch({ type: 'MEETING_PROJECT_GET_GROUP', payload: res.data })
                     }
@@ -64,7 +64,7 @@
         meetingProjectGetLevel: function () {
 
             return dispatch => {
-                axios.get('/meeting_project/project/level').then(
+                axios.get('/meeting_project/level').then(
                     res => {
                         dispatch({ type: 'MEETING_PROJECT_GET_LEVEL', payload: res.data })
                     }
@@ -89,7 +89,7 @@
             var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
 
             return dispatch => {
-                axios.get('/meeting_project/project').then(
+                axios.get('/meeting_project').then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
@@ -117,7 +117,7 @@
                 
                 var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
 
-                axios.get(`/meeting_project/project/bygroup/${id}`).then(
+                axios.get(`/meeting_project/bygroup/${id}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
@@ -131,7 +131,7 @@
             return dispatch => {
                 var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
 
-                axios.get(`/meeting_project/project/bylevel/${data.group}/${data.level}`).then(
+                axios.get(`/meeting_project/bylevel/${data.group}/${data.level}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
@@ -143,7 +143,7 @@
         meetingProjectAddData: function (select) {
             return dispatch => {
                 var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
-                axios.post('/meeting_project/project', select).then(
+                axios.post('/meeting_project', select).then(
                     res => {
                         Nylon.dispatch('meetingProjectGetData')
                         progress(_ => {
@@ -164,7 +164,7 @@
         },
         meetingProjectDelData: function (id) {
             return dispatch => {
-                axios.delete(`/meeting_project/project/${id}`).then(
+                axios.delete(`/meeting_project/${id}`).then(
                     res => {
                         Nylon.dispatch('meetingProjectGetData')
                     }
@@ -173,7 +173,7 @@
         },
         meetingProjectSelectData: function (id) {
             return dispatch => {
-                axios.get(`/meeting_project/project/${id}`).then(
+                axios.get(`/meeting_project/${id}`).then(
                     res => {
                         dispatch({ type: 'MEETING_PROJECT_SELECT_DATA', payload: res.data })
                         Nylon.$['page-meeting-project'].$.manage_project.$.pr.open()
@@ -185,11 +185,12 @@
             var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
 
             return dispatch => {
-                axios.put('/meeting_project/project', select).then(
+                axios.put('/meeting_project', select).then(
                     res => {
 
                         progress(() => {
                             Nylon.dispatch('meetingProjectGetData')
+                            Nylon.$['page-meeting-project'].$.list_project.dropdown = {group: 'all', level: 'all'}
                             Nylon.$['page-meeting-project'].$.manage_project.$.pr.close()
                             Nylon.store.dispatch({ type: 'MEETING_PROJECT_CLEAR_SELECT' })
 
