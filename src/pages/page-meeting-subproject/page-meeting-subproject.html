@@ -28,7 +28,7 @@
                 <div main-title>[[project.name]] ประจำปี [[project.year]]</div>
             </app-toolbar class="toolbar-header">
             <paper-tabs selected="0" scrollable>
-                <paper-tab>กำหนดการ</paper-tab>
+                <paper-tab>โครงการ</paper-tab>
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
@@ -62,7 +62,6 @@
 
             ready() {
                 super.ready();
-
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
@@ -74,7 +73,6 @@
 
             nylonPagesActive() {
                 Nylon.dispatch('meetingSubprojectGetProject', this._params.id)
-                // Nylon.dispatch('meetingSubprojectGetData', this._params.id)
             }
 
         }

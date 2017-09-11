@@ -15,11 +15,17 @@
             case 'MEETING_PROJECT_GET_DATA':
                 state.data = action.payload
                 return state
+            case 'MEETING_PROJECT_GET_GROUP':
+                state.group = action.payload
+                return state
             case 'MEETING_PROJECT_SELECT_DATA':
                 state.select = action.payload
                 return state
             case 'MEETING_PROJECT_CLEAR_SELECT':
                 state.select = {}
+                return state
+            case 'MEETING_PROJECT_GET_LEVEL':
+                state.level = action.payload
                 return state
             default:
                 return state
@@ -29,92 +35,169 @@
 
 
     Nylon.addAction({
-        view2Con:function(arg1){
-            return { type:arg1 }
+        view2Con: function (arg1) {
+            return { type: arg1 }
         },
-        meetingProjectGetData:function(){
+        meetingProjectGetGroup: function () {
 
-            var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({position:'top'})
-            
             return dispatch => {
-                axios.get('/meeting/project').then( 
+                axios.get('/meeting_project/project/group').then(
                     res => {
-                        progress(()=>{
-                            dispatch({type:'MEETING_PROJECT_GET_DATA',payload:res.data})
+                        dispatch({ type: 'MEETING_PROJECT_GET_GROUP', payload: res.data })
+                    }
+                )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting'].$.list_project.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingProjectGetLevel: function () {
+
+            return dispatch => {
+                axios.get('/meeting_project/project/level').then(
+                    res => {
+                        dispatch({ type: 'MEETING_PROJECT_GET_LEVEL', payload: res.data })
+                    }
+                )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting'].$.list_project.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingProjectGetData: function () {
+
+            var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
+
+            return dispatch => {
+                axios.get('/meeting_project/project').then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
                         })
                     }
                 )
-                .catch(
+                    .catch(
                     err => {
-                        progress(()=>{
-                            console.log({err})
+                        progress(() => {
+                            console.log({ err })
                             Nylon.$['page-meeting'].$.list_project.$.pc1.notify({
-                                status:'error',
-                                msg:err.response.data.msg,
-                                position:'top'
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
                             })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingProjectGetDataByGroup: function (id) {
+
+            return dispatch => {
+                
+                var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
+
+                axios.get(`/meeting_project/project/bygroup/${id}`).then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
                         })
                     }
                 )
             }
-
         },
-        meetingProjectAddData:function(select){
+        meetingProjectGetDataByLevel: function (data) {
+
+            return dispatch => {
+                var progress = Nylon.$['page-meeting-project'].$.list_project.$.pc1.progress({ position: 'top' })
+
+                axios.get(`/meeting_project/project/bylevel/${data.group}/${data.level}`).then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_PROJECT_GET_DATA', payload: res.data })
+                        })
+                    }
+                )
+            }
+        },
+        meetingProjectAddData: function (select) {
             return dispatch => {
                 var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
-                axios.post('/meeting/project',select).then(
+                axios.post('/meeting_project/project', select).then(
                     res => {
                         Nylon.dispatch('meetingProjectGetData')
-                        progress( _ => {
+                        progress(_ => {
+                            
+                            Nylon.$['page-meeting-project'].$.list_project.dropdown = {group: 'all', level: 'all'}
                             Nylon.$['page-meeting-project'].$.manage_project.$.pr.close()
-                            Nylon.store.dispatch({type:'MEETING_PROJECT_CLEAR_SELECT'})
+                            Nylon.store.dispatch({ type: 'MEETING_PROJECT_CLEAR_SELECT' })
 
                             Nylon.toast({
-                                msg:'เพิ่มเสร็จสิ้น'
+                                msg: 'เพิ่มเสร็จสิ้น'
                             })
                         })
-                        
+
 
                     }
                 )
             }
         },
-        meetingProjectDelData:function(id){
+        meetingProjectDelData: function (id) {
             return dispatch => {
-                axios.delete(`/meeting/project/${id}`).then( 
+                axios.delete(`/meeting_project/project/${id}`).then(
                     res => {
                         Nylon.dispatch('meetingProjectGetData')
                     }
                 )
             }
         },
-        meetingProjectSelectData:function(id){
+        meetingProjectSelectData: function (id) {
             return dispatch => {
-                axios.get(`/meeting/project/${id}`).then( 
+                axios.get(`/meeting_project/project/${id}`).then(
                     res => {
-                        dispatch({type:'MEETING_PROJECT_SELECT_DATA',payload:res.data})
+                        dispatch({ type: 'MEETING_PROJECT_SELECT_DATA', payload: res.data })
                         Nylon.$['page-meeting-project'].$.manage_project.$.pr.open()
                     }
                 )
             }
         },
-        meetingProjectEditData:function(select){
+        meetingProjectEditData: function (select) {
             var progress = Nylon.$['page-meeting-project'].$.manage_project.$.pc2.progress()
 
             return dispatch => {
-                axios.put('/meeting/project',select).then(
+                axios.put('/meeting_project/project', select).then(
                     res => {
 
-                        progress(()=>{
+                        progress(() => {
                             Nylon.dispatch('meetingProjectGetData')
                             Nylon.$['page-meeting-project'].$.manage_project.$.pr.close()
-                            Nylon.store.dispatch({type:'MEETING_PROJECT_CLEAR_SELECT'})
+                            Nylon.store.dispatch({ type: 'MEETING_PROJECT_CLEAR_SELECT' })
 
                             Nylon.toast({
-                                msg:'แก้ไขเสร็จสิ้น'
+                                msg: 'แก้ไขเสร็จสิ้น'
                             })
                         })
-                        
+
                     }
                 )
             }

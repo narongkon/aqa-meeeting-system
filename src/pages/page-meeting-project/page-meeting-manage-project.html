@@ -36,41 +36,43 @@
                 <div slot="content">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <paper-input always-float-label label="[[i18n.project_name]]" value="{{select.name}}"></paper-input>
+                            <paper-input label="[[i18n.project_name]]" value="{{data.project_name}}"></paper-input>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <paper-dropdown-menu label="[[i18n.year]]" value="{{select.year}}" attr-for-selected="year" style="width: 40%;">
-                                <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
-                                    <paper-item year="2559">2559</paper-item>
-                                    <paper-item year="2560">2560</paper-item>
-                                    <paper-item year="2561">2561</paper-item>
-                                    <paper-item year="2562">2562</paper-item>
+                            <paper-dropdown-menu label="[[i18n.year]]" style="width: 40%;">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.project_year}}">
+                                    <paper-item value="2559">2559</paper-item>
+                                    <paper-item value="2560">2560</paper-item>
+                                    <paper-item value="2561">2561</paper-item>
+                                    <paper-item value="2562">2562</paper-item>
                                 </paper-listbox>
                             </paper-dropdown-menu>
                         </div>
                     </div>
                     <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-6">
-                                <paper-dropdown-menu label="[[i18n.group]]" style="width: 100%;">
-                                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
-                                        <paper-item>สถานศึกษา</paper-item>
-                                        <paper-item>brontosaurus</paper-item>
-                                        <paper-item>carcharodontosaurus</paper-item>
-                                        <paper-item>diplodocus</paper-item>
-                                    </paper-listbox>
-                                </paper-dropdown-menu>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6">
-                                <paper-dropdown-menu label="[[i18n.level]]" style="width: 100%;">
-                                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="0">
-                                        <paper-item>พื้นฐาน</paper-item>
-                                        <paper-item>brontosaurus</paper-item>
-                                        <paper-item>carcharodontosaurus</paper-item>
-                                        <paper-item>diplodocus</paper-item>
-                                    </paper-listbox>
-                                </paper-dropdown-menu>
-                            </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <paper-dropdown-menu label="[[i18n.group]]" style="width: 100%;">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_project_id }}" on-click="_dropdown_group_change">
+                                    <dom-repeat items="{{group}}">
+                                        <template>
+                                            <paper-item value="[[item.id]]">[[item.group_project_name]]</paper-item>
+                                        </template>
+                                    </dom-repeat>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
                         </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <paper-dropdown-menu label="[[i18n.level]]" style="width: 100%;" id="dropdown_level">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_work_id }}">
+                                    <dom-repeat items="{{level}}">
+                                        <template>
+                                            <paper-item value="[[item.id]]">[[item.group_work_name]]</paper-item>
+                                        </template>
+                                    </dom-repeat>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                    </div>
                 </div>
                 <app-toolbar slot="footer">
                     <div main-title></div>
@@ -99,8 +101,22 @@
                         type: Object,
                         statePath: 'i18n.pageMeeting'
                     },
-                    select: {
+                    group: {
                         type: Object,
+                        statePath: 'meeting_project.group'
+                    },
+                    level: {
+                        type: Object,
+                        statePath: 'meeting_project.level'
+                    },
+                    data: {
+                        type: Object,
+                        value: {
+                            project_name: null,
+                            project_year: null,
+                            group_project_id: null,
+                            group_work_id: null
+                        },
                         statePath: 'meeting_project.select'
                     }
                 };
@@ -116,15 +132,24 @@
             }
 
             _saveData() {
-                if (!this.select.id || this.select.id == "") {
-                    Nylon.dispatch('meetingProjectAddData', this.select)
+                if (!this.data.id || this.data.id == "") {
+                    Nylon.dispatch('meetingProjectAddData', this.data)
                 } else {
-                    Nylon.dispatch('meetingProjectEditData', this.select)
+                    Nylon.dispatch('meetingProjectEditData', this.data)
                 }
             }
 
             _delData(e) {
                 Nylon.dispatch('view2DelData', e.model.item.id)
+            }
+
+            _dropdown_group_change() {
+                if (this.data.group_project_id == 'C' || this.data.group_project_id == 'B') {
+                    this.$.dropdown_level.style.visibility = "visible";
+                } else {
+                    this.$.dropdown_level.style.visibility = "hidden";
+                    this.set('data.group_work_id', null)
+                }
             }
 
         }
