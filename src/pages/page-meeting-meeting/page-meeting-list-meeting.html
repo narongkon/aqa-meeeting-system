@@ -17,10 +17,10 @@
 
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-project-i18n.html">
+<link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
 
 
-<dom-module id="page-meeting-list-project">
+<dom-module id="page-meeting-list-meeting">
     <template>
         <style include="shared-styles">
              :host {
@@ -32,7 +32,7 @@
                 <paper-item value="all">ทั้งหมด</paper-item>
                 <dom-repeat items="{{group}}">
                     <template>
-                        <paper-item value="[[item.id]]">[[item.group_project_name]]</paper-item>
+                        <paper-item value="[[item.id]]">[[item.group_meeting_name]]</paper-item>
                     </template>
                 </dom-repeat>
             </paper-listbox>
@@ -60,15 +60,15 @@
                     <template> [[_index(index)]] </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
-                    <template class="header"> [[i18n.project_name]] </template>
+                    <template class="header"> [[i18n.meeting_name]] </template>
                     <template>
-                        <div><a href="meeting-project/[[item.id]]">[[item.project_name]]</a></div>
+                        <div><a href="meeting-module/[[item.id]]">[[item.meeting_name]]</a></div>
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
                     <template class="header">[[i18n.group]]</template>
                     <template>
-                        <div>[[item.group_project_name]]</div>
+                        <div>[[item.group_meeting_name]]</div>
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
@@ -80,7 +80,7 @@
                 <vaadin-grid-column>
                     <template class="header"> [[i18n.year]] </template>
                     <template>
-                        <div>[[item.project_year]]</div>
+                        <div>[[item.meeting_year]]</div>
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
@@ -89,7 +89,7 @@
                         <div>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
-                            <a href="meeting-project/[[item.id]]">
+                            <a href="meeting-module/[[item.id]]">
                                 <paper-icon-button icon="list"></paper-icon-button>
                             </a>
                         </div>
@@ -102,25 +102,25 @@
     </template>
 
     <script>
-        class pageMeetingListProject extends ReduxMixin(Polymer.Element) {
-            static get is() { return 'page-meeting-list-project'; }
+        class pageMeetingListMeeting extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-meeting-list-meeting'; }
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingMeeting'
                     },
                     data: {
                         type: Object,
-                        statePath: 'meeting_project.data'
+                        statePath: 'meeting_meeting.data'
                     },
                     group: {
                         type: Object,
-                        statePath: 'meeting_project.group'
+                        statePath: 'meeting_meeting.group'
                     },
                     level: {
                         type: Object,
-                        statePath: 'meeting_project.level'
+                        statePath: 'meeting_meeting.level'
                     },
                     dropdown: {
                         type: Object,
@@ -142,7 +142,7 @@
             }
 
             _selectData(e) {
-                Nylon.dispatch('meetingProjectSelectData', e.model.item.id)
+                Nylon.dispatch('meetingMeetingSelectData', e.model.item.id)
             }
 
             _delData(e) {
@@ -151,16 +151,16 @@
                     title: 'ยืนยันการลบ',
                     msg: 'หากต้องการลบให้กดปุ่ม ok'
                 }, (confirm) => {
-                    Nylon.dispatch('meetingProjectDelData', e.model.item.id)
+                    Nylon.dispatch('meetingMeetingDelData', e.model.item.id)
                 })
 
 
             }
 
             _openPanelRight() {
-                Nylon.$['page-meeting-project'].$.manage_project.$.pr.open()
-                Nylon.$['page-meeting-project'].$.manage_project.data = { project_name: null, project_year: null, group_project_id: null, group_work_id: null }
-                Nylon.$['page-meeting-project'].$.manage_project.$.dropdown_level.style.visibility = "hidden";
+                Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pr.open()
+                Nylon.$['page-meeting-meeting'].$.manage_meeting.data = { meeting_name: null, meeting_year: null, group_meeting_id: null, group_work_id: null }
+                Nylon.$['page-meeting-meeting'].$.manage_meeting.$.dropdown_level.style.visibility = "hidden";
             }
 
             _index(i) {
@@ -177,22 +177,22 @@
                 }
 
                 if (this.dropdown.group == 'all') {
-                    Nylon.dispatch('meetingProjectGetData')
+                    Nylon.dispatch('meetingMeetingGetData')
                 } else {
-                    Nylon.dispatch('meetingProjectGetDataByGroup', this.dropdown.group)
+                    Nylon.dispatch('meetingMeetingGetDataByGroup', this.dropdown.group)
                 }
             }
             _dropdown_level_change() {
 
                 if (this.dropdown.level == 'all') {
-                    Nylon.dispatch('meetingProjectGetDataByGroup', this.dropdown.group)
+                    Nylon.dispatch('meetingMeetingGetDataByGroup', this.dropdown.group)
                 } else {
-                    Nylon.dispatch('meetingProjectGetDataByLevel', this.dropdown)
+                    Nylon.dispatch('meetingMeetingGetDataByLevel', this.dropdown)
                 }
                 
             }
 
         }
-        window.customElements.define(pageMeetingListProject.is, pageMeetingListProject);
+        window.customElements.define(pageMeetingListMeeting.is, pageMeetingListMeeting);
     </script>
 </dom-module>

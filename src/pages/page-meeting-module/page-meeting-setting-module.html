@@ -13,7 +13,7 @@
 <link rel="import" href="../../../bower_components/vaadin-upload/vaadin-upload.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 
 <link rel="import" href="../../layout/shared-styles.html">
 
@@ -29,7 +29,7 @@
             <div slot="content">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input always-float-label label="[[i18n.subproject_name]]" value="{{select.name}}"></paper-input>
+                        <paper-input label="[[i18n.subproject_name]]" value="{{select.name}}"></paper-input>
                     </div>
                 </div>
                 <div class="row">
@@ -57,7 +57,7 @@
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input always-float-label label="[[i18n.place]]" value="{{select.name}}"></paper-input>
+                        <paper-input label="[[i18n.place]]" value="{{select.name}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <paper-dropdown-menu label="[[i18n.day]]" style="width: 15%;">

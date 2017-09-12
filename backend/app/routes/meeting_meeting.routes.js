@@ -1,5 +1,5 @@
 module.exports = function(app){
-    var meeting = require('../controllers/meeting/meeting_project.controller')
+    var meeting = require('../controllers/meeting/meeting_meeting.controller')
     app.get('',meeting.list)
     app.get('/bygroup/:id',meeting.listbygroup)
     app.get('/bylevel/:group/:level',meeting.listbylevel)

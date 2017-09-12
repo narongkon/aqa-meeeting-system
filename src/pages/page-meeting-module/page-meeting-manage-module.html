@@ -15,11 +15,10 @@
 <link rel="import" href="../../layout/shared-styles.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
+<link rel="import" href="./page-meeting-setting-module.html">
 
-<link rel="import" href="./page-meeting-setting-subproject.html">
-
-<dom-module id="page-meeting-manage-subproject">
+<dom-module id="page-meeting-manage-module">
     <template>
         <style include="shared-styles">
              :host {
@@ -51,17 +50,17 @@
     </template>
 
     <script>
-        class pageMeetingManageSubproject extends ReduxMixin(Polymer.Element) {
+        class pageMeetingManageModule extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-manage-subproject';
+                return 'page-meeting-manage-module';
             }
 
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingModule'
                     },
                     selected: {
                         type: String,
@@ -93,6 +92,6 @@
 
         }
 
-        window.customElements.define(pageMeetingManageSubproject.is, pageMeetingManageSubproject);
+        window.customElements.define(pageMeetingManageModule.is, pageMeetingManageModule);
     </script>
 </dom-module>

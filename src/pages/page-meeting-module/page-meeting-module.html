@@ -8,14 +8,14 @@
 <link rel="import" href="../../layout/shared-styles.html">
 
 
-<link rel="import" href="./page-meeting-list-subproject.html">
-<link rel="import" href="./page-meeting-manage-subproject.html">
+<link rel="import" href="./page-meeting-list-module.html">
+<link rel="import" href="./page-meeting-manage-module.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting-subproject-redux.html">
-<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+<link rel="import" href="../../redux/meeting-module-redux.html">
+<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 
-<dom-module id="page-meeting-subproject">
+<dom-module id="page-meeting-module">
     <template>
         <style include="shared-styles">
              :host {
@@ -25,36 +25,36 @@
 
         <nylon-toolbar-selector>
             <app-toolbar>
-                <div main-title>[[project.name]] ประจำปี [[project.year]]</div>
+                <div main-title>[[project.project_name]] ประจำปี [[project.project_year]]</div>
             </app-toolbar class="toolbar-header">
             <paper-tabs selected="0" scrollable>
                 <paper-tab>โครงการ</paper-tab>
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-meeting-list-subproject id="list_subproject"></page-meeting-list-subproject>
-            <page-meeting-manage-subproject id="manage_subproject"></page-meeting-manage-subproject>
+            <page-meeting-list-module id="list_module"></page-meeting-list-module>
+            <page-meeting-manage-module id="manage_module"></page-meeting-manage-module>
         </div>
 
 
     </template>
 
     <script>
-        class pageMeetingSubproject extends ReduxMixin(Polymer.Element) {
+        class pageMeetingModule extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-subproject';
+                return 'page-meeting-module';
             }
 
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingModule'
                     },
                     project: {
                         type: Object,
-                        statePath: 'meeting_subproject.project',
+                        statePath: 'meeting_module.project',
                         observer: '_ok'
                     }
                 };
@@ -72,11 +72,13 @@
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('meetingSubprojectGetData', this._params.id)
+                Nylon.dispatch('meetingModuleGetProject', this._params.id)
+                Nylon.dispatch('meetingModuleGetRegion')
+                Nylon.dispatch('meetingModuleGetProvince')
             }
 
         }
 
-        window.customElements.define(pageMeetingSubproject.is, pageMeetingSubproject);
+        window.customElements.define(pageMeetingModule.is, pageMeetingModule);
     </script>
 </dom-module>

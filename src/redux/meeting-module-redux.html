@@ -1,0 +1,43 @@
+<script>
+    Nylon.addReducer('meeting_module', function (state, action) {
+        state = state || {
+            select: {}
+        }
+
+        switch (action.type) {
+            case 'MEETING_MODULE_GET_PROJECT':
+                state.project = action.payload
+                return state
+            default:
+                return state
+        }
+        return state
+    })
+
+
+    Nylon.addAction({
+        view2Con: function (arg1) {
+            return { type: arg1 }
+        },
+        meetingModuleGetProject: function (id) {
+            return dispatch => {
+                axios.get(`/meeting_module/getMeeting/${id}`).then(
+                    res => {
+                        dispatch({ type: 'MEETING_MODULE_GET_PROJECT', payload: res.data })
+                    }
+                )
+            }
+        },
+        meetingModuleGetRegion: function () {
+            return dispatch => {
+                axios.get(`/meeting_module/getRegion`).then(
+                    res => {
+                        // console.log(res.data)
+                    }
+                )
+            }
+        },
+
+    })
+
+</script>

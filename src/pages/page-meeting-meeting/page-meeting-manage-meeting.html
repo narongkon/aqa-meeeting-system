@@ -14,7 +14,7 @@
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-project-i18n.html">
+<link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
 
 <link rel="import" href="../../layout/shared-styles.html">
 
@@ -36,11 +36,11 @@
                 <div slot="content">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <paper-input label="[[i18n.project_name]]" value="{{data.project_name}}"></paper-input>
+                            <paper-input label="[[i18n.project_name]]" value="{{data.meeting_name}}"></paper-input>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6">
                             <paper-dropdown-menu label="[[i18n.year]]" style="width: 40%;">
-                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.project_year}}">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.meeting_year}}">
                                     <paper-item value="2559">2559</paper-item>
                                     <paper-item value="2560">2560</paper-item>
                                     <paper-item value="2561">2561</paper-item>
@@ -52,10 +52,10 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
                             <paper-dropdown-menu label="[[i18n.group]]" style="width: 100%;">
-                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_project_id }}" on-click="_dropdown_group_change">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_meeting_id }}" on-click="_dropdown_group_change">
                                     <dom-repeat items="{{group}}">
                                         <template>
-                                            <paper-item value="[[item.id]]">[[item.group_project_name]]</paper-item>
+                                            <paper-item value="[[item.id]]">[[item.group_meeting_name]]</paper-item>
                                         </template>
                                     </dom-repeat>
                                 </paper-listbox>
@@ -99,25 +99,25 @@
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingModule'
                     },
                     group: {
                         type: Object,
-                        statePath: 'meeting_project.group'
+                        statePath: 'meeting_meeting.group'
                     },
                     level: {
                         type: Object,
-                        statePath: 'meeting_project.level'
+                        statePath: 'meeting_meeting.level'
                     },
                     data: {
                         type: Object,
                         value: {
-                            project_name: null,
-                            project_year: null,
-                            group_project_id: null,
+                            meeting_name: null,
+                            meeting_year: null,
+                            group_meeting_id: null,
                             group_work_id: null
                         },
-                        statePath: 'meeting_project.select',
+                        statePath: 'meeting_meeting.select',
                         observer: '_data_change'
                     }
                 };
@@ -128,13 +128,12 @@
             }
 
             _data_change(){
-                if (this.data.group_project_id == 'C' || this.data.group_project_id == 'B') {
+                if (this.data.group_meeting_id == 'C' || this.data.group_meeting_id == 'B') {
                     this.$.dropdown_level.style.visibility = "visible";
                 } else {
                     this.$.dropdown_level.style.visibility = "hidden";
                 }
             }
-
 
             _closePanelRight() {
                 this.$.pr.close()
@@ -142,18 +141,14 @@
 
             _saveData() {
                 if (!this.data.id || this.data.id == "") {
-                    Nylon.dispatch('meetingProjectAddData', this.data)
+                    Nylon.dispatch('meetingMeetingAddData', this.data)
                 } else {
-                    Nylon.dispatch('meetingProjectEditData', this.data)
+                    Nylon.dispatch('meetingMeetingEditData', this.data)
                 }
             }
 
-            _delData(e) {
-                Nylon.dispatch('view2DelData', e.model.item.id)
-            }
-
             _dropdown_group_change() {
-                if (this.data.group_project_id == 'C' || this.data.group_project_id == 'B') {
+                if (this.data.group_meeting_id == 'C' || this.data.group_meeting_id == 'B') {
                     this.$.dropdown_level.style.visibility = "visible";
                 } else {
                     this.$.dropdown_level.style.visibility = "hidden";

@@ -1,8 +1,8 @@
 exports.list = (req, res) => {
   const r = req.r;
 
-  r.db('aqa_meeting').table('project')
-    .eqJoin('group_project_id', r.db('aqa_meeting').table('group_project')).without({ right: 'id' }).zip()
+  r.db('aqa_meeting').table('meeting')
+    .eqJoin('group_meeting_id', r.db('aqa_meeting').table('group_meeting')).without({ right: 'id' }).zip()
     .merge(function (m) {
       return {
         level: r.branch(m('group_work_id').eq(null), null, r.db('expert').table('group_work').get(m('group_work_id')))
@@ -20,8 +20,8 @@ exports.list = (req, res) => {
 
 exports.listbygroup = (req, res) => {
   const r = req.r;
-  r.db('aqa_meeting').table('project').filter({group_project_id: req.params.id})
-    .eqJoin('group_project_id', r.db('aqa_meeting').table('group_project')).without({ right: 'id' }).zip()
+  r.db('aqa_meeting').table('meeting').filter({group_meeting_id: req.params.id})
+    .eqJoin('group_meeting_id', r.db('aqa_meeting').table('group_meeting')).without({ right: 'id' }).zip()
     .merge(function (m) {
       return {
         level: r.branch(m('group_work_id').eq(null), null, r.db('expert').table('group_work').get(m('group_work_id')))
@@ -37,24 +37,10 @@ exports.listbygroup = (req, res) => {
 
 }
 
-exports.group = (req, res) => {
-  const r = req.r;
-
-  r.table('group_project').coerceTo('array')
-    .run()
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    })
-
-}
-
 exports.listbylevel = (req, res) => {
   const r = req.r;
-  r.db('aqa_meeting').table('project').filter({group_project_id: req.params.group, group_work_id: req.params.level})
-  .eqJoin('group_project_id', r.db('aqa_meeting').table('group_project')).without({ right: 'id' }).zip()
+  r.db('aqa_meeting').table('meeting').filter({group_meeting_id: req.params.group, group_work_id: req.params.level})
+  .eqJoin('group_meeting_id', r.db('aqa_meeting').table('group_meeting')).without({ right: 'id' }).zip()
   .merge(function (m) {
     return {
       level: r.branch(m('group_work_id').eq(null), null, r.db('expert').table('group_work').get(m('group_work_id')))
@@ -67,6 +53,20 @@ exports.listbylevel = (req, res) => {
   .catch((err) => {
     res.status(500).send(err);
   })
+}
+
+exports.group = (req, res) => {
+  const r = req.r;
+
+  r.table('group_meeting').coerceTo('array')
+    .run()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    })
+
 }
 
 exports.level = (req, res) => {
@@ -85,7 +85,7 @@ exports.level = (req, res) => {
 
 exports.select = (req, res) => {
   const r = req.r;
-  r.table('project').get(req.params.id)
+  r.table('meeting').get(req.params.id)
     .run()
     .then((result) => {
       res.json(result);
@@ -97,7 +97,7 @@ exports.select = (req, res) => {
 
 exports.add = (req, res) => {
   const r = req.r;
-  r.table('project').insert(req.body)
+  r.table('meeting').insert(req.body)
     .run()
     .then((result) => {
       res.json(result);
@@ -109,7 +109,7 @@ exports.add = (req, res) => {
 
 exports.edit = (req, res) => {
   const r = req.r;
-  r.table('project').get(req.body.id).update(r.expr(req.body).without('id', 'index'))
+  r.table('meeting').get(req.body.id).update(r.expr(req.body).without('id', 'index'))
     .run()
     .then((result) => {
       res.json(result);
@@ -121,19 +121,7 @@ exports.edit = (req, res) => {
 
 exports.del = (req, res) => {
   const r = req.r;
-  r.table('project').get(req.params.id).delete()
-    .run()
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.status(500).send(err.message);
-    })
-}
-
-exports.subprojectgetproject = (req, res) => {
-  const r = req.r;
-  r.table('subproject').get(req.params.id)
+  r.table('meeting').get(req.params.id).delete()
     .run()
     .then((result) => {
       res.json(result);

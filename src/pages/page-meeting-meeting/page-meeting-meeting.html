@@ -7,14 +7,14 @@
 
 <link rel="import" href="../../layout/shared-styles.html">
 
-<link rel="import" href="./page-meeting-list-project.html">
-<link rel="import" href="./page-meeting-manage-project.html">
+<link rel="import" href="./page-meeting-list-meeting.html">
+<link rel="import" href="./page-meeting-manage-meeting.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting-project-redux.html">
-<link rel="import" href="../../i18n/page-meeting-project-i18n.html">
+<link rel="import" href="../../redux/meeting-meeting-redux.html">
+<link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
 
-<dom-module id="page-meeting-project">
+<dom-module id="page-meeting-meeting">
     <template>
         <style include="shared-styles">
              :host {
@@ -31,25 +31,25 @@
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-meeting-list-project id="list_project"></page-meeting-list-project>
-            <page-meeting-manage-project id="manage_project"></page-meeting-manage-project>
+            <page-meeting-list-meeting id="list_meeting"></page-meeting-list-meeting>
+            <page-meeting-manage-project id="manage_meeting"></page-meeting-manage-project>
         </div>
 
 
     </template>
 
     <script>
-        class pageMeetingProject extends ReduxMixin(Polymer.Element) {
+        class pageMeetingMeeting extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-project';
+                return 'page-meeting-meeting';
             }
 
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingMeeting'
                     },
                 };
             }
@@ -63,13 +63,13 @@
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('meetingProjectGetData')
-                Nylon.dispatch('meetingProjectGetGroup')
-                Nylon.dispatch('meetingProjectGetLevel')
+                Nylon.dispatch('meetingMeetingGetData')
+                // Nylon.dispatch('meetingMeetingGetGroup')
+                // Nylon.dispatch('meetingMeetingGetLevel')
             }
 
         }
 
-        window.customElements.define(pageMeetingProject.is, pageMeetingProject);
+        window.customElements.define(pageMeetingMeeting.is, pageMeetingMeeting);
     </script>
 </dom-module>

@@ -14,10 +14,10 @@
 
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-subproject-i18n.html">
+<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 
 
-<dom-module id="page-meeting-list-subproject">
+<dom-module id="page-meeting-list-module">
     <template>
         <style include="shared-styles">
              :host {
@@ -60,13 +60,13 @@
     </template>
 
     <script>
-        class pageMeetingListSubproject extends ReduxMixin(Polymer.Element) {
-            static get is() { return 'page-meeting-list-subproject'; }
+        class pageMeetingListModule extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-meeting-list-module'; }
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting'
+                        statePath: 'i18n.pageMeetingModule'
                     },
                     data: {
                         type: Object,
@@ -105,6 +105,6 @@
 
 
         }
-        window.customElements.define(pageMeetingListSubproject.is, pageMeetingListSubproject);
+        window.customElements.define(pageMeetingListModule.is, pageMeetingListModule);
     </script>
 </dom-module>
