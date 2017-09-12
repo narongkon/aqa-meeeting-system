@@ -1,4 +1,4 @@
-exports.get_meeting = (req, res) => {
+exports.getMeeting = (req, res) => {
   const r = req.r;
   r.table('meeting').get(req.params.id)
     .run()
@@ -10,9 +10,9 @@ exports.get_meeting = (req, res) => {
     })
 }
 
-exports.get_region = (req, res) => {
+exports.getProvince = (req, res) => {
   const r = req.r;
-  r.table('subproject').filter({ project_id: req.params.id })
+  r.db('expert').table('province')
     .coerceTo('array')
     .run()
     .then((result) => {

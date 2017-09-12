@@ -75,10 +75,6 @@
                 }
             }
 
-            _selectData(e) {
-                Nylon.dispatch('view2SelectData', e.model.item.id)
-            }
-
             _delData(e) {
                 Nylon.confirm({
                     status: 'waring',
@@ -92,7 +88,7 @@
             }
 
             _openPanelRight() {
-                Nylon.$['page-meeting-subproject'].$.manage_subproject.$.pr.open()
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
             }
 
             _index(i) {

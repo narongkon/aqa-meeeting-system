@@ -1,5 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
- 
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
 
 <link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -11,6 +11,9 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="./nylon-datepicker.html">
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/page-meeting-module-i18n.html">
@@ -29,28 +32,16 @@
             <div slot="content">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="[[i18n.subproject_name]]" value="{{select.name}}"></paper-input>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-dropdown-menu label="[[i18n.zone]]" style="width: 100%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item>เหนือ</paper-item>
-                                <paper-item>ตะวันออก</paper-item>
-                                <paper-item>ตะวันออกเฉียงเหนือ</paper-item>
-                                <paper-item>กลาง</paper-item>
-                                <paper-item>ใต้</paper-item>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
+                        <paper-input label="[[i18n.subproject_name]]" value="{{data.module_name}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <paper-dropdown-menu label="[[i18n.province]]" style="width: 100%;">
                             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item>กระบี่</paper-item>
-                                <paper-item>กรุงเทพมหานคร</paper-item>
-                                <paper-item>กาญจนบุรี</paper-item>
-                                <paper-item>กาฬสินธุ์</paper-item>
+                                <dom-repeat items="{{province}}">
+                                    <template>
+                                        <paper-item value="[[item.id]]">[[item.province_th]]</paper-item>
+                                    </template>
+                                </dom-repeat>
                             </paper-listbox>
                         </paper-dropdown-menu>
                     </div>
@@ -60,33 +51,53 @@
                         <paper-input label="[[i18n.place]]" value="{{select.name}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-dropdown-menu label="[[i18n.day]]" style="width: 15%;">
+                        <paper-input label="[[i18n.place]]" value="{{select.name}}"></paper-input>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 0.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <label id="label1">จำนวนวัน</label>
+                        <paper-radio-group aria-labelledby="label1">
+                            <paper-radio-button name="a">วันเดียว</paper-radio-button>
+                            <paper-radio-button name="b">มากกว่า 1 วัน</paper-radio-button>
+                        </paper-radio-group>
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <label for="" style="width: 30%;">วันที่ &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <nylon-datepicker value="[[dataSelected.date_end]]" value-return="{{dataSelected.date_end}}"></nylon-datepicker>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <label for="" style="width: 30%;">ถึง &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <paper-dropdown-menu label="[[i18n.day]]" style="width: 10%;">
                             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item>1</paper-item>
-                                <paper-item>2</paper-item>
-                                <paper-item>3</paper-item>
-                                <paper-item>4</paper-item>
+                                <paper-item value="1">1</paper-item>
+                                <paper-item value="2">2</paper-item>
+                                <paper-item value="3">3</paper-item>
+                                <paper-item value="4">4</paper-item>
                             </paper-listbox>
                         </paper-dropdown-menu>
-                        <paper-dropdown-menu label="[[i18n.month]]" style="width: 40%;">
+                        <paper-dropdown-menu label="[[i18n.month]]" style="width: 30%;">
                             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item>มกราคม</paper-item>
-                                <paper-item>กุมภาพันธ์</paper-item>
-                                <paper-item>มีนาคม</paper-item>
-                                <paper-item>เมษายน</paper-item>
+                                <paper-item value="1">มกราคม</paper-item>
+                                <paper-item value="2">กุมภาพันธ์</paper-item>
+                                <paper-item value="3">มีนาคม</paper-item>
+                                <paper-item value="4">เมษายน</paper-item>
                             </paper-listbox>
                         </paper-dropdown-menu>
-                        <paper-dropdown-menu label="[[i18n.year]]" style="width: 40%;">
+                        <paper-dropdown-menu label="[[i18n.year]]" style="width: 30%;">
                             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item>2559</paper-item>
-                                <paper-item>2560</paper-item>
-                                <paper-item>2561</paper-item>
-                                <paper-item>2562</paper-item>
+                                <paper-item value="2016">2559</paper-item>
+                                <paper-item value="2017">2560</paper-item>
+                                <paper-item value="2018">2561</paper-item>
+                                <paper-item value="2019">2562</paper-item>
                             </paper-listbox>
                         </paper-dropdown-menu>
                     </div>
                 </div>
-
                 <div class="row" style="margin-top: 1.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <vaadin-upload id="upload"></vaadin-upload>
@@ -121,15 +132,40 @@
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeeting',
+                        statePath: 'i18n.pageMeetingModule',
                         observer: '_i18n'
                     },
+                    province: {
+                        type: Object,
+                        statePath: 'meeting_module.province'
+                    },
+                    data: {
+                        type: Object,
+                        value: {
+                            date_end_module: '',
+                            date_start_module: '',
+                            region_id: '',
+                            province_id: '',
+                            invite: [
+                                0
+                            ],
+                            meeting: {
+                                group_meeting_id: "",
+                                group_work_id: "",
+                                meeting_name: "",
+                                meeting_year: 0
+                            },
+                            module_name: "",
+                            module_place: "",
+                            module_address: ""
+                        }
+                    }
                 };
             }
 
             ready() {
                 super.ready();
-
+                console.log(this.data)
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
@@ -175,6 +211,10 @@
                         size: ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
                     }
                 };
+            }
+
+            _dropdown_region_change(e) {
+                console.log(this.data)
             }
 
 

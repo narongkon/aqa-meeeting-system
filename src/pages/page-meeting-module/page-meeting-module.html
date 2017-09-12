@@ -25,7 +25,7 @@
 
         <nylon-toolbar-selector>
             <app-toolbar>
-                <div main-title>[[project.project_name]] ประจำปี [[project.project_year]]</div>
+                <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
             </app-toolbar class="toolbar-header">
             <paper-tabs selected="0" scrollable>
                 <paper-tab>โครงการ</paper-tab>
@@ -52,10 +52,9 @@
                         type: Object,
                         statePath: 'i18n.pageMeetingModule'
                     },
-                    project: {
+                    meeting: {
                         type: Object,
-                        statePath: 'meeting_module.project',
-                        observer: '_ok'
+                        statePath: 'meeting_module.meeting'
                     }
                 };
             }
@@ -67,13 +66,8 @@
                 });
             }
 
-            _ok(e) {
-                console.log(e)
-            }
-
             nylonPagesActive() {
                 Nylon.dispatch('meetingModuleGetProject', this._params.id)
-                Nylon.dispatch('meetingModuleGetRegion')
                 Nylon.dispatch('meetingModuleGetProvince')
             }
 
