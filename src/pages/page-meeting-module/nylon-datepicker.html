@@ -30,6 +30,7 @@
     <!--<slot></slot>-->
     <div class="horizontal center layout">
       <!--<div class="flex">-->
+      <label>{{label}} &nbsp&nbsp&nbsp</label>
       <div class="flex-2">
         <vaadin-combo-box id="day" label="วันที่" no-label-float item-label-path="text" item-value-path="value" items="[[day]]" value="{{data.day}}">
           <template>
@@ -86,6 +87,10 @@
         attrForSelected: {
           type: String,
           value: 'name'
+        },
+        label: {
+          type: String,
+          value: 'วันที่'
         },
         data: {
           type: Object,

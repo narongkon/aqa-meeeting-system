@@ -12,7 +12,7 @@
 <link rel="import" href="./page-meeting-manage-module.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting-module-redux.html">
+<link rel="import" href="../../redux/meeting/module-redux.html">
 <link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 
 <dom-module id="page-meeting-module">
@@ -55,12 +55,16 @@
                     meeting: {
                         type: Object,
                         statePath: 'meeting_module.meeting'
+                    },
+                    _params: {
+                        type: Object
                     }
                 };
             }
 
             ready() {
                 super.ready();
+                console.log(this._params)
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });

@@ -11,7 +11,7 @@
 <link rel="import" href="./page-meeting-manage-meeting.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting-meeting-redux.html">
+<link rel="import" href="../../redux/meeting/meeting-redux.html">
 <link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
 
 <dom-module id="page-meeting-meeting">
@@ -64,8 +64,8 @@
 
             nylonPagesActive() {
                 Nylon.dispatch('meetingMeetingGetData')
-                // Nylon.dispatch('meetingMeetingGetGroup')
-                // Nylon.dispatch('meetingMeetingGetLevel')
+                Nylon.dispatch('meetingMeetingGetGroup')
+                Nylon.dispatch('meetingMeetingGetLevel')
             }
 
         }

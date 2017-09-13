@@ -24,7 +24,7 @@
         },
         meetingModuleGetProject: function (id) {
             return dispatch => {
-                axios.get(`/meeting_module/getMeeting/${id}`).then(
+                axios.get(`/meeting/module/getMeeting/${id}`).then(
                     res => {
                         dispatch({ type: 'MEETING_MODULE_GET_MEETING', payload: res.data })
                     }
@@ -33,12 +33,32 @@
         },
         meetingModuleGetProvince: function (id) {
             return dispatch => {
-                axios.get(`/meeting_module/getProvince`).then(
+                axios.get(`/meeting/module/getProvince`).then(
                     res => {
                         dispatch({ type: 'MEETING_MODULE_GET_PROVINCE', payload: res.data })
                     }
                 )
             }
+        },
+        meetingModuleAddData: function (data) {
+            var progress = Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.$.pc2.progress()
+            axios.post('/meeting/module', data).then(
+                res => {
+                    Nylon.dispatch('meetingMeetingGetData')
+                    progress(_ => {
+                        
+                        // Nylon.$['page-meeting-meeting'].$.list_meeting.dropdown = {group: 'all', level: 'all'}
+                        // Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pr.close()
+                        // Nylon.store.dispatch({ type: 'MEETING_MEETING_CLEAR_SELECT' })
+
+                        // Nylon.toast({
+                        //     msg: 'เพิ่มเสร็จสิ้น'
+                        // })
+                    })
+
+
+                }
+            )
         },
 
     })

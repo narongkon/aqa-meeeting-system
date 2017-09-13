@@ -22,3 +22,21 @@ exports.getProvince = (req, res) => {
       res.status(500).send(err);
     })
 }
+
+exports.add = (req, res) => {
+  const r = req.r;
+  var province = {};
+  r.db('expert').table('province').get(req.body.province_id)
+    .run()
+    .then((result) => {
+      res.json(result);
+      province = result;
+      req.body.province = province
+
+    })
+    .catch((err) => {
+      res.status(500).send(err.message);
+    })
+
+
+}

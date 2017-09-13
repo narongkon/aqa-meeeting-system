@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <paper-dropdown-menu label="[[i18n.province]]" style="width: 100%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.province_id}}">
                                 <dom-repeat items="{{province}}">
                                     <template>
                                         <paper-item value="[[item.id]]">[[item.province_th]]</paper-item>
@@ -48,17 +48,17 @@
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="[[i18n.place]]" value="{{select.name}}"></paper-input>
+                        <paper-input label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="[[i18n.place]]" value="{{select.name}}"></paper-input>
+                        <paper-input label="ที่อยู่" value="{{data.module_address}}"></paper-input>
                     </div>
                 </div>
 
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <label id="label1">จำนวนวัน</label>
-                        <paper-radio-group aria-labelledby="label1">
+                        <label>จำนวนวัน</label>
+                        <paper-radio-group selected="{{radio}}" on-click="_radio_change">
                             <paper-radio-button name="a">วันเดียว</paper-radio-button>
                             <paper-radio-button name="b">มากกว่า 1 วัน</paper-radio-button>
                         </paper-radio-group>
@@ -67,35 +67,16 @@
                 </div>
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <label for="" style="width: 30%;">วันที่ &nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <nylon-datepicker value="[[dataSelected.date_end]]" value-return="{{dataSelected.date_end}}"></nylon-datepicker>
+                        <nylon-datepicker label="เริ่มต้น" value="[[data.date_start_module]]" value-return="{{data.date_start_module}}"></nylon-datepicker>
                     </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6" id="date_end">
+
+                        <nylon-datepicker label="สิ้นสุด" value="[[data.date_end_module]]" value-return="{{data.date_end_module}}"></nylon-datepicker>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <label for="" style="width: 30%;">ถึง &nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <paper-dropdown-menu label="[[i18n.day]]" style="width: 10%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item value="1">1</paper-item>
-                                <paper-item value="2">2</paper-item>
-                                <paper-item value="3">3</paper-item>
-                                <paper-item value="4">4</paper-item>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
-                        <paper-dropdown-menu label="[[i18n.month]]" style="width: 30%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item value="1">มกราคม</paper-item>
-                                <paper-item value="2">กุมภาพันธ์</paper-item>
-                                <paper-item value="3">มีนาคม</paper-item>
-                                <paper-item value="4">เมษายน</paper-item>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
-                        <paper-dropdown-menu label="[[i18n.year]]" style="width: 30%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="1">
-                                <paper-item value="2016">2559</paper-item>
-                                <paper-item value="2017">2560</paper-item>
-                                <paper-item value="2018">2561</paper-item>
-                                <paper-item value="2019">2562</paper-item>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
+                        <paper-input label="จำนวนชั่วโมง" value="{{data.module_hours}}"></paper-input>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
@@ -142,30 +123,27 @@
                     data: {
                         type: Object,
                         value: {
-                            date_end_module: '',
-                            date_start_module: '',
-                            region_id: '',
-                            province_id: '',
-                            invite: [
-                                0
-                            ],
-                            meeting: {
-                                group_meeting_id: "",
-                                group_work_id: "",
-                                meeting_name: "",
-                                meeting_year: 0
-                            },
+                            date_end_module: "",
+                            date_start_module: "",
+                            province_id: "",
+                            invite: [],
+                            meeting: {},
                             module_name: "",
                             module_place: "",
-                            module_address: ""
+                            module_address: "",
+                            module_hours: ""
                         }
+                    },
+                    radio: {
+                        type: String,
+                        value: 'a'
                     }
                 };
             }
 
             ready() {
                 super.ready();
-                console.log(this.data)
+                this.$.date_end.style.visibility = "hidden";
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
@@ -213,12 +191,26 @@
                 };
             }
 
-            _dropdown_region_change(e) {
-                console.log(this.data)
+            _closePanelRight() {
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
             }
 
+            _radio_change() {
+                if (this.radio == 'a') {
+                    this.$.date_end.style.visibility = "hidden";
+                } else {
+                    this.$.date_end.style.visibility = "visible";
+                }
+            }
 
-
+            _saveData() {
+                console.log(this._params.id)
+                // if (!this.data.id || this.data.id == "") {
+                //     Nylon.dispatch('meetingModuleAddData', this.data)
+                // } else {
+                //     Nylon.dispatch('meetingModuleEditData', this.data)
+                // }
+            }
 
         }
 

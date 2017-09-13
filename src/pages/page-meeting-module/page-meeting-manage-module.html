@@ -36,7 +36,7 @@
             </nylon-toolbar-selector>
 
             <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
-                <div page-name="page-1"><page-meeting-setting-subproject></page-meeting-setting-subproject></div>
+                <div page-name="page-1"><page-meeting-setting-subproject id="setting_module"></page-meeting-setting-subproject></div>
                 <div page-name="page-2">Two</div>
                 <div page-name="page-3">Three</div>
                 <div page-name="fallback">
@@ -71,7 +71,7 @@
 
             ready() {
                 super.ready();
-
+                console.log(Nylon.$['page-meeting-module'])
             }
 
             _closePanelRight() {
