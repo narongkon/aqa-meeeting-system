@@ -7,7 +7,7 @@
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-meeting-invite">
+<dom-module id="page-meeting-participant">
     <template>
         <style include="shared-styles">
              :host {
@@ -22,7 +22,7 @@
             <div class="col-md-3">
                 <nylon-panel-card>
                     <div slot="content">
-                            จำนวนทั้งหมด 30 คน
+                            จำนวนทั้งหมด 50 คน
                     </div>
                 </nylon-panel-card>
             </div>
@@ -37,10 +37,10 @@
     </template>
 
     <script>
-        class pageMeetingInvite extends ReduxMixin(Polymer.Element) {
+        class pageMeetingParticipant extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-invite';
+                return 'page-meeting-participant';
             }
 
             static get properties() {
@@ -59,6 +59,6 @@
 
         }
 
-        window.customElements.define(pageMeetingInvite.is, pageMeetingInvite);
+        window.customElements.define(pageMeetingParticipant.is, pageMeetingParticipant);
     </script>
 </dom-module>

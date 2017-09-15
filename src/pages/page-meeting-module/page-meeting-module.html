@@ -33,7 +33,7 @@
         </nylon-toolbar-selector>
         <div class="container">
             <page-meeting-list-module id="list_module"></page-meeting-list-module>
-            <page-meeting-manage-module id="manage_module"></page-meeting-manage-module>
+            <page-meeting-manage-module _params="{{_params}}" id="manage_module"></page-meeting-manage-module>
         </div>
 
 
@@ -64,15 +64,15 @@
 
             ready() {
                 super.ready();
-                console.log(this._params)
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('meetingModuleGetProject', this._params.id)
-                Nylon.dispatch('meetingModuleGetProvince')
+                Nylon.dispatch('meetingModuleGetMeeting', this._params.id)
+                Nylon.dispatch('meetingModuleGetRegion')
+                Nylon.dispatch('meetingModuleGetData', this._params.id)
             }
 
         }

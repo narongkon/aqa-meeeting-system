@@ -1,9 +1,125 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="./flexbox-grid.html">
+<link rel="import" href="./nylon-cschatthai-font.html">
 
 <dom-module id="shared-styles">
   <template>
     <style include="flexbox-grid">
+       :root {
+
+
+        --font-size-default: .8em;
+        --font-size-large: calc(var(--font-size-default) * 1.25);
+        /*// ~20px*/
+        --font-size-small: calc(var(--font-size-default) * 0.85);
+        /*// ~14px*/
+        --font-size-h1: calc(var(--font-size-default) * 2.6);
+        /*// ~42px*/
+        --font-size-h2: calc(var(--font-size-default) * 2.15);
+        /*// ~34px*/
+        --font-size-h3: calc(var(--font-size-default) * 1.7);
+        /*// ~27px*/
+        --font-size-h4: calc(var(--font-size-default) * 1.25);
+        /*// ~20px*/
+        --font-size-h5: var(--font-size-default);
+        /*// ~16px*/
+        --font-size-h6: var(--font-size-small);
+        /*// ~14px*/
+        --nylon-font-family: {
+          font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+        --nylon-font-family-bone: {
+          font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+          font-weight: bold;
+          -webkit-font-smoothing: antialiased;
+        }
+        --nylon-margin: {
+          margin: 1px;
+        }
+      }
+
+      paper-input {
+        --paper-input-container-input: {
+          font-size: var(--font-size-h4);
+          @apply --nylon-font-family;
+        }
+        --paper-input-container-disabled: {
+          opacity: 1;
+        }
+        --paper-input-container-label: {
+          color: var(--paper-input-label-color-success);
+        }
+        --paper-input-container-underline: {
+          border-bottom: var(--paper-input-border-success);
+        }
+        --paper-input-container-underline-disabled: {
+          display: none;
+        }
+        --paper-input-container-label-floating: {
+          font-size: var(--font-size-h4);
+          @apply --nylon-font-family-bone;
+        }
+      }
+
+      vaadin-combo-box {
+        --paper-input-container-input: {
+          font-size: var(--font-size-h4);
+          @apply --nylon-font-family;
+        }
+        --paper-input-container-disabled: {
+          opacity: 1;
+        }
+        --paper-input-container-label: {
+          color: var(--paper-input-label-color-success);
+        }
+        --paper-input-container-underline: {
+          border-bottom: var(--paper-input-border-success);
+        }
+        --paper-input-container-underline-disabled: {
+          display: none;
+        }
+        --paper-input-container-label-floating: {
+          font-size: var(--font-size-h4);
+          @apply --nylon-font-family-bone;
+        }
+      }
+
+      .nylon-ex-large {
+        font-size: calc(var(--font-size-default) * 2);
+        padding: 14px 16px 14px 16px;
+        margin: var(--nylon-margin);
+        @apply --nylon-font-family;
+      }
+
+      .nylon-large {
+        font-size: var(--font-size-h3);
+        padding: 10px 16px 10px 16px;
+        margin: var(--nylon-margin);
+        @apply --nylon-font-family;
+      }
+
+      .nylon-default {
+        font-size: var(--font-size-h5);
+        padding: 6px 12px 6px 12px;
+        margin: var(--nylon-margin);
+        @apply --nylon-font-family;
+      }
+
+      .nylon-small {
+        font-size: var(--font-size-h5);
+        padding: 5px 10px 5px 10px;
+        margin: var(--nylon-margin);
+        @apply --nylon-font-family;
+      }
+
+      .nylon-ex-small {
+        font-size: var(--font-size-h6);
+        padding: 1px 8px 1px 8px;
+        margin: var(--nylon-margin);
+        @apply --nylon-font-family;
+      }
+
       .card {
         margin: 24px;
         padding: 16px;
@@ -32,31 +148,119 @@
       }
 
 
-      .nylon-toolbar-selector{
+      .nylon-toolbar-selector {
         background-color: #039BE5;
         color: #FFF;
       }
 
 
-      paper-button{
+      paper-button {
         height: 36px;
       }
-      paper-button.btn-primary{
+      /* --gl-danger-color: #d9534f;
+        --gl-disabled-color: #D5D8DC;  */
+
+      paper-button.btn-primary {
         background-color: #0388CA;
-        color:#FFF;
+        color: #FFF;
       }
 
-      paper-button.btn-success{
+      paper-button.btn-warning {
+        background-color: #f0ad4e;
+        color: #FFF;
+      }
+
+      paper-button.btn-danger {
+        background-color: #d9534f;
+        color: #FFF;
+      }
+
+      paper-button.btn-success {
         background-color: #28A745;
-        color:#FFF;
+        color: #FFF;
       }
 
-      paper-button.btn-default{
+      paper-button.btn-default {
         background-color: #FFF;
-        color:#707070;
+        color: #707070;
       }
 
+      paper-button.btn-primary[disabled],
+      paper-button.btn-danger[disabled],
+      paper-button.btn-warning[disabled],
+      paper-button.btn-default[disabled],
+      paper-button.btn-success[disabled] {
+        background-color: #eaeaea;
+        color: #a8a8a8;
+      }
 
+      vaadin-grid#material {
+        font-family: 'CSChatThaiUI', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+        --vaadin-grid-cell: {
+          padding: 0;
+        }
+        ;
+        --vaadin-grid-header-cell: {
+          min-height: calc(var(--font-size-default) * 4);
+          color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+          font-size: var(--font-size-h5);
+          font-weight: bold;
+          background-color: #F1F1F1;
+          padding: 5px 5px;
+          /*border-bottom: 1px solid red;*/
+          /*border: 0.5px solid rgba(0, 0, 0, var(--dark-secondary-opacity));*/
+        }
+        ;
+        --vaadin-grid-body-cell: {
+          /* min-height: calc(var(--font-size-default) * 5)48px; */
+          min-height: 40px;
+          font-size: var(--font-size-h5);
+          color: rgba(0, 0, 0, var(--dark-primary-opacity));
+          word-warp font-size: 17px;
+        }
+        ;
+        --vaadin-grid-footer-cell: {
+          min-height: calc(var(--font-size-default) * 4);
+          color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+          font-size: var(--font-size-h5);
+          font-weight: bold;
+          padding: 5px 5px;
+        }
+        ;
+        --vaadin-grid-body-row-hover-cell: {
+          background-color: var(--paper-grey-200);
+        }
+        ;
+        --vaadin-grid-body-row-selected-cell: {
+          background-color: var(--paper-grey-100);
+        }
+        ;
+        --vaadin-grid-focused-cell: {
+          box-shadow: none;
+          font-weight: bold;
+        }
+        ;
+      }
+
+      vaadin-grid#material .text-left {
+        text-align: left;
+        padding-right: 10px;
+      }
+
+      vaadin-grid#material .text-center {
+        text-align: center;
+      }
+
+      vaadin-grid#material .text-right {
+        text-align: right;
+        padding-right: 10px;
+      }
+
+      vaadin-grid#material .cursor {
+        cursor: pointer
+      }
     </style>
   </template>
 </dom-module>

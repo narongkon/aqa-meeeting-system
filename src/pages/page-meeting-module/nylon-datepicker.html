@@ -55,7 +55,7 @@
         <vaadin-combo-box id="month" l label="เดือน" no-label-float item-label-path="text" item-value-path="value" items="[[month]]"
           value="{{data.month}}">
           <template>
-            [[item.text]]
+
           </template>
         </vaadin-combo-box>
       </div>
@@ -108,7 +108,8 @@
         valueReturn: {
           type: String,
           value: '',
-          notify: true
+          notify: true,
+          observer: 'ad_change'
         },
         day: {
           type: Array,
@@ -221,6 +222,11 @@
             year: false
           }
         },
+        adChange: {
+          type: String,
+          value: '2017-01-01',
+          notify: true,
+        }
 
       },
       observers: [
@@ -242,6 +248,19 @@
         //   }
       },
 
+      ad_change(e) {
+
+        let str = e
+        let res = str.split("-")
+        let year = Number(res[0]) - 543
+        let month = res[1]
+        let day = res[2]
+        let date = year + "-" + month + "-" + day
+        if (res.length == 3 && res[0].length == 4) {
+          this.set('adChange', date)
+        }
+      },
+
       initDate(date) {
         if (date === '' || date === undefined) {
           // let dates = new Date().toISOString().split('T')[0]
@@ -254,7 +273,7 @@
           // console.log(date.split('-')[2]);
           this.set('data.day', date.split('-')[2])
           this.set('data.month', date.split('-')[1])
-          this.set('data.year', String(Number(date.split('-')[0]) + 000))
+          this.set('data.year', String(Number(date.split('-')[0]) + 000)) 
         }
         let yearSet = this.data.year - 000
         // console.log(yearSet);

@@ -28,9 +28,7 @@
 
 
     Nylon.addAction({
-        view2Con: function (arg1) {
-            return { type: arg1 }
-        },
+        
         meetingMeetingGetGroup: function () {
             return dispatch => {
                 axios.get('/meeting/meeting/group').then(
@@ -132,6 +130,7 @@
         },
         meetingMeetingAddData: function (data) {
             return dispatch => {
+                console.log(data)
                 var progress = Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pc2.progress()
                 axios.post('/meeting/meeting', data).then(
                     res => {

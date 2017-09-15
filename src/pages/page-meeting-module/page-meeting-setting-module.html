@@ -17,7 +17,6 @@
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/page-meeting-module-i18n.html">
-
 <link rel="import" href="../../layout/shared-styles.html">
 
 <dom-module id="page-meeting-setting-subproject">
@@ -32,14 +31,14 @@
             <div slot="content">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="[[i18n.subproject_name]]" value="{{data.module_name}}"></paper-input>
+                        <paper-input always-float-label label="[[i18n.subproject_name]]" value="{{data.module_name}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-dropdown-menu label="[[i18n.province]]" style="width: 100%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.province_id}}">
-                                <dom-repeat items="{{province}}">
+                        <paper-dropdown-menu always-float-label label="[[i18n.zone]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.region_id}}">
+                                <dom-repeat items="{{region}}">
                                     <template>
-                                        <paper-item value="[[item.id]]">[[item.province_th]]</paper-item>
+                                        <paper-item value="[[item.id]]">[[item.region_th]]</paper-item>
                                     </template>
                                 </dom-repeat>
                             </paper-listbox>
@@ -48,10 +47,10 @@
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
+                        <paper-input always-float-label label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="ที่อยู่" value="{{data.module_address}}"></paper-input>
+                        <paper-input always-float-label label="ที่อยู่" value="{{data.module_address}}"></paper-input>
                     </div>
                 </div>
 
@@ -67,16 +66,10 @@
                 </div>
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <nylon-datepicker label="เริ่มต้น" value="[[data.date_start_module]]" value-return="{{data.date_start_module}}"></nylon-datepicker>
+                        <nylon-datepicker label="เริ่มต้น" ad-change="{{data.date_start_module}}" value="{{date_start}}"></nylon-datepicker>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6" id="date_end">
-
-                        <nylon-datepicker label="สิ้นสุด" value="[[data.date_end_module]]" value-return="{{data.date_end_module}}"></nylon-datepicker>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 1.5cm;">
-                    <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input label="จำนวนชั่วโมง" value="{{data.module_hours}}"></paper-input>
+                        <nylon-datepicker label="สิ้นสุด" ad-change="{{data.date_end_module}}" value="{{date_end}}"></nylon-datepicker>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
@@ -116,37 +109,60 @@
                         statePath: 'i18n.pageMeetingModule',
                         observer: '_i18n'
                     },
-                    province: {
+                    region: {
                         type: Object,
-                        statePath: 'meeting_module.province'
+                        statePath: 'meeting_module.region'
                     },
                     data: {
                         type: Object,
-                        value: {
-                            date_end_module: "",
-                            date_start_module: "",
-                            province_id: "",
-                            invite: [],
-                            meeting: {},
-                            module_name: "",
-                            module_place: "",
-                            module_address: "",
-                            module_hours: ""
-                        }
+                        statePath: 'meeting_module.select',
+                        observer: '_data_change'
                     },
                     radio: {
                         type: String,
                         value: 'a'
+                    },
+                    _params: {
+                        type: Object
+                    },
+                    date_start: {
+                        type: String
+                    },
+                    date_end: {
+                        type: String
                     }
                 };
             }
 
             ready() {
                 super.ready();
+                this.set('data.meeting_id', this._params.id)
                 this.$.date_end.style.visibility = "hidden";
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
+            }
+
+            _data_change(e) {
+                let date_start = this.xxx(e.date_start_module)
+                this.set('date_start', date_start)
+                let date_end = this.xxx(e.date_end_module)
+                this.set('date_end', date_end)
+
+                if (date_start == date_end) {
+                    this.set('radio', 'a')
+                    this.$.date_end.style.visibility = "hidden";
+                } else {
+                    this.set('radio', 'b')
+                    this.$.date_end.style.visibility = "visible";
+                }
+            }
+
+            xxx(data) {
+                let date = new Date(Date.parse(data))
+                let new_date = date.getFullYear() + 543 + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + date.getDate()).slice(-2);
+                return new_date
             }
 
             _i18n(e) {
@@ -204,12 +220,17 @@
             }
 
             _saveData() {
-                console.log(this._params.id)
-                // if (!this.data.id || this.data.id == "") {
-                //     Nylon.dispatch('meetingModuleAddData', this.data)
-                // } else {
-                //     Nylon.dispatch('meetingModuleEditData', this.data)
-                // }
+                this.set('data.meeting_id', this._params.id)
+                if (this.radio == 'a') {
+                    this.set("data.date_end_module", this.data.date_start_module)
+                }
+
+
+                if (!this.data.id || this.data.id == "") {
+                    Nylon.dispatch('meetingModuleAddData', this.data)
+                } else {
+                    Nylon.dispatch('meetingModuleEditData', this.data)
+                }
             }
 
         }
