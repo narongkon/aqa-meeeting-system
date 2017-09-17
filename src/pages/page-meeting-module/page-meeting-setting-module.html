@@ -13,8 +13,8 @@
 <link rel="import" href="../../../bower_components/vaadin-upload/vaadin-upload.html">
 <link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
-<link rel="import" href="./nylon-datepicker.html">
-
+<!-- <link rel="import" href="./nylon-datepicker.html"> -->
+<link rel="import" href="../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
@@ -24,6 +24,11 @@
         <style include="shared-styles">
              :host {
                 display: block
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
             }
         </style>
 
@@ -57,7 +62,7 @@
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <label>จำนวนวัน</label>
-                        <paper-radio-group selected="{{radio}}" on-click="_radio_change">
+                        <paper-radio-group selected="{{radio}}" on-click="_radio_change" class "font">
                             <paper-radio-button name="a">วันเดียว</paper-radio-button>
                             <paper-radio-button name="b">มากกว่า 1 วัน</paper-radio-button>
                         </paper-radio-group>
@@ -66,10 +71,12 @@
                 </div>
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <nylon-datepicker label="เริ่มต้น" ad-change="{{data.date_start_module}}" value="{{date_start}}"></nylon-datepicker>
+                        <vaadin-date-picker id="start" label="เริ่มต้น" value="{{data.date_start_module}}"></vaadin-date-picker>
+                        <!-- <nylon-datepicker label="เริ่มต้น" ad-change="{{data.date_start_module}}" value="{{date_start}}"></nylon-datepicker> -->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6" id="date_end">
-                        <nylon-datepicker label="สิ้นสุด" ad-change="{{data.date_end_module}}" value="{{date_end}}"></nylon-datepicker>
+                        <vaadin-date-picker id="end" label="สิ้นสุด" value="{{data.date_end_module}}"></vaadin-date-picker>
+                        <!-- <nylon-datepicker label="สิ้นสุด" ad-change="{{data.date_end_module}}" value="{{date_end}}"></nylon-datepicker> -->
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
@@ -82,10 +89,10 @@
 
             <app-toolbar slot="footer">
                 <div main-title></div>
-                <paper-button raised on-click="_closePanelRight">
+                <paper-button raised on-click="_closePanelRight" class="font">
                     <iron-icon icon="clear"></iron-icon>&nbsp;&nbsp;[[i18n.cancel]]
                 </paper-button>
-                <paper-button raised class="btn-success" on-click="_saveData">
+                <paper-button raised class="btn-success font" on-click="_saveData">
                     <iron-icon icon="check"></iron-icon>&nbsp;&nbsp;[[i18n.save]]
                 </paper-button>
             </app-toolbar>
@@ -124,12 +131,6 @@
                     },
                     _params: {
                         type: Object
-                    },
-                    date_start: {
-                        type: String
-                    },
-                    date_end: {
-                        type: String
                     }
                 };
             }
@@ -144,25 +145,14 @@
             }
 
             _data_change(e) {
-                let date_start = this.xxx(e.date_start_module)
-                this.set('date_start', date_start)
-                let date_end = this.xxx(e.date_end_module)
-                this.set('date_end', date_end)
 
-                if (date_start == date_end) {
+                if (e.date_start_module == e.date_end_module) {
                     this.set('radio', 'a')
                     this.$.date_end.style.visibility = "hidden";
                 } else {
                     this.set('radio', 'b')
                     this.$.date_end.style.visibility = "visible";
                 }
-            }
-
-            xxx(data) {
-                let date = new Date(Date.parse(data))
-                let new_date = date.getFullYear() + 543 + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
-                    ("0" + date.getDate()).slice(-2);
-                return new_date
             }
 
             _i18n(e) {

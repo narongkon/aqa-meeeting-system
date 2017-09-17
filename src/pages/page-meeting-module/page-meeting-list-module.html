@@ -23,12 +23,17 @@
              :host {
                 display: block;
             }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
         </style>
 
         <nylon-panel-card id="pc1">
             <app-toolbar slot="header">
                 <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
-                <paper-button raised class="btn-primary" on-click="_openPanelRight">
+                <paper-button raised class="btn-primary font" on-click="_openPanelRight">
                     <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;[[i18n.add]]
                 </paper-button>
             </app-toolbar>
@@ -42,9 +47,9 @@
                     <template> [[item.module_name]]</template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
-                        <template class="header"> [[i18n.zone]] </template>
-                        <template> [[item.region.region_th]]</template>
-                    </vaadin-grid-column>
+                    <template class="header"> [[i18n.zone]] </template>
+                    <template> [[item.region.region_th]]</template>
+                </vaadin-grid-column>
                 <vaadin-grid-column>
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
@@ -96,12 +101,12 @@
             _openPanelRight() {
                 Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
                 Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.data = {};
-                Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.date_start = "2560-01-01"
+                Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.date_start = "2017-01-01"
             }
 
             _selectData(e) {
                 Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
-                Nylon.dispatch('meetingModuleSelectParticipant', e.model.item.id)
+                // Nylon.dispatch('meetingModuleSelectParticipant', e.model.item.id)
             }
 
             _index(i) {

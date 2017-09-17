@@ -114,15 +114,48 @@ exports.add = (req, res) => {
 }
 
 exports.edit = (req, res) => {
-  const r = req.r;
+  const r = req.r
+  let meeting_data = {}
+  console.log('edit', req.body)
   req.body = Object.assign(req.body, {
     meeting_year: Number(req.body.meeting_year),
     meeting_hours: Number(req.body.meeting_hours)
   })
-  r.table('meeting').get(req.body.id).update(r.expr(req.body).without('id', 'index'))
+  r.table('meeting').get(req.body.id).update(req.body)
     .run()
     .then((result) => {
-      res.json(result);
+      // res.json(result);
+
+      r.table('meeting').get(req.body.id)
+        .run()
+        .then((result) => {
+          // res.json(result);
+          meeting_data = result
+
+          r.table('module').filter({ meeting_id: req.body.id }).update({ meeting: meeting_data })
+            .run()
+            .then((result) => {
+              // res.json(result);
+
+              r.table('participant').filter({ meeting_id: req.body.id }).update({ meeting: meeting_data })
+                .run()
+                .then((result) => {
+                  res.json(result);
+                })
+                .catch((err) => {
+                  res.status(500).send(err.message);
+                })
+
+            })
+            .catch((err) => {
+              res.status(500).send(err.message);
+            })
+
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        })
+
     })
     .catch((err) => {
       res.status(500).send(err.message);
@@ -134,7 +167,23 @@ exports.del = (req, res) => {
   r.table('meeting').get(req.params.id).delete()
     .run()
     .then((result) => {
-      res.json(result);
+      // res.json(result);
+      r.table('module').filter({ meeting_id: req.params.id }).delete()
+        .run()
+        .then((result) => {
+          // res.json(result);
+          r.table('participant').filter({ meeting_id: req.params.id }).delete()
+            .run()
+            .then((result) => {
+              res.json(result);
+            })
+            .catch((err) => {
+              res.status(500).send(err.message);
+            })
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        })
     })
     .catch((err) => {
       res.status(500).send(err.message);

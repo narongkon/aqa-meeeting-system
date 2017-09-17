@@ -49,13 +49,14 @@
         meetingModuleAddData: function (data) {
             var progress = Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
+
+                console.log(data);
                 axios.post('/meeting/module', data).then(
                     res => {
                         Nylon.dispatch('meetingModuleGetData', data.meeting_id)
                         progress(_ => {
 
                             Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
-                            Nylon.store.dispatch({ type: 'MEETING_MEETING_CLEAR_SELECT' })
 
                             Nylon.toast({
                                 msg: 'เพิ่มเสร็จสิ้น'
@@ -83,6 +84,12 @@
             return dispatch => {
                 axios.get(`/meeting/module/selectData/${id}`).then(
                     res => {
+
+                        var date_start = res.data.date_start_module.split("T");
+                        res.data.date_start_module = date_start[0]
+                        var date_end = res.data.date_end_module.split("T");
+                        res.data.date_end_module = date_end[0]
+
                         dispatch({ type: 'MEETING_MODULE_SELECT_DATA', payload: res.data })
                         Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
                     }
@@ -107,7 +114,6 @@
                         progress(_ => {
 
                             Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
-                            Nylon.store.dispatch({ type: 'MEETING_MEETING_CLEAR_SELECT' })
 
                             Nylon.toast({
                                 msg: 'แก้ไขเสร็จสิ้น'
@@ -122,7 +128,7 @@
             return dispatch => {
                 axios.get(`/meeting/module/getParticipant/${id}`).then(
                     res => {
-                        
+
                     }
                 )
             }

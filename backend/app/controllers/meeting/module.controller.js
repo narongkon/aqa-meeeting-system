@@ -40,7 +40,7 @@ exports.add = (req, res) => {
   const r = req.r;
   let meeting_data = {}
   let module_data = {}
-  let participant_data ={}
+  let participant_data = {}
   r.db('expert').table('region').get(req.body.region_id)
     .run()
     .then((result) => {
@@ -69,8 +69,18 @@ exports.add = (req, res) => {
                 .then((result) => {
                   module_data = result
 
-                  r.db('aqa_expert').table('profile').filter({ properties: true, meeting: false, type_assessor: { group_work_id: meeting_data.group_work_id } })
-                    .pluck(['taxno', 'basic', 'address', 'id', 'type_assessor'])
+                  r.db('aqa_expert').table('profile')
+                    .getAll(meeting_data.group_work_id, { index: 'group_work_id' })
+                    .pluck('zone', 'taxno', 'basic', 'address', 'id', 'type_assessor', 'properties')
+                    .filter(function (f) {
+                      return f('zone').contains(function (c) {
+                        return c('region_id').eq(req.body.region_id)
+                      })
+
+                    })
+                    .filter({ properties: false })
+                    // r.db('aqa_expert').table('profile').filter({ properties: true, meeting: false, type_assessor: { group_work_id: meeting_data.group_work_id } })
+                    //   .pluck(['taxno', 'basic', 'address', 'id', 'type_assessor'])
                     .merge(
                     function (m) {
                       return {
@@ -92,17 +102,18 @@ exports.add = (req, res) => {
                     ).without(['basic', 'address', 'id', 'type_assessor'])
                     .run()
                     .then((result) => {
-                      
+
                       participant_data = result
+                      console.log('xxxxxxxxxxxxxxxxxxxxxxx',participant_data)
 
                       r.table('participant').insert(participant_data)
-                      .run()
-                      .then((result) => {
-                        res.json(result);
-                      })
-                      .catch((err) => {
-                        res.status(500).send(err.message);
-                      })
+                        .run()
+                        .then((result) => {
+                          res.json(result);
+                        })
+                        .catch((err) => {
+                          res.status(500).send(err.message);
+                        })
 
                     })
                     .catch((err) => {
@@ -112,8 +123,6 @@ exports.add = (req, res) => {
 
 
                 })
-
-
                 .catch((err) => {
                   res.status(500).send(err.message);
                 })
@@ -140,9 +149,18 @@ exports.add = (req, res) => {
 exports.select = (req, res) => {
   const r = req.r;
   r.table('module').get(req.params.id)
+    .merge(
+    function (m) {
+      return {
+        date_start_module: m('date_start_module').toISO8601(),
+        date_end_module: m('date_end_module').toISO8601()
+      }
+    })
+
     .run()
     .then((result) => {
       res.json(result);
+      console.log(result)
     })
     .catch((err) => {
       res.status(500).send(err.message);
@@ -154,18 +172,25 @@ exports.del = (req, res) => {
   r.table('module').get(req.params.id).delete()
     .run()
     .then((result) => {
-      res.json(result);
+      // res.json(result);
+
+      r.table('participant').filter({ module_id: req.params.id }).delete()
+        .run()
+        .then((result) => {
+          res.json(result);
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        })
+
     })
     .catch((err) => {
       res.status(500).send(err.message);
     })
 }
 
-
-
 exports.edit = (req, res) => {
   const r = req.r;
-
   r.db('expert').table('region').get(req.body.region_id)
     .run()
     .then((result) => {
@@ -185,8 +210,29 @@ exports.edit = (req, res) => {
           r.table('module').update(req.body)
             .run()
             .then((result) => {
-              res.json(result);
-              console.log(result.generated_keys[0])
+              // res.json(result);
+
+              r.table('module').get(req.body.id)
+                .run()
+                .then((result) => {
+                  // res.json(result);
+
+                  r.table('participant').filter({ module_id: req.body.id }).update({ module: result })
+                    .run()
+                    .then((result) => {
+                      res.json(result);
+                    })
+                    .catch((err) => {
+                      res.status(500).send(err.message);
+                    })
+
+
+                })
+                .catch((err) => {
+                  res.status(500).send(err.message);
+                })
+
+
             })
             .catch((err) => {
               res.status(500).send(err.message);

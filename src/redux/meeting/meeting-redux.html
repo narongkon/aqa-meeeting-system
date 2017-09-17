@@ -172,16 +172,15 @@
         },
         meetingMeetingEditData: function (select) {
             var progress = Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pc2.progress()
-
+            console.log('edit', select)
             return dispatch => {
                 axios.put('/meeting/meeting', select).then(
                     res => {
-
+                        Nylon.dispatch('meetingMeetingGetData')
                         progress(() => {
-                            Nylon.dispatch('meetingMeetingGetData')
+                            
                             Nylon.$['page-meeting-meeting'].$.list_meeting.dropdown = {group: 'all', level: 'all'}
                             Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pr.close()
-                            Nylon.store.dispatch({ type: 'MEETING_MEETING_CLEAR_SELECT' })
 
                             Nylon.toast({
                                 msg: 'แก้ไขเสร็จสิ้น'

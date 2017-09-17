@@ -21,6 +21,11 @@
              :host {
                 display: block
             }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
         </style>
 
         <nylon-toolbar-selector>
@@ -28,7 +33,7 @@
                 <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
             </app-toolbar class="toolbar-header">
             <paper-tabs selected="0" scrollable>
-                <paper-tab>โครงการ</paper-tab>
+                <paper-tab class="font">โครงการ</paper-tab>
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">

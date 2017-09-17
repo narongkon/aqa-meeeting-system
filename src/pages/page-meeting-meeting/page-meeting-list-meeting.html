@@ -59,7 +59,7 @@
                 </paper-button>
             </app-toolbar>
             <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
-                <vaadin-grid-column width="50px" flex-grow="0">
+                <vaadin-grid-column width="80px" flex-grow="0">
                     <template class="header"></template>
                     <template> [[_index(index)]] </template>
                 </vaadin-grid-column>
@@ -69,13 +69,13 @@
                         <div><a href="meeting-module/[[item.id]]">[[item.meeting_name]]</a></div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column width="80px" flex-grow="0">
+                <vaadin-grid-column width="100px" flex-grow="0">
                     <template class="header"> [[i18n.type]]</template>
                     <template>
                         <div>[[item.meeting_type]]</div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
+                <vaadin-grid-column width="220px" flex-grow="0">
                     <template class="header">[[i18n.group]]</template>
                     <template>
                         <div>[[item.group_meeting_name]]</div>
@@ -93,7 +93,7 @@
                         <div>[[item.meeting_year]]</div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
+                <vaadin-grid-column width="200px" flex-grow="0">
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>

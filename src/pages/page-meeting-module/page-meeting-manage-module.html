@@ -22,22 +22,33 @@
              :host {
                 display: block
             }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
         </style>
 
 
         <nylon-panel-right id="pr" title="[[i18n.manage]]">
             <nylon-toolbar-selector slot="header">
                 <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
-                    <paper-tab page-name="page-1">[[i18n.setting]]</paper-tab>
-                    <paper-tab page-name="page-2">Invite</paper-tab>
-                    <paper-tab page-name="page-3">Participant</paper-tab>
+                    <paper-tab class="font" page-name="page-1">[[i18n.setting]]</paper-tab>
+                    <paper-tab class="font" page-name="page-2">Invite</paper-tab>
+                    <paper-tab class="font" page-name="page-3">Participant</paper-tab>
                 </paper-tabs>
             </nylon-toolbar-selector>
 
             <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
-                <div page-name="page-1"><page-meeting-setting-subproject _params="{{_params}}" id="setting_module"></page-meeting-setting-subproject></div>
-                <div page-name="page-2"><page-meeting-invite></page-meeting-invite></div>
-                <div page-name="page-3"><page-meeting-participant></page-meeting-participant></div>
+                <div page-name="page-1">
+                    <page-meeting-setting-subproject _params="{{_params}}" id="setting_module"></page-meeting-setting-subproject>
+                </div>
+                <div page-name="page-2">
+                    <page-meeting-invite></page-meeting-invite>
+                </div>
+                <div page-name="page-3">
+                    <page-meeting-participant></page-meeting-participant>
+                </div>
                 <div page-name="fallback">
                     Change pages by typing 'page-1', 'page-2', or 'page-3' in the input above.
                 </div>
