@@ -78,7 +78,7 @@ exports.add = (req, res) => {
                       })
 
                     })
-                    .filter({ properties: false })
+                    .filter({ properties: true })
                     // r.db('aqa_expert').table('profile').filter({ properties: true, meeting: false, type_assessor: { group_work_id: meeting_data.group_work_id } })
                     //   .pluck(['taxno', 'basic', 'address', 'id', 'type_assessor'])
                     .merge(
@@ -104,7 +104,6 @@ exports.add = (req, res) => {
                     .then((result) => {
 
                       participant_data = result
-                      console.log('xxxxxxxxxxxxxxxxxxxxxxx',participant_data)
 
                       r.table('participant').insert(participant_data)
                         .run()
@@ -160,7 +159,6 @@ exports.select = (req, res) => {
     .run()
     .then((result) => {
       res.json(result);
-      console.log(result)
     })
     .catch((err) => {
       res.status(500).send(err.message);
@@ -249,4 +247,45 @@ exports.edit = (req, res) => {
       res.status(500).send(err.message);
     })
 
+}
+
+
+exports.getInvite = (req, res) => {S
+  const r = req.r;
+  r.db('aqa_meeting').table('module').get(req.params.id).pluck(['id'])
+    .merge(
+    function (m) {
+      return {
+        count: r.db('aqa_meeting').table('participant').filter({ module_id: m('id') }).count(),
+        participant: r.db('aqa_meeting').table('participant').filter({ module_id: m('id') }).coerceTo('array')
+      }
+    }
+    )
+    .run()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    })
+}
+
+exports.getParticipant = (req, res) => {
+  const r = req.r;
+  r.db('aqa_meeting').table('module').get(req.params.id).pluck(['id'])
+    .merge(
+    function (m) {
+      return {
+        count: r.db('aqa_meeting').table('participant').filter({ module_id: m('id'), email: true }).count(),
+        participant: r.db('aqa_meeting').table('participant').filter({ module_id: m('id'), email: true }).coerceTo('array')
+      }
+    }
+    )
+    .run()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    })
 }

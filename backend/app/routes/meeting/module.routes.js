@@ -8,6 +8,8 @@ module.exports = function (app) {
     app.post('/',meeting.add)
     app.put('/',meeting.edit)
     app.delete('/:id',meeting.del)
-    
+
+    app.get('/getInvite/:id', meeting.getInvite)
+    app.get('/getParticipant/:id', meeting.getParticipant)
 }
 

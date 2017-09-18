@@ -1,0 +1,197 @@
+<script>
+    Nylon.addReducer('meeting_expenses', function (state, action) {
+        state = state || {
+            select: {}
+        }
+
+        switch (action.type) {
+            case 'MEETING_EXPENSES_GET_DATA':
+                state.data = action.payload
+                return state
+            case 'MEETING_EXPENSES_GET_GROUP':
+                state.group = action.payload
+                return state
+            case 'MEETING_EXPENSES_SELECT_DATA':
+                state.select = action.payload
+                return state
+            case 'MEETING_EXPENSES_CLEAR_SELECT':
+                state.select = {}
+                return state
+            case 'MEETING_EXPENSES_GET_LEVEL':
+                state.level = action.payload
+                return state
+            default:
+                return state
+        }
+        return state
+    })
+
+
+    Nylon.addAction({
+
+        meetingExpensesGetGroup: function () {
+            return dispatch => {
+                axios.get('/meeting/expenses/group').then(
+                    res => {
+                        dispatch({ type: 'MEETING_EXPENSES_GET_GROUP', payload: res.data })
+                    }
+                )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting'].$.list_meeting.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingExpensesGetLevel: function () {
+
+            return dispatch => {
+                axios.get('/meeting/expenses/level').then(
+                    res => {
+                        dispatch({ type: 'MEETING_EXPENSES_GET_LEVEL', payload: res.data })
+                    }
+                )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting'].$.list_meeting.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingExpensesGetData: function () {
+
+            var progress = Nylon.$['page-meeting-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
+
+            return dispatch => {
+                axios.get('/meeting/expenses')
+                    .then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_EXPENSES_GET_DATA', payload: res.data })
+                        })
+                    }
+                    )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting-expenses'].$.list_meeting.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        meetingExpensesGetDataByGroup: function (id) {
+
+            return dispatch => {
+                var progress = Nylon.$['page-meeting-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
+                axios.get(`/meeting/expenses/bygroup/${id}`).then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_EXPENSES_GET_DATA', payload: res.data })
+                        })
+                    }
+                )
+            }
+        },
+        meetingExpensesGetDataByLevel: function (data) {
+
+            return dispatch => {
+                var progress = Nylon.$['page-meeting-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
+
+                axios.get(`/meeting/expenses/bylevel/${data.group}/${data.level}`).then(
+                    res => {
+                        progress(() => {
+                            dispatch({ type: 'MEETING_EXPENSES_GET_DATA', payload: res.data })
+                        })
+                    }
+                )
+            }
+        },
+        meetingExpensesAddData: function (data) {
+            return dispatch => {
+                console.log(data)
+                var progress = Nylon.$['page-meeting-expenses'].$.manage_meeting.$.pc2.progress()
+                axios.post('/meeting/expenses', data).then(
+                    res => {
+                        Nylon.dispatch('meetingExpensesGetData')
+                        progress(_ => {
+
+                            Nylon.$['page-meeting-expenses'].$.list_meeting.dropdown = { group: 'all', level: 'all' }
+                            Nylon.$['page-meeting-expenses'].$.manage_meeting.$.pr.close()
+                            Nylon.store.dispatch({ type: 'MEETING_EXPENSES_CLEAR_SELECT' })
+
+                            Nylon.toast({
+                                msg: 'เพิ่มเสร็จสิ้น'
+                            })
+                        })
+
+
+                    }
+                )
+            }
+        },
+        meetingExpensesDelData: function (id) {
+            return dispatch => {
+                axios.delete(`/meeting/expenses/${id}`).then(
+                    res => {
+                        Nylon.dispatch('meetingExpensesGetData')
+                    }
+                )
+            }
+        },
+        meetingExpensesSelectData: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses/${id}`).then(
+                    res => {
+                        dispatch({ type: 'MEETING_EXPENSES_SELECT_DATA', payload: res.data })
+                        Nylon.$['page-meeting-expenses'].$.manage_meeting.$.pr.open()
+                    }
+                )
+            }
+        },
+        meetingExpensesEditData: function (select) {
+            var progress = Nylon.$['page-meeting-expenses'].$.manage_meeting.$.pc2.progress()
+            console.log('edit', select)
+            return dispatch => {
+                axios.put('/meeting/expenses', select).then(
+                    res => {
+                        Nylon.dispatch('meetingExpensesGetData')
+                        progress(() => {
+
+                            Nylon.$['page-meeting-expenses'].$.list_meeting.dropdown = { group: 'all', level: 'all' }
+                            Nylon.$['page-meeting-expenses'].$.manage_meeting.$.pr.close()
+
+                            Nylon.toast({
+                                msg: 'แก้ไขเสร็จสิ้น'
+                            })
+                        })
+
+                    }
+                )
+            }
+        }
+    })
+
+</script>

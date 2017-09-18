@@ -4,15 +4,14 @@
 <link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
 <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="./page-meeting-list-meeting.html">
-<link rel="import" href="./page-meeting-manage-meeting.html">
+<link rel="import" href="./page-meeting-expenses-list-meeting.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting/meeting-redux.html">
-<link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
+<link rel="import" href="../../redux/meeting/expenses-redux.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-meeting-meeting">
+
+<dom-module id="page-meeting-expenses">
     <template>
         <style include="shared-styles">
              :host {
@@ -29,8 +28,8 @@
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-meeting-list-meeting id="list_meeting"></page-meeting-list-meeting>
-            <page-meeting-manage-project id="manage_meeting"></page-meeting-manage-project>
+            <page-meeting-expenses-list-meeting id="list_meeting"></page-meeting-expenses-list-meeting>
+            <!-- <page-meeting-manage-project id="manage_meeting"></page-meeting-manage-project> -->
         </div>
 
 
@@ -40,14 +39,14 @@
         class pageMeetingMeeting extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-meeting';
+                return 'page-meeting-expenses';
             }
 
             static get properties() {
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeetingMeeting'
+                        statePath: 'i18n.pageMeetingExpenses'
                     },
                 };
             }
@@ -61,9 +60,9 @@
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('meetingMeetingGetData')
-                Nylon.dispatch('meetingMeetingGetGroup')
-                Nylon.dispatch('meetingMeetingGetLevel')
+                Nylon.dispatch('meetingExpensesGetData')
+                Nylon.dispatch('meetingExpensesGetGroup')
+                Nylon.dispatch('meetingExpensesGetLevel')
             }
 
         }

@@ -36,7 +36,7 @@
             <div slot="content">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input always-float-label label="[[i18n.subproject_name]]" value="{{data.module_name}}"></paper-input>
+                        <paper-input always-float-label label="[[i18n.name]]" value="{{data.module_name}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <paper-dropdown-menu always-float-label label="[[i18n.zone]]" style="width: 100%;">
@@ -55,27 +55,27 @@
                         <paper-input always-float-label label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-input always-float-label label="ที่อยู่" value="{{data.module_address}}"></paper-input>
+                        <paper-input always-float-label label="[[i18n.address]]" value="{{data.module_address}}"></paper-input>
                     </div>
                 </div>
 
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <label>จำนวนวัน</label>
+                        <div><label>[[i18n.number_days]]</label></div>
                         <paper-radio-group selected="{{radio}}" on-click="_radio_change" class "font">
-                            <paper-radio-button name="a">วันเดียว</paper-radio-button>
-                            <paper-radio-button name="b">มากกว่า 1 วัน</paper-radio-button>
+                            <paper-radio-button name="a">[[i18n.single_day]]</paper-radio-button>
+                            <paper-radio-button name="b">[[i18n.more_day]]</paper-radio-button>
                         </paper-radio-group>
 
                     </div>
                 </div>
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <vaadin-date-picker id="start" label="เริ่มต้น" value="{{data.date_start_module}}"></vaadin-date-picker>
+                        <vaadin-date-picker id="start" label="[[i18n.start]]" value="{{data.date_start_module}}"></vaadin-date-picker>
                         <!-- <nylon-datepicker label="เริ่มต้น" ad-change="{{data.date_start_module}}" value="{{date_start}}"></nylon-datepicker> -->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6" id="date_end">
-                        <vaadin-date-picker id="end" label="สิ้นสุด" value="{{data.date_end_module}}"></vaadin-date-picker>
+                        <vaadin-date-picker id="end" label="[[i18n.end]]" value="{{data.date_end_module}}"></vaadin-date-picker>
                         <!-- <nylon-datepicker label="สิ้นสุด" ad-change="{{data.date_end_module}}" value="{{date_end}}"></nylon-datepicker> -->
                     </div>
                 </div>

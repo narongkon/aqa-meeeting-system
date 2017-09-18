@@ -130,7 +130,6 @@
         },
         meetingMeetingAddData: function (data) {
             return dispatch => {
-                console.log(data)
                 var progress = Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pc2.progress()
                 axios.post('/meeting/meeting', data).then(
                     res => {
@@ -172,7 +171,6 @@
         },
         meetingMeetingEditData: function (select) {
             var progress = Nylon.$['page-meeting-meeting'].$.manage_meeting.$.pc2.progress()
-            console.log('edit', select)
             return dispatch => {
                 axios.put('/meeting/meeting', select).then(
                     res => {

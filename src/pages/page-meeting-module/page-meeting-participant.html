@@ -3,8 +3,12 @@
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../redux/meeting/module-redux.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
 <dom-module id="page-meeting-participant">
@@ -22,17 +26,45 @@
             <div class="col-md-3">
                 <nylon-panel-card>
                     <div slot="content">
-                            จำนวนทั้งหมด 50 คน
+                            จำนวนทั้งหมด [[participant.count]] คน
                     </div>
                 </nylon-panel-card>
             </div>
             <div class="col-md-9">
-                <nylon-panel-card>
-                    <div slot="content">
-                        เชิญ
-                    </div>
-                </nylon-panel-card>
-            </div>
+                    <nylon-panel-card>
+                        <div slot="content">
+                            <vaadin-grid items="{{participant.participant}}">
+                                <vaadin-grid-column>
+                                    <template class="header">First Name</template>
+                                    <template>
+                                        [[item.profile.basic.firstname_en]]
+                                    </template>
+                                </vaadin-grid-column>
+    
+                                <vaadin-grid-column>
+                                    <template class="header">Last Name</template>
+                                    <template>
+                                        [[item.profile.basic.lastname_en]]
+                                    </template>
+                                </vaadin-grid-column>
+    
+                                <vaadin-grid-column>
+                                    <template class="header">Email</template>
+                                    <template>
+                                        <div>[[item.profile.contract.email]]</div>
+                                    </template>
+                                </vaadin-grid-column>
+                                <vaadin-grid-column>
+                                    <template class="header">Manager</template>
+                                    <template>
+                                            <paper-icon-button icon="delete" on-click="_selectData"></paper-icon-button>
+                                    </template>
+                                </vaadin-grid-column>
+    
+                            </vaadin-grid>
+                        </div>
+                    </nylon-panel-card>
+                </div>
         </div>
     </template>
 
@@ -45,7 +77,10 @@
 
             static get properties() {
                 return {
-
+                    participant: {
+                        type: Object,
+                        statePath: 'meeting_module.participant'
+                    }
                 };
             }
 

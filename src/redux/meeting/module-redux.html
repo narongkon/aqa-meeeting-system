@@ -8,17 +8,29 @@
             case 'MEETING_MODULE_GET_MEETING':
                 state.meeting = action.payload
                 return state
+                break;
             case 'MEETING_MODULE_GET_REGION':
                 state.region = action.payload
                 return state
+                break;
             case 'MEETING_MODULE_GET_DATA':
                 state.data = action.payload
                 return state
+                break;
             case 'MEETING_MODULE_SELECT_DATA':
                 state.select = action.payload
                 return state
+                break;
+            case 'MEETING_MODULE_GET_INVITE':
+                state.invite = action.payload
+                break;
+            case 'MEETING_MODULE_GET_PARTICIPANT':
+                state.participant = action.payload
+                return state
+                break;
             default:
                 return state
+                break;
         }
         return state
     })
@@ -49,8 +61,6 @@
         meetingModuleAddData: function (data) {
             var progress = Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
-
-                console.log(data);
                 axios.post('/meeting/module', data).then(
                     res => {
                         Nylon.dispatch('meetingModuleGetData', data.meeting_id)
@@ -124,11 +134,20 @@
                 )
             }
         },
-        meetingModuleSelectParticipant: function (id) {
+        meetingModuleGetInvite: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/module/getInvite/${id}`).then(
+                    res => {
+                        dispatch({ type: 'MEETING_MODULE_GET_INVITE', payload: res.data })
+                    }
+                )
+            }
+        },
+        meetingModuleGetParticipant: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getParticipant/${id}`).then(
                     res => {
-
+                        dispatch({ type: 'MEETING_MODULE_GET_PARTICIPANT', payload: res.data })
                     }
                 )
             }

@@ -106,7 +106,8 @@
 
             _selectData(e) {
                 Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
-                // Nylon.dispatch('meetingModuleSelectParticipant', e.model.item.id)
+                Nylon.dispatch('meetingModuleGetInvite', e.model.item.id)
+                Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)
             }
 
             _index(i) {

@@ -34,8 +34,8 @@
             <nylon-toolbar-selector slot="header">
                 <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
                     <paper-tab class="font" page-name="page-1">[[i18n.setting]]</paper-tab>
-                    <paper-tab class="font" page-name="page-2">Invite</paper-tab>
-                    <paper-tab class="font" page-name="page-3">Participant</paper-tab>
+                    <paper-tab class="font" page-name="page-2">[[i18n.invite]]</paper-tab>
+                    <paper-tab class="font" page-name="page-3">[[i18n.participant]]</paper-tab>
                 </paper-tabs>
             </nylon-toolbar-selector>
 
@@ -88,18 +88,6 @@
 
             _closePanelRight() {
                 this.$.pr.close()
-            }
-
-            _saveData() {
-                if (!this.select.id || this.select.id == "") {
-                    Nylon.dispatch('view2AddData', this.select)
-                } else {
-                    Nylon.dispatch('view2EditData', this.select)
-                }
-            }
-
-            _delData(e) {
-                Nylon.dispatch('view2DelData', e.model.item.id)
             }
 
         }
