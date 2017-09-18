@@ -8,6 +8,7 @@
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="../../layout/shared-styles.html">
@@ -55,6 +56,7 @@
                     <template>
                         <div>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
+                            <paper-icon-button icon="social:people" on-click="_inviteData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
                     </template>
@@ -99,19 +101,33 @@
             }
 
             _openPanelRight() {
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_setting.style.display = ''
                 Nylon.$['page-meeting-module'].$.manage_module.$.tab_invite.style.display = 'none'
                 Nylon.$['page-meeting-module'].$.manage_module.$.tab_participant.style.display = 'none'
-                Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
+                Nylon.$['page-meeting-module'].$.manage_module.selected = "page-1"
                 Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.data = {};
                 Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.date_start = "2017-01-01"
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
             }
 
             _selectData(e) {
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_setting.style.display = ''
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_invite.style.display = 'none'
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_participant.style.display = 'none'
+                Nylon.$['page-meeting-module'].$.manage_module.selected = "page-1"
+                Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
+                
+            }
+
+            _inviteData(e) {
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_setting.style.display = 'none'
                 Nylon.$['page-meeting-module'].$.manage_module.$.tab_invite.style.display = ''
                 Nylon.$['page-meeting-module'].$.manage_module.$.tab_participant.style.display = ''
-                Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
+                Nylon.$['page-meeting-module'].$.manage_module.selected = "page-2"
                 Nylon.dispatch('meetingModuleGetInvite', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
             }
 
             _index(i) {

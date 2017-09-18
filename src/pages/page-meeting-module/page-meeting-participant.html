@@ -24,16 +24,16 @@
             }
         </style>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div slot="content">
                     จำนวนทั้งหมด [[participant.count]] คน
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <nylon-panel-card id="pc1">
                     <vaadin-grid items="{{participant.participant}}" slot="content" sub-slot="grid">
                         <vaadin-grid-column>
-                            <template class="header">First Name</template>
+                            <template class="header">&nbsp&nbspFirst Name</template>
                             <template>
                                 [[item.profile.basic.firstname_en]]
                             </template>
