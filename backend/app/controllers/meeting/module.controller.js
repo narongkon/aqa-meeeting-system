@@ -250,7 +250,7 @@ exports.edit = (req, res) => {
 }
 
 
-exports.getInvite = (req, res) => {S
+exports.getInvite = (req, res) => {
   const r = req.r;
   r.db('aqa_meeting').table('module').get(req.params.id).pluck(['id'])
     .merge(

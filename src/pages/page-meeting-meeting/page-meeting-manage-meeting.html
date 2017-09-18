@@ -153,7 +153,6 @@
                 if (!this.data.id || this.data.id == "") {
                     Nylon.dispatch('meetingMeetingAddData', this.data)
                 } else {
-                    console.log('edit', this.data)
                     Nylon.dispatch('meetingMeetingEditData', this.data)
                 }
             }

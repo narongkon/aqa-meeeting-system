@@ -17,6 +17,7 @@
              :host {
                 display: block
             }
+
             .font {
                 font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
                 -webkit-font-smoothing: antialiased;
@@ -24,47 +25,36 @@
         </style>
         <div class="row">
             <div class="col-md-3">
-                <nylon-panel-card>
-                    <div slot="content">
-                            จำนวนทั้งหมด [[participant.count]] คน
-                    </div>
-                </nylon-panel-card>
+                <div slot="content">
+                    จำนวนทั้งหมด [[participant.count]] คน
+                </div>
             </div>
             <div class="col-md-9">
-                    <nylon-panel-card>
-                        <div slot="content">
-                            <vaadin-grid items="{{participant.participant}}">
-                                <vaadin-grid-column>
-                                    <template class="header">First Name</template>
-                                    <template>
-                                        [[item.profile.basic.firstname_en]]
-                                    </template>
-                                </vaadin-grid-column>
-    
-                                <vaadin-grid-column>
-                                    <template class="header">Last Name</template>
-                                    <template>
-                                        [[item.profile.basic.lastname_en]]
-                                    </template>
-                                </vaadin-grid-column>
-    
-                                <vaadin-grid-column>
-                                    <template class="header">Email</template>
-                                    <template>
-                                        <div>[[item.profile.contract.email]]</div>
-                                    </template>
-                                </vaadin-grid-column>
-                                <vaadin-grid-column>
-                                    <template class="header">Manager</template>
-                                    <template>
-                                            <paper-icon-button icon="delete" on-click="_selectData"></paper-icon-button>
-                                    </template>
-                                </vaadin-grid-column>
-    
-                            </vaadin-grid>
-                        </div>
-                    </nylon-panel-card>
-                </div>
+                <nylon-panel-card id="pc1">
+                    <vaadin-grid items="{{participant.participant}}" slot="content" sub-slot="grid">
+                        <vaadin-grid-column>
+                            <template class="header">First Name</template>
+                            <template>
+                                [[item.profile.basic.firstname_en]]
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column>
+                            <template class="header">Last Name</template>
+                            <template>
+                                [[item.profile.basic.lastname_en]]
+                            </template>
+                        </vaadin-grid-column>
+
+                        <vaadin-grid-column>
+                            <template class="header">Email</template>
+                            <template>
+                                <div>[[item.profile.contract.email]]</div>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                </nylon-panel-card>
+            </div>
         </div>
     </template>
 

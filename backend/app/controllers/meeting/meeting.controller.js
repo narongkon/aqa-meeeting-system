@@ -97,7 +97,6 @@ exports.select = (req, res) => {
 
 exports.add = (req, res) => {
   const r = req.r;
-  console.log(req.body)
   req.body = Object.assign(req.body, {
     meeting_year: Number(req.body.meeting_year),
     meeting_hours: Number(req.body.meeting_hours)
@@ -116,7 +115,6 @@ exports.add = (req, res) => {
 exports.edit = (req, res) => {
   const r = req.r
   let meeting_data = {}
-  console.log('edit', req.body)
   req.body = Object.assign(req.body, {
     meeting_year: Number(req.body.meeting_year),
     meeting_hours: Number(req.body.meeting_hours)

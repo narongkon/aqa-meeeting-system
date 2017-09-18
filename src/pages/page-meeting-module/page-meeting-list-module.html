@@ -46,11 +46,11 @@
                     <template class="header"> [[i18n.name]] </template>
                     <template> [[item.module_name]]</template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
+                <vaadin-grid-column width="220px" flex-grow="0">
                     <template class="header"> [[i18n.zone]] </template>
                     <template> [[item.region.region_th]]</template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
+                <vaadin-grid-column width="220px" flex-grow="0">
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
@@ -99,12 +99,16 @@
             }
 
             _openPanelRight() {
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_invite.style.display = 'none'
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_participant.style.display = 'none'
                 Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
                 Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.data = {};
                 Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.date_start = "2017-01-01"
             }
 
             _selectData(e) {
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_invite.style.display = ''
+                Nylon.$['page-meeting-module'].$.manage_module.$.tab_participant.style.display = ''
                 Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetInvite', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)

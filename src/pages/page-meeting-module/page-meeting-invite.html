@@ -24,46 +24,41 @@
             }
         </style>
         <div class="row">
-            <div class="col-md-3">
-                <nylon-panel-card>
-                    <div slot="content">
-                        จำนวนทั้งหมด [[invite.count]] คน
-                    </div>
-                </nylon-panel-card>
+            <div class="col-md-2">
+                <div slot="content">
+                    จำนวนทั้งหมด [[invite.count]] คน
+                </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <nylon-panel-card>
-                    <div slot="content">
-                        <vaadin-grid items="{{invite.participant}}">
-                            <vaadin-grid-column>
-                                <template class="header">First Name</template>
-                                <template>
-                                    [[item.profile.basic.firstname_en]]
-                                </template>
-                            </vaadin-grid-column>
+                    <vaadin-grid items="{{invite.participant}}" slot="content" sub-slot="grid">
+                        <vaadin-grid-column>
+                            <template class="header">First Name</template>
+                            <template>
+                                [[item.profile.basic.firstname_en]]
+                            </template>
+                        </vaadin-grid-column>
 
-                            <vaadin-grid-column>
-                                <template class="header">Last Name</template>
-                                <template>
-                                    [[item.profile.basic.lastname_en]]
-                                </template>
-                            </vaadin-grid-column>
+                        <vaadin-grid-column>
+                            <template class="header">Last Name</template>
+                            <template>
+                                [[item.profile.basic.lastname_en]]
+                            </template>
+                        </vaadin-grid-column>
 
-                            <vaadin-grid-column>
-                                <template class="header">Email</template>
-                                <template>
-                                    <div>[[item.profile.contract.email]]</div>
-                                </template>
-                            </vaadin-grid-column>
-                            <vaadin-grid-column>
-                                <template class="header">Manager</template>
-                                <template>
-                                        <paper-icon-button icon="delete" on-click="_selectData"></paper-icon-button>
-                                </template>
-                            </vaadin-grid-column>
-
-                        </vaadin-grid>
-                    </div>
+                        <vaadin-grid-column>
+                            <template class="header">Email</template>
+                            <template>
+                                <div>[[item.profile.contract.email]]</div>
+                            </template>
+                        </vaadin-grid-column>
+                        <vaadin-grid-column>
+                            <template class="header">Manager</template>
+                            <template>
+                                <paper-icon-button icon="delete" on-click="_selectData"></paper-icon-button>
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
                 </nylon-panel-card>
             </div>
         </div>
