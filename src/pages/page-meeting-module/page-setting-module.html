@@ -19,7 +19,7 @@
 <link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-meeting-setting-subproject">
+<dom-module id="page-setting-subproject">
     <template>
         <style include="shared-styles">
              :host {
@@ -58,25 +58,14 @@
                         <paper-input always-float-label label="[[i18n.address]]" value="{{data.module_address}}"></paper-input>
                     </div>
                 </div>
-
-                <div class="row" style="margin-top: 0.5cm;">
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div><label>[[i18n.number_days]]</label></div>
-                        <paper-radio-group selected="{{radio}}" on-click="_radio_change" class "font">
-                            <paper-radio-button name="a">[[i18n.single_day]]</paper-radio-button>
-                            <paper-radio-button name="b">[[i18n.more_day]]</paper-radio-button>
-                        </paper-radio-group>
-
-                    </div>
-                </div>
                 <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
-                        <vaadin-date-picker id="start" label="[[i18n.start]]" value="{{data.date_start_module}}"></vaadin-date-picker>
-                        <!-- <nylon-datepicker label="เริ่มต้น" ad-change="{{data.date_start_module}}" value="{{date_start}}"></nylon-datepicker> -->
+                        <vaadin-date-picker label="[[i18n.start]]" value="{{data.date_start_module}}"></vaadin-date-picker>
+            
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6" id="date_end">
-                        <vaadin-date-picker id="end" label="[[i18n.end]]" value="{{data.date_end_module}}"></vaadin-date-picker>
-                        <!-- <nylon-datepicker label="สิ้นสุด" ad-change="{{data.date_end_module}}" value="{{date_end}}"></nylon-datepicker> -->
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <vaadin-date-picker label="[[i18n.end]]" value="{{data.date_end_module}}"></vaadin-date-picker>
+        
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.5cm;">
@@ -103,10 +92,10 @@
     </template>
 
     <script>
-        class pageMeetingSettingSubproject extends ReduxMixin(Polymer.Element) {
+        class pageSettingSubproject extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-setting-subproject';
+                return 'page-setting-subproject';
             }
 
             static get properties() {
@@ -122,12 +111,7 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'meeting_module.select',
-                        observer: '_data_change'
-                    },
-                    radio: {
-                        type: String,
-                        value: 'a'
+                        statePath: 'meeting_module.select'
                     },
                     _params: {
                         type: Object
@@ -138,21 +122,8 @@
             ready() {
                 super.ready();
                 this.set('data.meeting_id', this._params.id)
-                this.$.date_end.style.visibility = "hidden";
                 Polymer.RenderStatus.afterNextRender(this, function () {
-
                 });
-            }
-
-            _data_change(e) {
-
-                if (e.date_start_module == e.date_end_module) {
-                    this.set('radio', 'a')
-                    this.$.date_end.style.visibility = "hidden";
-                } else {
-                    this.set('radio', 'b')
-                    this.$.date_end.style.visibility = "visible";
-                }
             }
 
             _i18n(e) {
@@ -201,14 +172,6 @@
                 Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
             }
 
-            _radio_change() {
-                if (this.radio == 'a') {
-                    this.$.date_end.style.visibility = "hidden";
-                } else {
-                    this.$.date_end.style.visibility = "visible";
-                }
-            }
-
             _saveData() {
                 this.set('data.meeting_id', this._params.id)
                 if (this.radio == 'a') {
@@ -225,6 +188,6 @@
 
         }
 
-        window.customElements.define(pageMeetingSettingSubproject.is, pageMeetingSettingSubproject);
+        window.customElements.define(pageSettingSubproject.is, pageSettingSubproject);
     </script>
 </dom-module>

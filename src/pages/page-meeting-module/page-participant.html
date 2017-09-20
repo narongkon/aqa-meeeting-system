@@ -9,9 +9,10 @@
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../redux/meeting/module-redux.html">
+<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-meeting-invite">
+<dom-module id="page-participant">
     <template>
         <style include="shared-styles">
              :host {
@@ -24,38 +25,37 @@
             }
         </style>
         <div class="row">
-            <div class="col-md-2">
-                <div slot="content">
-                    จำนวนทั้งหมด [[invite.count]] คน
-                </div>
-            </div>
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <nylon-panel-card>
-                    <vaadin-grid items="{{invite.participant}}" slot="content" sub-slot="grid">
+                    <app-toolbar slot="header">
+                        <div main-title>[[i18n.number_people]] [[participant.count]] [[i18n.people]]</div>
+                    </app-toolbar>
+                    <vaadin-grid items="{{participant.participant}}" slot="content">
                         <vaadin-grid-column>
-                            <template class="header">&nbsp&nbspFirst Name</template>
+                            <template class="header">&nbsp&nbsp [[i18n.first_name]]</template>
                             <template>
                                 [[item.profile.basic.firstname_en]]
                             </template>
                         </vaadin-grid-column>
-
                         <vaadin-grid-column>
-                            <template class="header">Last Name</template>
+                            <template class="header">&nbsp&nbsp [[i18n.last_name]]</template>
                             <template>
                                 [[item.profile.basic.lastname_en]]
                             </template>
                         </vaadin-grid-column>
-
+                        </vaadin-grid-column>
                         <vaadin-grid-column>
-                            <template class="header">Email</template>
+                            <template class="header">ความสามารถเฉพาะด้าน</template>
                             <template>
-                                <div>[[item.profile.contract.email]]</div>
+                                <template is="dom-repeat" items="{{item.profile.specialist}}">
+                                    <div>[[_index(index)]]. [[item.type_specialist.type_specialist_name]]</div>
+                                </template>
                             </template>
                         </vaadin-grid-column>
                         <vaadin-grid-column>
-                            <template class="header">Manager</template>
+                            <template class="header">[[i18n.email]]</template>
                             <template>
-                                <paper-icon-button icon="delete" on-click="_selectData"></paper-icon-button>
+                                <div>[[item.profile.contract.email]]</div>
                             </template>
                         </vaadin-grid-column>
                     </vaadin-grid>
@@ -65,19 +65,22 @@
     </template>
 
     <script>
-        class pageMeetingInvite extends ReduxMixin(Polymer.Element) {
+        class pageParticipant extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-meeting-invite';
+                return 'page-participant';
             }
 
             static get properties() {
                 return {
-                    invite: {
+                    i18n: {
                         type: Object,
-                        statePath: 'meeting_module.invite'
+                        statePath: 'i18n.pageMeetingModule'
+                    },
+                    participant: {
+                        type: Object,
+                        statePath: 'meeting_module.participant'
                     }
-
                 };
             }
 
@@ -91,6 +94,6 @@
 
         }
 
-        window.customElements.define(pageMeetingInvite.is, pageMeetingInvite);
+        window.customElements.define(pageParticipant.is, pageParticipant);
     </script>
 </dom-module>

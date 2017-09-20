@@ -1,0 +1,32 @@
+<script>
+        Nylon.addReducer('expenses_cost', function (state, action) {
+            state = state || {}
+    
+            switch (action.type) {
+                case 'EXPENSES_MODULE_GET_MEETING':
+                    state.meeting = action.payload
+                    return state
+                    break;
+                default:
+                    return state
+                    break;
+            }
+            return state
+        })
+    
+    
+        Nylon.addAction({
+
+            expensesModuleGetMeeting: function (id) {
+                return dispatch => {
+                    axios.get(`/meeting/module/getMeeting/${id}`).then(
+                        res => {
+                            dispatch({ type: 'EXPENSES_MODULE_GET_MEETING', payload: res.data })
+                        }
+                    )
+                }
+            },
+            
+        })
+    
+    </script>

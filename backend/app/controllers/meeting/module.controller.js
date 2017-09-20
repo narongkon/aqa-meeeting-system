@@ -12,7 +12,7 @@ exports.getMeeting = (req, res) => {
 
 exports.getRegion = (req, res) => {
   const r = req.r;
-  r.db('expert').table('region')
+  r.db('aqa_expert').table('region')
     .coerceTo('array')
     .run()
     .then((result) => {
@@ -41,7 +41,7 @@ exports.add = (req, res) => {
   let meeting_data = {}
   let module_data = {}
   let participant_data = {}
-  r.db('expert').table('region').get(req.body.region_id)
+  r.db('aqa_expert').table('region').get(req.body.region_id)
     .run()
     .then((result) => {
       // res.json(result);
@@ -61,71 +61,7 @@ exports.add = (req, res) => {
           r.table('module').insert(req.body)
             .run()
             .then((result) => {
-              // res.json(result);
-
-
-              r.table('module').get(result.generated_keys[0])
-                .run()
-                .then((result) => {
-                  module_data = result
-
-                  r.db('aqa_expert').table('profile')
-                    .getAll(meeting_data.group_work_id, { index: 'group_work_id' })
-                    .pluck('zone', 'taxno', 'basic', 'address', 'id', 'type_assessor', 'properties')
-                    .filter(function (f) {
-                      return f('zone').contains(function (c) {
-                        return c('region_id').eq(req.body.region_id)
-                      })
-
-                    })
-                    .filter({ properties: true })
-                    // r.db('aqa_expert').table('profile').filter({ properties: true, meeting: false, type_assessor: { group_work_id: meeting_data.group_work_id } })
-                    //   .pluck(['taxno', 'basic', 'address', 'id', 'type_assessor'])
-                    .merge(
-                    function (m) {
-                      return {
-                        "confirm": true,
-                        "email": false,
-                        "profile": {
-                          contract: m('address')('address_contract'),
-                          basic: m('basic'),
-                          type_assessor: m('type_assessor')
-                        },
-                        "profile_id": m('id'),
-                        "lms": false,
-                        "meeting_id": meeting_data.id,
-                        "meeting": meeting_data,
-                        "module_id": module_data.id,
-                        "module": module_data
-                      }
-                    }
-                    ).without(['basic', 'address', 'id', 'type_assessor'])
-                    .run()
-                    .then((result) => {
-
-                      participant_data = result
-
-                      r.table('participant').insert(participant_data)
-                        .run()
-                        .then((result) => {
-                          res.json(result);
-                        })
-                        .catch((err) => {
-                          res.status(500).send(err.message);
-                        })
-
-                    })
-                    .catch((err) => {
-                      res.status(500).send(err.message);
-                    })
-
-
-
-                })
-                .catch((err) => {
-                  res.status(500).send(err.message);
-                })
-
+              res.json(result);
 
             })
             .catch((err) => {
@@ -189,7 +125,7 @@ exports.del = (req, res) => {
 
 exports.edit = (req, res) => {
   const r = req.r;
-  r.db('expert').table('region').get(req.body.region_id)
+  r.db('aqa_expert').table('region').get(req.body.region_id)
     .run()
     .then((result) => {
       // res.json(result);
@@ -287,5 +223,90 @@ exports.getParticipant = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send(err);
+    })
+}
+
+exports.getPeople = (req, res) => {
+  const r = req.r
+  var module_data = {}
+  r.db('aqa_meeting').table('module').get(req.params.id)
+    .merge(function (m) {
+      return {
+        paticipants: r.db('aqa_meeting').table('participant')
+          .getAll(m('id'), { index: 'module_id' }).coerceTo('array').pluck('profile_id'),
+        assessor: r.db('aqa_expert').table('profile')
+          .getAll(m('meeting')('group_work_id'), { index: 'group_work_id' })
+          .filter(function (f) {
+            return f('properties').eq(true).and(
+              f('zone').contains(function (c) {
+                return c('region_id').eq(m('region')('id'))
+              })
+            )
+          })
+          .coerceTo('array')
+          .pluck('id')
+      }
+    })
+    .pluck('paticipants', 'assessor')
+    .merge(function (m) {
+      return {
+        assessor: m('assessor').filter(function (f) {
+          return m('paticipants').getField('profile_id').contains(f('id')).not()
+        }).coerceTo('array')
+      }
+    })
+    .pluck('paticipants', 'assessor')
+    .merge(function (m) {
+      return {
+        assessor: m('assessor').filter(function (f) {
+          return m('paticipants').getField('profile_id').contains(f('id')).not()
+        }).coerceTo('array')
+      }
+    })
+    ('assessor')
+    .merge(function (m) {
+      return r.db('aqa_expert').table('profile').get(m('id'))
+      // return m('id')
+    })
+    .run()
+    .then((result) => {
+      res.json(result);
+
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    })
+}
+
+
+
+
+exports.addInvite = (req, res) => {
+  const r = req.r;
+  let invite = [];
+  // console.log(req.body.module_id);
+  r.db('aqa_meeting').table('module').get(req.body.module_id)
+    .run()
+    .then((result) => {
+      // res.json(result);
+      // console.log(req.body.profile);
+      for (x in req.body.profile) {
+        invite[x] = {
+          meeting_id: result.meeting_id,
+          meeting: result.meeting,
+          module_id: result.id,
+          module: result,
+          profile_id: req.body.profile[x].id,
+          taxno: req.body.profile[x].taxno,
+          profile: req.body.profile[x]
+        }
+      }
+      r.db('aqa_meeting').table('participant').insert(invite) 
+        .run()
+        .then((result) => {
+          res.json(result);
+        })
+
+
     })
 }

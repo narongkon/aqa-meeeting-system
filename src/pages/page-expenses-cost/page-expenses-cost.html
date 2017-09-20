@@ -1,0 +1,113 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
+<link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="./page-list-cost.html">
+<link rel="import" href="./page-lecturer-list-cost.html">
+<link rel="import" href="./page-material-list-cost.html">
+<link rel="import" href="./page-place-list-cost.html">
+<link rel="import" href="./page-utility-list-cost.html">
+<link rel="import" href="./page-vehicle-list-cost.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../redux/meeting/expenses-redux.html">
+<link rel="import" href="../../layout/shared-styles.html">
+
+
+<dom-module id="page-expenses-cost">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+
+        <nylon-toolbar-selector>
+            <app-toolbar>
+                <div main-title>
+                    <div>โครงการอมรมผู้ประเมินประเภทผู้บริหารสถานศึกษา (ระดับปฐมวัย)</div>
+                    <div>: ภาคใต้ (โรงแรมอวยชัยแกรน)</div>
+                </div>
+            </app-toolbar class="toolbar-header">
+            <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
+                <paper-tab id="tab_setting" class="font" page-name="page-1">ผลรวม</paper-tab>
+                <paper-tab id="tab_people" class="font" page-name="page-2">ค่าวัสดุ/อุปกรณ์</paper-tab>
+                <paper-tab id="tab_invite" class="font" page-name="page-3">ค่าสถานที่</paper-tab>
+                <paper-tab id="tab_participant" class="font" page-name="page-4">ค่าวิทยากร</paper-tab>
+                <paper-tab id="tab_participant" class="font" page-name="page-5">ค่าพาหนะ</paper-tab>
+                <paper-tab id="tab_participant" class="font" page-name="page-6">ค่าเบ็ดเตล็ด</paper-tab>
+            </paper-tabs>
+        </nylon-toolbar-selector>
+        <div class="container">
+
+            <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
+                <div page-name="page-1">
+                    <page-list-cost id="list_meeting"></page-list-cost>
+                </div>
+                <div page-name="page-2">
+                    <page-material-list-cost></page-material-list-cost>
+                </div>
+                <div page-name="page-3">
+                    <page-place-list-cost></page-place-list-cost>
+                </div>
+                <div page-name="page-4">
+                    <page-lecturer-list-cost></page-lecturer-list-cost>
+                </div>
+                <div page-name="page-5">
+                    <page-vehicle-list-cost></page-vehicle-list-cost>
+                </div>
+                <div page-name="page-6">
+                    <page-utility-list-cost></page-utility-list-cost>
+                </div>
+            </iron-pages>
+
+        </div>
+
+
+    </template>
+
+    <script>
+        class pageExpensesCost extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-expenses-cost';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeetingExpenses'
+                    },
+                    selected: {
+                        type: String,
+                        value: 'page-1'
+                    },
+                };
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+
+                });
+            }
+
+            nylonPagesActive() {
+                Nylon.dispatch('expensesCostGetModule')
+            }
+
+        }
+
+        window.customElements.define(pageExpensesCost.is, pageExpensesCost);
+    </script>
+</dom-module>

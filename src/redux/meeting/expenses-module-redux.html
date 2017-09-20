@@ -1,5 +1,5 @@
 <script>
-    Nylon.addReducer('meeting_module', function (state, action) {
+    Nylon.addReducer('expenses_module', function (state, action) {
         state = state || {
             select: {
                 date_start_module: '2017-01-01',
@@ -8,30 +8,30 @@
         }
 
         switch (action.type) {
-            case 'MEETING_MODULE_GET_MEETING':
+            case 'EXPENSES_MODULE_GET_MEETING':
                 state.meeting = action.payload
                 return state
                 break;
-            case 'MEETING_MODULE_GET_REGION':
+            case 'EXPENSES_MODULE_GET_REGION':
                 state.region = action.payload
                 return state
                 break;
-            case 'MEETING_MODULE_GET_DATA':
+            case 'EXPENSES_MODULE_GET_DATA':
                 state.data = action.payload
                 return state
                 break;
-            case 'MEETING_MODULE_SELECT_DATA':
+            case 'EXPENSES_MODULE_SELECT_DATA':
                 state.select = action.payload
                 return state
                 break;
-            case 'MEETING_MODULE_GET_INVITE':
+            case 'EXPENSES_MODULE_GET_INVITE':
                 state.invite = action.payload
                 break;
-            case 'MEETING_MODULE_GET_PARTICIPANT':
+            case 'EXPENSES_MODULE_GET_PARTICIPANT':
                 state.participant = action.payload
                 return state
                 break;
-            case 'MEETING_MODULE_GET_PEOPLE':
+            case 'EXPENSES_MODULE_GET_PEOPLE':
                 state.people = action.payload
                 return state
                 break;
@@ -47,30 +47,30 @@
         view2Con: function (arg1) {
             return { type: arg1 }
         },
-        meetingModuleGetMeeting: function (id) {
+        expensesModuleGetMeeting: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getMeeting/${id}`).then(
                     res => {
-                        dispatch({ type: 'MEETING_MODULE_GET_MEETING', payload: res.data })
+                        dispatch({ type: 'EXPENSES_MODULE_GET_MEETING', payload: res.data })
                     }
                 )
             }
         },
-        meetingModuleGetRegion: function (id) {
+        expensesModuleGetRegion: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getRegion`).then(
                     res => {
-                        dispatch({ type: 'MEETING_MODULE_GET_REGION', payload: res.data })
+                        dispatch({ type: 'EXPENSES_MODULE_GET_REGION', payload: res.data })
                     }
                 )
             }
         },
-        meetingModuleAddData: function (data) {
+        expensesModuleAddData: function (data) {
             var progress = Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
                 axios.post('/meeting/module', data).then(
                     res => {
-                        Nylon.dispatch('meetingModuleGetData', data.meeting_id)
+                        Nylon.dispatch('expensesModuleGetData', data.meeting_id)
                         progress(_ => {
 
                             Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
@@ -84,20 +84,20 @@
                 )
             }
         },
-        meetingModuleGetData: function (id) {
+        expensesModuleGetData: function (id) {
 
-            var progress = Nylon.$['page-meeting-module'].$.list_module.$.pc1.progress({ position: 'top' })
+            var progress = Nylon.$['page-expenses-module'].$.list_module.$.pc1.progress({ position: 'top' })
             return dispatch => {
                 axios.get(`/meeting/module/getData/${id}`).then(
                     res => {
                         progress(() => {
-                            dispatch({ type: 'MEETING_MODULE_GET_DATA', payload: res.data })
+                            dispatch({ type: 'EXPENSES_MODULE_GET_DATA', payload: res.data })
                         })
                     }
                 )
             }
         },
-        meetingModuleSelectData: function (id) {
+        expensesModuleSelectData: function (id) {
             console.log('select')
             return dispatch => {
                 axios.get(`/meeting/module/selectData/${id}`).then(
@@ -108,27 +108,27 @@
                         var date_end = res.data.date_end_module.split("T");
                         res.data.date_end_module = date_end[0]
 
-                        dispatch({ type: 'MEETING_MODULE_SELECT_DATA', payload: res.data })
+                        dispatch({ type: 'EXPENSES_MODULE_SELECT_DATA', payload: res.data })
                         Nylon.$['page-meeting-module'].$.manage_module.$.pr.open()
                     }
                 )
             }
         },
-        meetingModuleDelData: function (data) {
+        expensesModuleDelData: function (data) {
             return dispatch => {
                 axios.delete(`/meeting/module/${data.id}`).then(
                     res => {
-                        Nylon.dispatch('meetingModuleGetData', data.meeting_id)
+                        Nylon.dispatch('expensesModuleGetData', data.meeting_id)
                     }
                 )
             }
         },
-        meetingModuleEditData: function (data) {
+        expensesModuleEditData: function (data) {
             var progress = Nylon.$['page-meeting-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
                 axios.put('/meeting/module', data).then(
                     res => {
-                        Nylon.dispatch('meetingModuleGetData', data.meeting_id)
+                        Nylon.dispatch('expensesModuleGetData', data.meeting_id)
                         progress(_ => {
 
                             Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
@@ -142,16 +142,16 @@
                 )
             }
         },
-        meetingModuleGetInvite: function (id) {
+        expensesModuleGetInvite: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getInvite/${id}`).then(
                     res => {
-                        dispatch({ type: 'MEETING_MODULE_GET_INVITE', payload: res.data })
+                        dispatch({ type: 'EXPENSES_MODULE_GET_INVITE', payload: res.data })
                     }
                 )
             }
         },
-        meetingModuleGetParticipant: function (id) {
+        expensesModuleGetParticipant: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getParticipant/${id}`).then(
                     res => {
@@ -160,27 +160,12 @@
                 )
             }
         },
-        meetingModuleGetPeople: function (id) {
+        expensesModuleGetPeople: function (id) {
             return dispatch => {
                 axios.get(`/meeting/module/getPeople/${id}`).then(
                     res => {
                         console.log(res.data)
                         dispatch({ type: 'MEETING_MODULE_GET_PEOPLE', payload: res.data })
-                    }
-                )
-            }
-        },
-        meetingModuleAddInvite: function (data, id) {
-            let invite = {
-                profile: data,
-                module_id: id
-            }
-            // console.log(data)
-            return dispatch => {
-                axios.post('/meeting/module/addInvite', invite).then(
-                    res => {
-                        Nylon.dispatch('meetingModuleGetPeople', id)
-                        Nylon.dispatch('meetingModuleGetInvite', id)
                     }
                 )
             }

@@ -37,7 +37,7 @@
                 <paper-item value="all">ทั้งหมด</paper-item>
                 <dom-repeat items="{{group}}">
                     <template>
-                        <paper-item value="[[item.id]]">[[item.group_meeting_name]]</paper-item>
+                        <paper-item value="[[item.id]]" class="font">[[item.group_meeting_name]]</paper-item>
                     </template>
                 </dom-repeat>
             </paper-listbox>
@@ -47,7 +47,7 @@
                 <paper-item value="all">ทั้งหมด</paper-item>
                 <dom-repeat items="{{level}}">
                     <template>
-                        <paper-item value="[[item.id]]">[[item.group_work_name]]</paper-item>
+                        <paper-item value="[[item.id]]" class="font">[[item.group_work_name]]</paper-item>
                     </template>
                 </dom-repeat>
             </paper-listbox>
@@ -98,8 +98,8 @@
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
-                            <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="list" on-click="_linkData"></paper-icon-button>
+                            <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
                     </template>
@@ -166,7 +166,8 @@
             }
 
             _linkData(e) {
-                location.href = "/meeting-module/" + e.model.item.id;
+                Nylon.redirect("/meeting-module/" + e.model.item.id)
+                // location.href = "/meeting-module/" + e.model.item.id;
             }
 
             _openPanelRight() {

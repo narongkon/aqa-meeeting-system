@@ -11,5 +11,9 @@ module.exports = function (app) {
 
     app.get('/getInvite/:id', meeting.getInvite)
     app.get('/getParticipant/:id', meeting.getParticipant)
+    app.get('/getPeople/:id', meeting.getPeople)
+
+    app.post('/addInvite',meeting.addInvite)
+
 }
 
