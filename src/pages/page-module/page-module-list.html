@@ -1,0 +1,164 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/meeting/module/module-i18n.html">
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-module-list">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+
+        <nylon-panel-card id="pc1">
+            <app-toolbar slot="header">
+                <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
+                <paper-button raised class="btn-primary font" on-click="_openPanelRight">
+                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;[[i18n.add]]
+                </paper-button>
+            </app-toolbar>
+            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+                <vaadin-grid-column width="50px" flex-grow="0">
+                    <template class="header"></template>
+                    <template> [[_index(index)]] </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.name]] </template>
+                    <template> [[item.module_name]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.zone]] </template>
+                    <template> [[item.region.region_th]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.address]] </template>
+                    <template> [[item.module_place]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.start_date]] </template>
+                    <template> [[_date(item.date_end_module)]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.end_date]] </template>
+                    <template> [[_date(item.date_end_module)]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column width="220px" flex-grow="0">
+                    <template class="header"> [[i18n.manage]] </template>
+                    <template>
+                        <div>
+                            <paper-icon-button src="https://d30y9cdsu7xlg0.cloudfront.net/png/76005-200.png" on-click="_inviteData"></paper-icon-button>
+                            <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
+                            <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
+                        </div>
+                    </template>
+                </vaadin-grid-column>
+            </vaadin-grid>
+        </nylon-panel-card>
+
+
+    </template>
+
+    <script>
+        class pageModuleList extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-module-list'; }
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeetingModule'
+                    },
+                    data: {
+                        type: Object,
+                        statePath: 'meeting_module.data'
+                    },
+                    meeting: {
+                        type: Object,
+                        statePath: 'meeting_module.meeting'
+                    },
+                }
+            }
+
+            _delData(e) {
+
+                Nylon.confirm({
+                    status: 'waring',
+                    title: 'ยืนยันการลบ',
+                    msg: 'หากต้องการลบให้กดปุ่ม ok'
+                }, (confirm) => {
+                    Nylon.dispatch('meetingModuleDelData', e.model.item)
+                })
+
+
+            }
+
+            _date(e) {
+                if (e != undefined || e != null) {
+                    let date = e.split("T");
+                    return date[0]
+                } else {
+                    return e
+                }
+            }
+
+            _openPanelRight() {
+                Nylon.$['page-module'].$.manage_module.$.setting_module.data = { date_start_module: '2017-01-01', date_end_module: '2017-01-01' }
+                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = ''
+                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = 'none'
+                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = 'none'
+                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = 'none'
+                Nylon.$['page-module'].$.manage_module.selected = "page-1"
+                Nylon.$['page-module'].$.manage_module.$.pr.open()
+            }
+
+            _selectData(e) {
+                Nylon.$['page-module'].$.manage_module.module = e.model.item
+                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = ''
+                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = 'none'
+                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = 'none'
+                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = 'none'
+                Nylon.$['page-module'].$.manage_module.selected = "page-1"
+                Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
+                Nylon.$['page-module'].$.manage_module.$.pr.open()
+
+            }
+
+            _inviteData(e) {
+                Nylon.$['page-module'].$.manage_module.module = e.model.item
+                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = 'none'
+                Nylon.$['page-module'].$.manage_module.$.people._params = e.model.item.id
+                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = ''
+                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = ''
+                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = ''
+                Nylon.$['page-module'].$.manage_module.selected = "page-2"
+                Nylon.dispatch('meetingModuleGetPeople', e.model.item.id)
+                Nylon.dispatch('meetingModuleGetInvite', e.model.item.id)
+                Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)
+                Nylon.$['page-module'].$.manage_module.$.pr.open()
+            }
+
+            _index(i) {
+                return i + 1;
+            }
+
+        }
+        window.customElements.define(pageModuleList.is, pageModuleList);
+    </script>
+</dom-module>

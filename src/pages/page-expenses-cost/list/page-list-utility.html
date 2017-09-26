@@ -1,0 +1,73 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+
+<dom-module id="page-list-utility">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+        <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
+            <app-toolbar slot="header">
+                <div main-title>ค่าเบ็ดเตล็ด</div>
+                <paper-button raised class="btn-primary font" on-click="_openPanelRight">
+                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
+                </paper-button>
+            </app-toolbar>
+            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+                <vaadin-grid-column width="80px" flex-grow="0">
+                    <template class="header"></template>
+                    <template> [[_index(index)]] </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">รายการ</template>
+                    <template></template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">ราคา</template>
+                    <template></template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header">รวม</template>
+                    <template></template>
+                </vaadin-grid-column>
+            </vaadin-grid>
+        </nylon-panel-card>
+    </template>
+
+    <script>
+
+        class pageListUtility extends Polymer.Element {
+
+            static get is() {
+                return 'page-list-utility';
+            }
+
+            static get properties() {
+                return {
+
+                };
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+
+                });
+            }
+
+        }
+
+        window.customElements.define(pageListUtility.is, pageListUtility);
+    </script>
+</dom-module>

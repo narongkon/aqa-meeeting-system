@@ -5,14 +5,15 @@
 <link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
 <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="./page-expenses-module-list.html">
+<link rel="import" href="./page-module-list.html">
+<link rel="import" href="./page-module-manage.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting/expenses-module/expenses-module-redux.html">
-<link rel="import" href="../../i18n/page-expenses-i18n.html">
+<link rel="import" href="../../redux/meeting/module/module-redux.html">
+<link rel="import" href="../../i18n/meeting/module/module-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-expenses-module">
+<dom-module id="page-module">
     <template>
         <style include="shared-styles">
              :host {
@@ -27,7 +28,8 @@
 
         <nylon-toolbar-selector>
             <app-toolbar>
-                <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]
+                <div main-title>
+                    [[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]
                 </div>
             </app-toolbar class="toolbar-header">
             <paper-tabs selected="0" scrollable>
@@ -35,17 +37,18 @@
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-expenses-module-list id="list_module"></page-expenses-module-list>
+            <page-module-list id="list_module"></page-module-list>
+            <page-module-manage _params="{{_params}}" id="manage_module"></page-module-manage>
         </div>
 
 
     </template>
 
     <script>
-        class pageExpensesModule extends ReduxMixin(Polymer.Element) {
+        class pageModule extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-expenses-module';
+                return 'page-module';
             }
 
             static get properties() {
@@ -56,7 +59,7 @@
                     },
                     meeting: {
                         type: Object,
-                        statePath: 'expenses_module.meeting'
+                        statePath: 'meeting_module.meeting'
                     },
                     _params: {
                         type: Object
@@ -72,13 +75,13 @@
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('expensesModuleGetMeeting', this._params.id)
-                Nylon.dispatch('expensesModuleGetRegion')
-                Nylon.dispatch('expensesModuleGetData', this._params.id)
+                Nylon.dispatch('meetingModuleGetMeeting', this._params.id)
+                Nylon.dispatch('meetingModuleGetRegion')
+                Nylon.dispatch('meetingModuleGetData', this._params.id)
             }
 
         }
 
-        window.customElements.define(pageExpensesModule.is, pageExpensesModule);
+        window.customElements.define(pageModule.is, pageModule);
     </script>
 </dom-module>

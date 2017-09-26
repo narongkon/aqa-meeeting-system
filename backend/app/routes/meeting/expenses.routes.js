@@ -5,10 +5,5 @@ module.exports = function(app){
     app.get('/bylevel/:group/:level', meeting.listbylevel)
     app.get('/group', meeting.group)
     app.get('/level', meeting.level)
-    app.get('/:id', meeting.select)
-    app.post('/', meeting.add)
-    app.put('/', meeting.edit)
-    app.delete('/:id', meeting.del)
-    
 }
 

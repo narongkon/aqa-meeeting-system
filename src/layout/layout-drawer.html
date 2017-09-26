@@ -10,10 +10,11 @@
 <link rel="import" href="../redux-mixin.html">
 
 <link rel="import" href="../my-icons.html">
+<link rel="import" href="./shared-styles.html">
 
 <dom-module id="layout-drawer">
     <template>
-        <style>
+        <style include="shared-styles">
              :host {
                 display: block;
                 z-index: 1;
@@ -40,7 +41,12 @@
                 z-index: 1
             }
 
-            iron-selector > paper-icon-item {
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            iron-selector>paper-icon-item {
                 cursor: pointer;
             }
         </style>
@@ -48,13 +54,17 @@
         <app-drawer id="drawer" no-focus-trap="false">
             <br>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <paper-icon-item name="page-view" href="/" on-click="_redirect">
-                    <iron-icon icon="bookmark-border" slot="item-icon"></iron-icon>
-                    View One
+                <paper-icon-item name="page-view" href="/meeting" on-click="_redirect" class="font">
+                    <iron-icon src="http://www.freeiconspng.com/uploads/business-meeting-icon-buy-this-icon-for--0-99-1.png" slot="item-icon"></iron-icon>
+                    ระบบจัดการการประชุม
                 </paper-icon-item>
-                <paper-icon-item  name="page-view2" href="/view2/test" on-click="_redirect">
-                    <iron-icon icon="bookmark-border" slot="item-icon"></iron-icon>
-                    View Two
+                <paper-icon-item name="page-view2" href="/expenses" on-click="_redirect" class="font">
+                    <iron-icon src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png" slot="item-icon"></iron-icon>
+                    ระบบจัดการค่าใช้จ่าย
+                </paper-icon-item>
+                <paper-icon-item name="page-view2" href="/expenses" on-click="_redirect" class="font">
+                    <iron-icon src="https://cdn2.iconfinder.com/data/icons/clipboard-2/100/clipboard3-512.png" slot="item-icon"></iron-icon>
+                    ลงทะเบียนเข้าการประชุม
                 </paper-icon-item>
             </iron-selector>
         </app-drawer>
@@ -83,11 +93,11 @@
                 this.$.drawer.toggle();
             }
 
-            _redirect(e){
+            _redirect(e) {
                 Nylon.redirect(e.currentTarget.getAttribute('href'))
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.$.drawer.close()
-                },500)
+                }, 500)
             }
 
         }

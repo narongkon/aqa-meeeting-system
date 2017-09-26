@@ -1,0 +1,122 @@
+<script>
+    Nylon.addReducer('expenses_cost', function (state, action) {
+        state = state || {}
+
+        switch (action.type) {
+            case 'EXPENSES_COST_GET_MODULE':
+                state.module = action.payload
+                return state
+                break;
+            case 'EXPENSES_COST_GET_MEETING':
+                state.meeting = action.payload
+                return state
+                break;
+            case 'EXPENSES_COST_GET_EXPENSES':
+                state.data = action.payload
+                return state
+                break;
+            case 'EXPENSES_COST_SELECT_EXPENSES':
+                state.select = action.payload
+                return state
+                break;
+            case 'EXPENSES_COST_GET_GROUP_EXPENSES':
+                state.group_expenses = action.payload
+                return state
+                break;
+            default:
+                return state
+                break;
+        }
+        return state
+    })
+
+
+    Nylon.addAction({
+
+        expensesCostGetModule: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/getModule/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_GET_MODULE', payload: res.data })
+                    }
+                )
+            }
+        },
+        expensesCostGetModuleByMeeting: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/getModuleByMeeting/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_GET_MODULE', payload: res.data })
+                    }
+                )
+            }
+        },
+        expensesCostGetMeeting: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/getMeeting/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_GET_MEETING', payload: res.data })
+                    }
+                )
+            }
+        },
+        expensesCostGetGroupExpenses: function (id) {
+            return dispatch => {
+                axios.get('/meeting/expenses_cost/getGroupExpenses').then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_GET_GROUP_EXPENSES', payload: res.data })
+                    }
+                )
+            }
+        },
+        expensesCostGetExpenses: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/getExpenses/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_GET_EXPENSES', payload: res.data })
+                    }
+                )
+            }
+        },
+        expensesCostAddData: function (data) {
+            return dispatch => {
+                axios.post('meeting/expenses_cost/addExpenses/', data).then(
+                    res => {
+                        Nylon.dispatch('expensesCostGetExpenses', data.module_id)
+                        Nylon.$['page-expenses-cost'].$.manage_material.$.pr.close()
+                    }
+                )
+            }
+        },
+        expensesCostSelectData: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/selectExpenses/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_COST_SELECT_EXPENSES', payload: res.data })
+                        Nylon.$['page-expenses-cost'].$.manage_material.$.pr.open()
+                    }
+                )
+            }
+        },
+        expensesCostDelData: function (data) {
+            return dispatch => {
+                axios.delete(`/meeting/expenses_cost/delExpenses/${data.id}`).then(
+                    res => {
+                        Nylon.dispatch('expensesCostGetExpenses', data.module_id)
+                    }
+                )
+            }
+        },
+        expensesCostGetData: function (data) {
+            return dispatch => {
+                axios.get(`/meeting/expenses_cost/getData/${data.id}`).then(
+                    res => {
+                        // console.log(res.data);
+                    }
+                )
+            }
+        },
+
+    })
+
+</script>

@@ -25,8 +25,14 @@ exports.getRegion = (req, res) => {
 
 exports.getData = (req, res) => {
   const r = req.r;
-  r.table('module').filter({ meeting_id: req.params.id })
-    .coerceTo('array')
+  r.table('module').getAll(req.params.id, { index: 'meeting_id' })
+    .merge(function (m) {
+      return {
+        date_end_module: m('date_end_module').toISO8601(),
+        date_start_module: m('date_start_module').toISO8601()
+      }
+    })
+    // .coerceTo('array')
     .run()
     .then((result) => {
       res.json(result);
@@ -278,9 +284,6 @@ exports.getPeople = (req, res) => {
     })
 }
 
-
-
-
 exports.addInvite = (req, res) => {
   const r = req.r;
   let invite = [];
@@ -301,7 +304,7 @@ exports.addInvite = (req, res) => {
           profile: req.body.profile[x]
         }
       }
-      r.db('aqa_meeting').table('participant').insert(invite) 
+      r.db('aqa_meeting').table('participant').insert(invite)
         .run()
         .then((result) => {
           res.json(result);
@@ -309,4 +312,29 @@ exports.addInvite = (req, res) => {
 
 
     })
+}
+
+exports.delInvite = (req, res) => {
+  const r = req.r;
+  console.log(req.body)
+  for (let x in req.body) {
+    r.db('aqa_meeting').table('participant').get(req.body[x]).delete()
+      .run()
+      .then((result) => {
+        
+      })
+  }
+  res.json(true);
+}
+
+exports.editInvite = (req, res) => {
+  const r = req.r;
+  for (let x in req.body) {
+    r.db('aqa_meeting').table('participant').get(req.body[x]).update({email: true, confirm: false})
+      .run()
+      .then((result) => {
+        
+      })
+  }
+  res.json(true);
 }

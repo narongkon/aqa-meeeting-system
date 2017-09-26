@@ -1,0 +1,193 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/meeting/module/module-i18n.html">
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-module-setting">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+
+        <nylon-panel-card id="pc2">
+            <div slot="content">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-input always-float-label label="[[i18n.name]]" value="{{data.module_name}}"></paper-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-dropdown-menu always-float-label label="[[i18n.zone]]" style="width: 100%;">
+                            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.region_id}}">
+                                <dom-repeat items="{{region}}">
+                                    <template>
+                                        <paper-item value="[[item.id]]">[[item.region_th]]</paper-item>
+                                    </template>
+                                </dom-repeat>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-input always-float-label label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <paper-input always-float-label label="[[i18n.address]]" value="{{data.module_address}}"></paper-input>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <vaadin-date-picker label="[[i18n.start]]" value="{{data.date_start_module}}"></vaadin-date-picker>
+            
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <vaadin-date-picker label="[[i18n.end]]" value="{{data.date_end_module}}"></vaadin-date-picker>
+        
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.5cm;">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                        <vaadin-upload id="upload"></vaadin-upload>
+                    </div>
+                </div>
+            </div>
+
+
+            <app-toolbar slot="footer">
+                <div main-title></div>
+                <paper-button raised on-click="_closePanelRight" class="font">
+                    <iron-icon icon="clear"></iron-icon>&nbsp;&nbsp;[[i18n.cancel]]
+                </paper-button>
+                <paper-button raised class="btn-success font" on-click="_saveData">
+                    <iron-icon icon="check"></iron-icon>&nbsp;&nbsp;[[i18n.save]]
+                </paper-button>
+            </app-toolbar>
+        </nylon-panel-card>
+
+
+
+    </template>
+
+    <script>
+        class pageModuleSetting extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-module-setting';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeetingModule',
+                        observer: '_i18n'
+                    },
+                    region: {
+                        type: Object,
+                        statePath: 'meeting_module.region'
+                    },
+                    data: {
+                        type: Object,
+                        statePath: 'meeting_module.select'
+                    },
+                    _params: {
+                        type: Object
+                    }
+                };
+            }
+
+            ready() {
+                super.ready();
+                this.set('data.meeting_id', this._params.id)
+                Polymer.RenderStatus.afterNextRender(this, function () {
+                });
+            }
+
+            _i18n(e) {
+
+                let upload = this.$.upload
+
+                upload.i18n = {
+                    dropFiles: {
+                        one: e.drop_file_here,
+                        many: e.drop_file_here
+                    },
+                    addFiles: {
+                        one: e.select_file,
+                        many: e.upload_files
+                    },
+                    cancel: e.cancel,
+                    error: {
+                        tooManyFiles: 'Too Many Files.',
+                        fileIsTooBig: 'File is Too Big.',
+                        incorrectFileType: 'Incorrect File Type.'
+                    },
+                    uploading: {
+                        status: {
+                            connecting: 'Connecting...',
+                            stalled: 'Stalled.',
+                            processing: 'Processing File...',
+                            held: 'Queued'
+                        },
+                        remainingTime: {
+                            prefix: 'remaining time: ',
+                            unknown: 'unknown remaining time'
+                        },
+                        error: {
+                            serverUnavailable: 'Server Unavailable',
+                            unexpectedServerError: 'Unexpected Server Error',
+                            forbidden: 'Forbidden'
+                        }
+                    },
+                    units: {
+                        size: ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+                    }
+                };
+            }
+
+            _closePanelRight() {
+                Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
+            }
+
+            _saveData() {
+                this.set('data.meeting_id', this._params.id)
+                if (this.radio == 'a') {
+                    this.set("data.date_end_module", this.data.date_start_module)
+                }
+
+
+                if (!this.data.id || this.data.id == "") {
+                    Nylon.dispatch('meetingModuleAddData', this.data)
+                } else {
+                    Nylon.dispatch('meetingModuleEditData', this.data)
+                }
+            }
+
+        }
+
+        window.customElements.define(pageModuleSetting.is, pageModuleSetting);
+    </script>
+</dom-module>

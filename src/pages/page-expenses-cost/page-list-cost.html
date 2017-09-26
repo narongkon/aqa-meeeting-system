@@ -16,7 +16,7 @@
 <link rel="import" href="../../layout/shared-styles.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-meeting-i18n.html">
+<link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 
 
 <dom-module id="page-list-cost">
@@ -33,9 +33,9 @@
         </style>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
-                <div main-title></div>
+                <div main-title>ผลรวมค่าใช้จ่าย</div>
                 <paper-button raised class="btn-primary font" on-click="_openPanelRight">
-                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;[[i18n.add]]
+                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
                 </paper-button>
             </app-toolbar>
             <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
@@ -72,7 +72,7 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'expenses.data'
+                        statePath: 'expenses_cost.data'
                     }
                 }
             }
@@ -86,10 +86,9 @@
             }
 
             _openPanelRight() {
+                Nylon.$['page-expenses-cost'].$.manage_material.data = { expense_amount: 1, expense_price: 1 };
                 Nylon.$['page-expenses-cost'].$.manage_cost.$.pr.open()
             }
-
-
 
         }
         window.customElements.define(pageListCost.is, pageListCost);

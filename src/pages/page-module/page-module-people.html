@@ -1,0 +1,174 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/meeting/module/module-i18n.html">
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-module-people">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+        <div class="row">
+            <div class="col-md-12">
+                <nylon-panel-card>
+                    <app-toolbar slot="header">
+                        <div main-title>[[module.module_name]] ([[module.region.region_th]])</div>
+                        <paper-button raised class="btn-success font" on-click="_saveData" disabled="[[active]]">
+                            <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
+                        </paper-button>
+                    </app-toolbar>
+                    <vaadin-grid items="{{people}}" id="grid" inverted$="[[inverted]]" slot="content" >
+                        <vaadin-grid-selection-column auto-select>
+
+                        </vaadin-grid-selection-column>
+                        <vaadin-grid-column>
+                            <template class="header">&nbsp&nbsp [[i18n.first_name]]</template>
+                            <template>
+                                [[item.basic.firstname_th]]
+                            </template>
+                        </vaadin-grid-column>
+                        <vaadin-grid-column>
+                            <template class="header">&nbsp&nbsp [[i18n.last_name]]</template>
+                            <template>
+                                [[item.basic.lastname_th]]
+                            </template>
+                        </vaadin-grid-column>
+                        </vaadin-grid-column>
+                        <vaadin-grid-column>
+                            <template class="header">ความสามารถเฉพาะด้าน</template>
+                            <template>
+                                <template is="dom-repeat" items="{{item.specialist}}">
+                                    <div>[[_index(index)]]. [[item.type_specialist.type_specialist_name]]</div>
+                                </template>
+                            </template>
+                        </vaadin-grid-column>
+                        <vaadin-grid-column>
+                            <template class="header">[[i18n.email]]</template>
+                            <template>
+                                <!-- [[item.email]] -->
+                                [[item.address.address_contract.email]]
+                            </template>
+                        </vaadin-grid-column>
+                    </vaadin-grid>
+                </nylon-panel-card>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class pageModulePeople extends ReduxMixin(Polymer.Element) {
+
+            static get is() {
+                return 'page-module-people';
+            }
+
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeetingModule'
+                    },
+                    people: {
+                        type: Object,
+                        statePath: 'meeting_module.people'
+                    },
+                    inverted: {
+                        type: Boolean,
+                        value: false
+                    },
+                    indeterminate: {
+                        type: Boolean,
+                        value: false
+                    },
+                    data: {
+                        type: Object
+                    },
+                    _params: {
+                        type: String
+                    },
+                    module: {
+                        type: Object
+                    },
+                    active: {
+                        type: Boolean,
+                        statePath: 'meeting_module.active'
+                    }
+
+                };
+            }
+
+            static get observers() {
+                return [
+                    '_resetSelection(inverted)'
+                ]
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+
+                });
+            }
+
+            _invert(e) {
+                this.inverted = !this.inverted;
+            }
+
+            _isChecked(inverted, indeterminate) {
+                return indeterminate || inverted;
+            }
+
+            _isSelected(inverted, selected) {
+                return inverted != selected;
+            }
+
+            _selectItem(e) {
+                if (e.target.checked === this.inverted) {
+                    this.$.grid.deselectItem(e.model.item);
+                } else {
+                    this.$.grid.selectItem(e.model.item);
+                }
+                this.indeterminate = this.$.grid.selectedItems.length > 0;
+            }
+
+            _resetSelection(inverted) {
+                this.$.grid.selectedItems = [];
+                this.updateStyles();
+                this.indeterminate = false;
+            }
+
+            _index(i) {
+                return i + 1;
+            }
+
+
+            _saveData() {
+                // console.log(this.$.grid.selectedItems);
+                // console.log(this._params);
+                Nylon.dispatch('meetingModuleAddInvite', this.$.grid.selectedItems, this._params)
+            }
+
+        }
+
+        window.customElements.define(pageModulePeople.is, pageModulePeople);
+    </script>
+</dom-module>

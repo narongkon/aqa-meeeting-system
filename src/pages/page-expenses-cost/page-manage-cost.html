@@ -9,10 +9,13 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
 <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../i18n/page-meeting-module-i18n.html">
+<link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
 <dom-module id="page-manage-cost">
@@ -28,33 +31,81 @@
             }
         </style>
 
-
         <nylon-panel-right id="pr" title="[[i18n.manage]]">
             <nylon-toolbar-selector slot="header">
-                <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
-                    <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าวัสดุอุปกรณ์</paper-tab>
-                    <paper-tab id="tab_people" class="font" page-name="page-2">ค่าเดินทาง</paper-tab>
-                    <paper-tab id="tab_invite" class="font" page-name="page-3">ค่าวิทยากร</paper-tab>
+                <paper-tabs selected="0" scrollable>
+                    <paper-tab class="font">[[i18n.setting]]</paper-tab>
                 </paper-tabs>
             </nylon-toolbar-selector>
-
-            <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
-                <div page-name="page-1">
-                    ค่าวัสดุอุปกรณ์
+            <nylon-panel-card id="pc2" slot="content">
+                <div slot="content">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <vaadin-combo-box always-float-label label="วันที่" item-label-path="module_name" item-value-path="id" items="[[data.module_id]]"
+                                value="{{data.module.id}}">
+                                <template>
+                                    {{item.module_name}}
+                                </template>
+                            </vaadin-combo-box>
+                            <!-- <paper-dropdown-menu always-float-label label="โครงการย่อย" style="width: 100%;">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.module.id}}">
+                                    <dom-repeat items="{{module}}">
+                                        <template>
+                                            <paper-item value="{{item.id}}">{{item.module_name}}</paper-item>
+                                        </template>
+                                    </dom-repeat>
+                                </paper-listbox>
+                            </paper-dropdown-menu> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <vaadin-combo-box always-float-label label="วันที่" item-label-path="module_name" item-value-path="id" items="[[module]]"
+                                value="{{data.module.id}}">
+                                <template>
+                                    {{item.module_name}}
+                                </template>
+                            </vaadin-combo-box>
+                            <paper-dropdown-menu always-float-label label="ประเภทค่าใช้จ่าย" style="width: 100%;" on-change="_group_expenses_change">
+                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_expenses_id}}">
+                                    <dom-repeat items="{{group_expenses}}">
+                                        <template>
+                                            <paper-item value="{{item.id}}">{{item.group_expenses_name}}</paper-item>
+                                        </template>
+                                    </dom-repeat>
+                                </paper-listbox>
+                            </paper-dropdown-menu>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <paper-input always-float-label label="ชื่อรายการ/รหัสบัตรประชาชน (บุคคล)" value="{{data.expense_amount}}"></paper-input>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                            <paper-input id="input_amount" always-float-label label="จำนวน" value="{{data.expense_amount}}" on-keyup="_sum" on-click="_sum"
+                                type="number"></paper-input>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                            <paper-input always-float-label label="ราคา" value="{{data.expense_price}}" on-keyup="_sum" on-click="_sum" type="number"></paper-input>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                            <paper-input always-float-label label="ผลรวม" value="[[sum]]" disabled></paper-input>
+                        </div>
+                    </div>
                 </div>
-                <div page-name="page-2">
-                    ค่าเดินทาง
-                </div>
-                <div page-name="page-3">
-                    ค่าวิทยากร
-                </div>
-                <div page-name="fallback">
-                    Change pages by typing 'page-1', 'page-2', or 'page-3' in the input above.
-                </div>
-            </iron-pages>
-
+                <app-toolbar slot="footer">
+                    <div main-title></div>
+                    <paper-button raised on-click="_closePanelRight" class="font">
+                        <iron-icon icon="clear"></iron-icon>&nbsp;&nbsp;[[i18n.cancel]]
+                    </paper-button>
+                    <paper-button raised class="btn-success font" on-click="_saveData">
+                        <iron-icon icon="check"></iron-icon>&nbsp;&nbsp;[[i18n.save]]
+                    </paper-button>
+                </app-toolbar>
+            </nylon-panel-card>
         </nylon-panel-right>
-
 
     </template>
 
@@ -69,14 +120,24 @@
                 return {
                     i18n: {
                         type: Object,
-                        statePath: 'i18n.pageMeetingModule'
+                        statePath: 'i18n.pageMeetingMeeting'
                     },
-                    selected: {
-                        type: String,
-                        value: 'page-1'
+                    data: {
+                        type: Object,
+                        statePath: 'expenses_cost.select',
+                        observer: '_sum'
                     },
-                    _params: {
+                    params: {
                         type: Object
+                    },
+                    module: {
+                        type: Object,
+                        statePath: 'expenses_cost.module',
+                        observer: 'xxxx'
+                    },
+                    group_expenses: {
+                        type: Object,
+                        statePath: 'expenses_cost.group_expenses'
                     }
                 };
             }
@@ -85,8 +146,28 @@
                 super.ready();
             }
 
+            _group_expenses_change(e) {
+                console.log(e)
+            }
+
+            _sum() {
+                this.set('sum', Number(this.data.expense_amount) * Number(this.data.expense_price))
+            }
+
             _closePanelRight() {
                 this.$.pr.close()
+            }
+
+            _saveData() {
+                this.set('data.expense_amount', Number(this.data.expense_amount))
+                this.set('data.expense_price', Number(this.data.expense_price))
+                this.set('data.expense_group', 1)
+                this.set('data.module_id', this.params.id)
+                if (!this.data.id || this.data.id == "") {
+                    Nylon.dispatch('expensesCostAddData', this.data)
+                } else {
+                    Nylon.dispatch('expensesCostEditData', this.data)
+                }
             }
 
         }

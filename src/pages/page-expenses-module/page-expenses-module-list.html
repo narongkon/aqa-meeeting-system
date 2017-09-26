@@ -1,0 +1,114 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<link rel="import" href="../../components/nylon-panel-card/nylon-panel-card.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../i18n/meeting/module/module-i18n.html">
+<link rel="import" href="../../layout/shared-styles.html">
+
+<dom-module id="page-expenses-module-list">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+            .font {
+                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+        </style>
+
+        <nylon-panel-card id="pc1">
+            <app-toolbar slot="header">
+                <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
+            </app-toolbar>
+            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+                <vaadin-grid-column width="50px" flex-grow="0">
+                    <template class="header"></template>
+                    <template> [[_index(index)]] </template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.name]] </template>
+                    <template> [[item.module_name]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> [[i18n.zone]] </template>
+                    <template> [[item.region.region_th]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> สถานที่ </template>
+                    <template> [[item.module_place]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> วันที่เริ่มต้น </template>
+                    <template> [[_date(item.date_end_module)]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> วันที่สิ้นสุด </template>
+                    <template> [[_date(item.date_end_module)]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column>
+                    <template class="header"> ค่าใช้จ่าย </template>
+                    <template>
+                        <div>
+                            <paper-icon-button on-click="_linkPage" src="https://image.flaticon.com/icons/png/512/32/32632.png"></paper-icon-button>
+                        </div>
+                    </template>
+                </vaadin-grid-column>
+            </vaadin-grid>
+        </nylon-panel-card>
+
+
+    </template>
+
+    <script>
+        class pageExpensesModuleList extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-expenses-module-list'; }
+            static get properties() {
+                return {
+                    i18n: {
+                        type: Object,
+                        statePath: 'i18n.pageMeetingModule'
+                    },
+                    data: {
+                        type: Object,
+                        statePath: 'expenses_module.data'
+                    },
+                    meeting: {
+                        type: Object,
+                        statePath: 'expenses_module.meeting'
+                    },
+                }
+            }
+
+            _index(i) {
+                return i + 1;
+            }
+
+            _date(e) {
+                if (e != undefined || e != null) {
+                    let date = e.split("T");
+                    return date[0]
+                } else {
+                    return e
+                }
+            }
+
+            _linkPage(e) {
+                Nylon.redirect("/expenses-cost/module/" + e.model.item.id)
+            }
+
+        }
+        window.customElements.define(pageExpensesModuleList.is, pageExpensesModuleList);
+    </script>
+</dom-module>
