@@ -3,6 +3,6 @@ module.exports = function (app) {
     app.route('/')
         .get(controller.list)
         .post(controller.insert)
-    // .put(controller.update)
-    // .delete(controller.delete);
+        .put(controller.update)
+        .delete(controller.delete);
 }
