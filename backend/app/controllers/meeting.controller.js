@@ -1,18 +1,22 @@
 exports.list = (req, res) => {
     const r = req.r;
     var tb = r.table('meeting');
-    if (req.query.hasOwnProperty('group_work_id')) {
-        tb = tb.getAll([req.query.group_meeting_id, req.query.group_work_id], { index: 'groupMeetingAndWork' })
-    } else if (req.query.hasOwnProperty('group_meeting_id')) {
-        tb = tb.getAll(req.query.group_meeting_id, { index: 'group_meeting_id' })
+    if (req.query.hasOwnProperty('id')) {
+        tb = tb.get(req.query.id)
+    } else {
+        if (req.query.hasOwnProperty('group_work_id')) {
+            tb = tb.getAll([req.query.group_meeting_id, req.query.group_work_id], { index: 'groupMeetingAndWork' })
+        } else if (req.query.hasOwnProperty('group_meeting_id')) {
+            tb = tb.getAll(req.query.group_meeting_id, { index: 'group_meeting_id' })
+        }
+        tb = tb.eqJoin('group_meeting_id', r.table('group_meeting')).without({ right: 'id' }).zip()
+            .merge(function (m) {
+                return {
+                    level: r.branch(m('group_work_id').eq(null), null, r.db('aqa_expert').table('group_work').get(m('group_work_id')))
+                }
+            })
     }
-    tb.eqJoin('group_meeting_id', r.table('group_meeting')).without({ right: 'id' }).zip()
-        .merge(function (m) {
-            return {
-                level: r.branch(m('group_work_id').eq(null), null, r.db('aqa_expert').table('group_work').get(m('group_work_id')))
-            }
-        })
-        .run()
+    tb.run()
         .then((result) => {
             res.json(result);
         })
