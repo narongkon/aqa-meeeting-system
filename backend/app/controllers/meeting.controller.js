@@ -20,3 +20,50 @@ exports.list = (req, res) => {
             res.status(500).send(err);
         })
 }
+exports.insert = function (req, res) {
+    const r = req.r;
+    req.body = Object.assign(req.body, {
+        meeting_year: Number(req.body.meeting_year),
+        meeting_hours: Number(req.body.meeting_hours)
+    })
+
+    r.table('meeting').insert(req.body)
+        .run()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            res.status(500).send(err.message);
+        })
+}
+exports.update = function (req, res) {
+    const r = req.r;
+    req.body = Object.assign(req.body, {
+        meeting_year: Number(req.body.meeting_year),
+        meeting_hours: Number(req.body.meeting_hours)
+    })
+
+    r.table('meeting')
+        .get(req.body.id)
+        .update(req.body)
+        .run()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            res.status(500).send(err.message);
+        })
+}
+exports.delete = function (req, res) {
+    const r = req.r;
+    r.table('meeting')
+        .get(req.query.id)
+        .delete()
+        .run()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            res.status(500).send(err.message);
+        })
+}
