@@ -109,8 +109,9 @@
             }
 
             _openPanelRight() {
-                Nylon.$['page-expenses-cost'].$.manage_material.data = { expense_amount: 1, expense_price: 1 };
-                Nylon.$['page-expenses-cost'].$.manage_material.$.pr.open()
+                // Nylon.$['page-expenses-cost'].$.manage_material.data = { expense_amount: 1, expense_price: 1 };
+                Nylon.$['page-expenses-cost'].$.manage_cost.$.pr.open()
+                // Nylon.$['page-expenses-cost'].$.manage_material.$.pr.open()
             }
 
             _selectData(e) {

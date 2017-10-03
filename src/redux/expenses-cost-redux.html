@@ -1,6 +1,9 @@
 <script>
     Nylon.addReducer('expenses_cost', function (state, action) {
-        state = state || {}
+        state = state || {
+            module_id: undefined,
+            select: {}
+        }
 
         switch (action.type) {
             case 'EXPENSES_COST_GET_MODULE':
@@ -23,7 +26,8 @@
                 state.group_expenses = action.payload
                 return state
                 break;
-            default:
+            case 'EXPENSES_COST_CLEAR_SELECT':
+                state.select = action.payload
                 return state
                 break;
         }
@@ -114,6 +118,13 @@
                         // console.log(res.data);
                     }
                 )
+            }
+        },
+        expensesCostSelectClear: function (data) {
+            return dispatch => {
+
+                dispatch({ type: 'EXPENSES_COST_SELECT_EXPENSES', payload: data })
+
             }
         },
 

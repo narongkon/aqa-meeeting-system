@@ -20,6 +20,7 @@ exports.list = function (req, res) {
             res.status(500).send(err);
         })
 }
+
 exports.insert = function (req, res) {
     const r = req.r;
     req.body = Object.assign(req.body, {

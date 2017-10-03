@@ -13,6 +13,7 @@
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/meeting/module/module-i18n.html">
+<link rel="import" href="../../redux/expenses-cost-redux.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
 <dom-module id="page-expenses-module-list">
@@ -32,7 +33,7 @@
             <app-toolbar slot="header">
                 <div main-title>[[meeting.meeting_name]] ประจำปี [[meeting.meeting_year]]</div>
             </app-toolbar>
-            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+            <vaadin-grid slot="content" sub-slot="grid" items="[[module]]">
                 <vaadin-grid-column width="50px" flex-grow="0">
                     <template class="header"></template>
                     <template> [[_index(index)]] </template>
@@ -61,7 +62,7 @@
                     <template class="header"> ค่าใช้จ่าย </template>
                     <template>
                         <div>
-                            <paper-icon-button on-click="_linkPage" src="https://image.flaticon.com/icons/png/512/32/32632.png"></paper-icon-button>
+                            <paper-icon-button on-click="_linkPage" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
                         </div>
                     </template>
                 </vaadin-grid-column>
@@ -80,7 +81,7 @@
                         type: Object,
                         statePath: 'i18n.pageMeetingModule'
                     },
-                    data: {
+                    module: {
                         type: Object,
                         statePath: 'expenses_module.data'
                     },

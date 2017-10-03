@@ -7,7 +7,6 @@
             },
             active: false
         }
-
         switch (action.type) {
             case 'MODULE_GET_MEETING':
                 state.meeting = action.payload
@@ -32,15 +31,16 @@
                 state.participant = action.payload
                 return state
                 break;
-            case 'MODULE_GET_PEOPLE':
-                state.people = action.payload
+            case 'MODULE_GET_PROFILE':
+                state.profile = action.payload
                 return state
                 break;
             case 'MODULE_ACTIVE':
                 state.active = action.payload
                 return state
                 break;
-            default:
+            case 'MODULE_GET_MODULE':
+                state.module = action.payload
                 return state
                 break;
         }
@@ -49,21 +49,27 @@
 
 
     Nylon.addAction({
-        view2Con: function (arg1) {
-            return { type: arg1 }
-        },
         meetingModuleGetMeeting: function (id) {
             return dispatch => {
-                axios.get(`/meeting/module/getMeeting/${id}`).then(
+                axios.get(`/meeting?id=${id}`).then(
                     res => {
                         dispatch({ type: 'MODULE_GET_MEETING', payload: res.data })
                     }
                 )
             }
         },
+        meetingModuleGetModule: function (id) {
+            return dispatch => {
+                axios.get(`/module?id=${id}`).then(
+                    res => {
+                        dispatch({ type: 'MODULE_GET_MODULE', payload: res.data })
+                    }
+                )
+            }
+        },
         meetingModuleGetRegion: function (id) {
             return dispatch => {
-                axios.get(`/meeting/module/getRegion`).then(
+                axios.get(`/region`).then(
                     res => {
                         dispatch({ type: 'MODULE_GET_REGION', payload: res.data })
                     }
@@ -73,7 +79,7 @@
         meetingModuleAddData: function (data) {
             var progress = Nylon.$['page-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
-                axios.post('/meeting/module', data).then(
+                axios.post('/module', data).then(
                     res => {
                         Nylon.dispatch('meetingModuleGetData', data.meeting_id)
                         progress(_ => {
@@ -93,7 +99,7 @@
 
             var progress = Nylon.$['page-module'].$.list_module.$.pc1.progress({ position: 'top' })
             return dispatch => {
-                axios.get(`/meeting/module/getData/${id}`).then(
+                axios.get(`/module?meeting_id=${id}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MODULE_GET_DATA', payload: res.data })
@@ -105,7 +111,7 @@
         meetingModuleSelectData: function (id) {
             return dispatch => {
                 // console.log(Nylon.store.getState().meeting_module.region)
-                axios.get(`/meeting/module/selectData/${id}`).then(
+                axios.get(`/module?id=${id}`).then(
                     res => {
 
                         var date_start = res.data.date_start_module.split("T");
@@ -121,7 +127,7 @@
         },
         meetingModuleDelData: function (data) {
             return dispatch => {
-                axios.delete(`/meeting/module/${data.id}`).then(
+                axios.delete(`/module?id=${data.id}`).then(
                     res => {
                         Nylon.dispatch('meetingModuleGetData', data.meeting_id)
                     }
@@ -131,7 +137,7 @@
         meetingModuleEditData: function (data) {
             var progress = Nylon.$['page-module'].$.manage_module.$.setting_module.$.pc2.progress()
             return dispatch => {
-                axios.put('/meeting/module', data).then(
+                axios.put('/module', data).then(
                     res => {
                         Nylon.dispatch('meetingModuleGetData', data.meeting_id)
                         progress(_ => {
@@ -147,46 +153,32 @@
                 )
             }
         },
-        meetingModuleGetInvite: function (id) {
+        meetingModuleGetProfile: function (id) {
             return dispatch => {
-                axios.get(`/meeting/module/getInvite/${id}`).then(
+                axios.get(`/invite/profile?module_id=${id}`).then(
                     res => {
-                        dispatch({ type: 'MODULE_GET_INVITE', payload: res.data })
+                        dispatch({ type: 'MODULE_GET_PROFILE', payload: res.data })
                     }
                 )
             }
         },
         meetingModuleGetParticipant: function (id) {
             return dispatch => {
-                axios.get(`/meeting/module/getParticipant/${id}`).then(
+                axios.get(`/participant?module_id=${id}`).then(
                     res => {
-                        dispatch({ type: 'MODULE_GET_PARTICIPANT', payload: res.data })
+                        dispatch({ type: 'MODULE_GET_INVITE', payload: res.data })
                     }
                 )
             }
         },
-        meetingModuleGetPeople: function (id) {
-            return dispatch => {
-                axios.get(`/meeting/module/getPeople/${id}`).then(
-                    res => {
-                        dispatch({ type: 'MODULE_GET_PEOPLE', payload: res.data })
-                    }
-                )
-            }
-        },
-        meetingModuleAddInvite: function (data, id) {
-            let invite = {
-                profile: data,
-                module_id: id
-            }
-            // console.log(data)
+        meetingModuleAddParticipant: function (data, module_id) {
             return dispatch => {
                 dispatch({ type: 'MODULE_ACTIVE', payload: true })
-                axios.post('/meeting/module/addInvite', invite).then(
+                axios.post('/participant', data).then(
                     res => {
-                        dispatch({ type: 'MODULE_ACTIVE', payload: false })
-                        Nylon.dispatch('meetingModuleGetPeople', id)
-                        Nylon.dispatch('meetingModuleGetInvite', id)
+                        // dispatch({ type: 'MODULE_ACTIVE', payload: false })
+                        Nylon.dispatch('meetingModuleGetProfile', module_id)
+                        Nylon.dispatch('meetingModuleGetParticipant', module_id)
                     }
                 )
             }
@@ -195,7 +187,7 @@
             return dispatch => {
                 axios.put('/meeting/module/delInvite', data).then(
                     res => {
-                        Nylon.dispatch('meetingModuleGetPeople', id)
+                        Nylon.dispatch('meetingModuleGetProfile', id)
                         Nylon.dispatch('meetingModuleGetInvite', id)
                     }
                 )
@@ -205,7 +197,7 @@
             return dispatch => {
                 axios.put('/meeting/module/editInvite', data).then(
                     res => {
-                        Nylon.dispatch('meetingModuleGetPeople', id)
+                        Nylon.dispatch('meetingModuleGetProfile', id)
                         Nylon.dispatch('meetingModuleGetInvite', id)
                     }
                 )

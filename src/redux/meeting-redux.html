@@ -1,7 +1,27 @@
 <script>
     Nylon.addReducer('meeting_meeting', function (state, action) {
         state = state || {
-            select: {}
+            select: {},
+            year: [
+                {
+                    label: 2560,
+                    value: 2560
+                },
+                {
+                    label: 2561,
+                    value: 2561
+                }
+            ],
+            type: [
+                {
+                    label: 'Exam',
+                    value: 'exam'
+                },
+                {
+                    label: 'Training',
+                    value: 'training'
+                }
+            ]
         }
 
         switch (action.type) {
@@ -31,7 +51,7 @@
 
         meetingMeetingGetGroup: function () {
             return dispatch => {
-                axios.get('/meeting/meeting/group').then(
+                axios.get('/group/meeting').then(
                     res => {
                         dispatch({ type: 'MEETING_GET_GROUP', payload: res.data })
                     }
@@ -54,7 +74,7 @@
         meetingMeetingGetLevel: function () {
 
             return dispatch => {
-                axios.get('/meeting/meeting/level').then(
+                axios.get('/group/work').then(
                     res => {
                         dispatch({ type: 'MEETING_GET_LEVEL', payload: res.data })
                     }
@@ -79,7 +99,7 @@
             var progress = Nylon.$['page-meeting'].$.list_meeting.$.pc1.progress({ position: 'top' })
 
             return dispatch => {
-                axios.get('/meeting/meeting').then(
+                axios.get('/meeting').then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_GET_DATA', payload: res.data })
@@ -105,7 +125,7 @@
 
             return dispatch => {
                 var progress = Nylon.$['page-meeting'].$.list_meeting.$.pc1.progress({ position: 'top' })
-                axios.get(`/meeting/meeting/bygroup/${id}`).then(
+                axios.get(`/meeting?group_meeting_id=${id}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_GET_DATA', payload: res.data })
@@ -119,7 +139,7 @@
             return dispatch => {
                 var progress = Nylon.$['page-meeting'].$.list_meeting.$.pc1.progress({ position: 'top' })
 
-                axios.get(`/meeting/meeting/bylevel/${data.group}/${data.level}`).then(
+                axios.get(`/meeting?group_meeting_id=${data.group}&group_work_id=${data.level}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'MEETING_GET_DATA', payload: res.data })
@@ -131,7 +151,7 @@
         meetingMeetingAddData: function (data) {
             return dispatch => {
                 var progress = Nylon.$['page-meeting'].$.manage_meeting.$.pc2.progress()
-                axios.post('/meeting/meeting', data).then(
+                axios.post('/meeting', data).then(
                     res => {
                         Nylon.dispatch('meetingMeetingGetData')
                         progress(_ => {
@@ -152,7 +172,7 @@
         },
         meetingMeetingDelData: function (id) {
             return dispatch => {
-                axios.delete(`/meeting/meeting/${id}`).then(
+                axios.delete(`/meeting?id=${id}`).then(
                     res => {
                         Nylon.dispatch('meetingMeetingGetData')
                     }
@@ -161,7 +181,7 @@
         },
         meetingMeetingSelectData: function (id) {
             return dispatch => {
-                axios.get(`/meeting/meeting/${id}`).then(
+                axios.get(`/meeting?id=${id}`).then(
                     res => {
                         dispatch({ type: 'MEETING_SELECT_DATA', payload: res.data })
                         Nylon.$['page-meeting'].$.manage_meeting.$.pr.open()
@@ -172,7 +192,7 @@
         meetingMeetingEditData: function (select) {
             var progress = Nylon.$['page-meeting'].$.manage_meeting.$.pc2.progress()
             return dispatch => {
-                axios.put('/meeting/meeting', select).then(
+                axios.put('/meeting', select).then(
                     res => {
                         Nylon.dispatch('meetingMeetingGetData')
                         progress(() => {

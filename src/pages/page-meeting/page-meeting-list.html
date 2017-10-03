@@ -12,6 +12,7 @@
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
@@ -23,32 +24,26 @@
              :host {
                 display: block;
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
-        <paper-dropdown-menu label="[[i18n.group]]">
-            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{dropdown.group}}" on-click="_dropdown_group_change">
-                <paper-item value="all">ทั้งหมด</paper-item>
-                <dom-repeat items="{{group}}">
+
+        <div class="row">
+            <div class="col-md-3">
+                <vaadin-combo-box always-float-label label="[[i18n.group]]" item-label-path="group_meeting_name" item-value-path="id" items="[[group]]"
+                    value="{{dropdown.group}}" on-change="_dropdown_group_change" placeholder="ทั้งหมด">
                     <template>
-                        <paper-item value="[[item.id]]" class="font">[[item.group_meeting_name]]</paper-item>
+                        [[item.group_meeting_name]]
                     </template>
-                </dom-repeat>
-            </paper-listbox>
-        </paper-dropdown-menu>
-        <paper-dropdown-menu label="[[i18n.level]]" id="dropdown_level">
-            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{dropdown.level}}" on-click="_dropdown_level_change">
-                <paper-item value="all">ทั้งหมด</paper-item>
-                <dom-repeat items="{{level}}">
+                </vaadin-combo-box>
+            </div>
+            <div class="col-md-3">
+                <vaadin-combo-box id="dropdown_level" always-float-label label="[[i18n.level]]" item-label-path="group_work_name" item-value-path="id"
+                    items="[[level]]" value="{{dropdown.level}}" on-change="_dropdown_level_change" placeholder="ทั้งหมด">
                     <template>
-                        <paper-item value="[[item.id]]" class="font">[[item.group_work_name]]</paper-item>
+                        [[item.group_work_name]]
                     </template>
-                </dom-repeat>
-            </paper-listbox>
-        </paper-dropdown-menu>
+                </vaadin-combo-box>
+            </div>
+        </div>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
                 <div main-title></div>
@@ -70,7 +65,7 @@
                 <vaadin-grid-column width="100px" flex-grow="0">
                     <template class="header"> [[i18n.type]]</template>
                     <template>
-                        <div>[[item.meeting_type]]</div>
+                        [[_type(item.meeting_type)]]
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column width="220px" flex-grow="0">
@@ -91,11 +86,18 @@
                         <div>[[item.meeting_year]]</div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column width="200px" flex-grow="0">
+                <vaadin-grid-column width="100px" flex-grow="0">
+                        <template class="header"> โครงการย่อย </template>
+                        <template>
+                            <div>
+                                <paper-icon-button icon="list" on-click="_linkData"></paper-icon-button>
+                            </div>
+                        </template>
+                    </vaadin-grid-column>
+                <vaadin-grid-column width="100px" flex-grow="0">
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
-                            <paper-icon-button icon="list" on-click="_linkData"></paper-icon-button>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
@@ -130,8 +132,8 @@
                     dropdown: {
                         type: Object,
                         value: {
-                            group: 'all',
-                            level: 'all'
+                            group: "",
+                            level: ""
                         },
                         observer: '_dropdown_change'
                     }
@@ -158,8 +160,6 @@
                 }, (confirm) => {
                     Nylon.dispatch('meetingMeetingDelData', e.model.item.id)
                 })
-
-
             }
 
             _linkData(e) {
@@ -186,7 +186,7 @@
 
                 }
 
-                if (this.dropdown.group == 'all') {
+                if (this.dropdown.group == '') {
                     Nylon.dispatch('meetingMeetingGetData')
                 } else {
                     Nylon.dispatch('meetingMeetingGetDataByGroup', this.dropdown.group)
@@ -194,12 +194,20 @@
             }
             _dropdown_level_change() {
 
-                if (this.dropdown.level == 'all') {
+                if (this.dropdown.level == '') {
                     Nylon.dispatch('meetingMeetingGetDataByGroup', this.dropdown.group)
                 } else {
                     Nylon.dispatch('meetingMeetingGetDataByLevel', this.dropdown)
                 }
 
+            }
+
+            _type(e) {
+                if (e == 'exam') {
+                    return 'ทดสอบ'
+                } else {
+                    return 'อมรม'
+                }
             }
 
         }

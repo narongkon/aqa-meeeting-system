@@ -12,6 +12,7 @@
 <link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../layout/shared-styles.html">
 
@@ -31,26 +32,24 @@
                 -webkit-font-smoothing: antialiased;
             }
         </style>
-        <paper-dropdown-menu label="[[i18n.group]]">
-            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{dropdown.group}}" on-click="_dropdown_group_change">
-                <paper-item value="all">ทั้งหมด</paper-item>
-                <dom-repeat items="{{group}}">
+        <div class="row">
+            <div class="col-md-3">
+                <vaadin-combo-box always-float-label label="[[i18n.group]]" item-label-path="group_meeting_name" item-value-path="id" items="[[group]]"
+                    value="{{dropdown.group}}" on-change="_dropdown_group_change" placeholder="ทั้งหมด">
                     <template>
-                        <paper-item value="[[item.id]]">[[item.group_meeting_name]]</paper-item>
+                        [[item.group_meeting_name]]
                     </template>
-                </dom-repeat>
-            </paper-listbox>
-        </paper-dropdown-menu>
-        <paper-dropdown-menu label="[[i18n.level]]" id="dropdown_level">
-            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{dropdown.level}}" on-click="_dropdown_level_change">
-                <paper-item value="all">ทั้งหมด</paper-item>
-                <dom-repeat items="{{level}}">
+                </vaadin-combo-box>
+            </div>
+            <div class="col-md-3">
+                <vaadin-combo-box id="dropdown_level" always-float-label label="[[i18n.level]]" item-label-path="group_work_name" item-value-path="id"
+                    items="[[level]]" value="{{dropdown.level}}" on-change="_dropdown_level_change" placeholder="ทั้งหมด">
                     <template>
-                        <paper-item value="[[item.id]]">[[item.group_work_name]]</paper-item>
+                        [[item.group_work_name]]
                     </template>
-                </dom-repeat>
-            </paper-listbox>
-        </paper-dropdown-menu>
+                </vaadin-combo-box>
+            </div>
+        </div>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
                 <div main-title></div>
@@ -69,7 +68,7 @@
                 <vaadin-grid-column width="120px" flex-grow="0">
                     <template class="header"> [[i18n.type]]</template>
                     <template>
-                        <div>[[item.meeting_type]]</div>
+                        <div>[[_type(item.meeting_type)]]</div>
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column width="200px" flex-grow="0">
@@ -78,12 +77,6 @@
                         <div>[[item.group_meeting_name]]</div>
                     </template>
                 </vaadin-grid-column>
-                <!-- <vaadin-grid-column>
-                    <template class="header"> [[i18n.level]] </template>
-                    <template>
-                        <div>[[item.level.group_work_name]]</div>
-                    </template>
-                </vaadin-grid-column> -->
                 <vaadin-grid-column width="100px" flex-grow="0">
                     <template class="header"> [[i18n.year]] </template>
                     <template>
@@ -94,7 +87,7 @@
                     <template class="header">ค่าใช้จ่าย</template>
                     <template>
                         <div>
-                            <paper-icon-button on-click="_linkData2" src="https://image.flaticon.com/icons/png/512/32/32632.png"></paper-icon-button>
+                            <paper-icon-button on-click="_linkData2" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
                         </div>
                     </template>
                 </vaadin-grid-column>
@@ -102,7 +95,7 @@
                     <template class="header">โครงการย่อย</template>
                     <template>
                         <div>
-                            <paper-icon-button on-click="_linkData" icon="icons:view-list"></paper-icon-button>
+                            <paper-icon-button on-click="_linkData" icon="list"></paper-icon-button>
                         </div>
                     </template>
                 </vaadin-grid-column>
@@ -123,7 +116,7 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'expenses.data'
+                        statePath: 'expenses.meeting'
                     },
                     group: {
                         type: Object,
@@ -136,8 +129,8 @@
                     dropdown: {
                         type: Object,
                         value: {
-                            group: 'all',
-                            level: 'all'
+                            group: '',
+                            level: ''
                         },
                         observer: '_dropdown_change'
                     }
@@ -160,8 +153,6 @@
                 }, (confirm) => {
                     Nylon.dispatch('meetingMeetingDelData', e.model.item.id)
                 })
-
-
             }
 
             _index(i) {
@@ -169,7 +160,7 @@
             }
 
             _dropdown_group_change() {
-                this.set('dropdown.level', 'all')
+                this.set('dropdown.level', '')
                 if (this.dropdown.group == 'C' || this.dropdown.group == 'B') {
                     this.$.dropdown_level.style.visibility = "visible"
                 } else {
@@ -177,30 +168,35 @@
 
                 }
 
-                if (this.dropdown.group == 'all') {
-                    Nylon.dispatch('meetingExpensesGetData')
+                if (this.dropdown.group == '') {
+                    Nylon.dispatch('expensesGetMeeting')
                 } else {
-                    Nylon.dispatch('meetingExpensesGetDataByGroup', this.dropdown.group)
+                    Nylon.dispatch('expensesGetMeetingByGroup', this.dropdown.group)
                 }
             }
+
             _dropdown_level_change() {
-
-                if (this.dropdown.level == 'all') {
-                    Nylon.dispatch('meetingExpensesGetDataByGroup', this.dropdown.group)
+                if (this.dropdown.level == '') {
+                    Nylon.dispatch('expensesGetMeetingByGroup', this.dropdown.group)
                 } else {
-                    Nylon.dispatch('meetingExpensesGetDataByLevel', this.dropdown)
+                    Nylon.dispatch('expensesGetMeetingByLevel', this.dropdown)
                 }
-
             }
 
             _linkData(e) {
                 Nylon.redirect("/expenses-module/" + e.model.item.id)
-                // location.href = "/meeting-expenses-module/" + e.model.item.id;
             }
 
             _linkData2(e) {
                 Nylon.redirect("/expenses-cost/meeting/" + e.model.item.id)
-                // location.href = "/meeting-expenses-module/" + e.model.item.id;
+            }
+
+            _type(e) {
+                if (e == 'exam') {
+                    return 'ทดสอบ'
+                } else {
+                    return 'อมรม'
+                }
             }
 
         }

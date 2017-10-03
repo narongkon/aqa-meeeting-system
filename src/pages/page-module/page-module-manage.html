@@ -12,10 +12,8 @@
 <link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./page-module-setting.html">
-<link rel="import" href="./page-module-participant.html">
+<link rel="import" href="./page-module-profile.html">
 <link rel="import" href="./page-module-invite.html">
-<link rel="import" href="./page-module-people.html">
-
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/meeting/module/module-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
@@ -26,37 +24,26 @@
              :host {
                 display: block
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
-
-
-        <nylon-panel-right id="pr" title="[[module.meeting.meeting_name]]">
+        <nylon-panel-right id="pr" title="จัดการ">
             <nylon-toolbar-selector slot="header">
                 <paper-tabs selected="{{selected}}" attr-for-selected="page-name" scrollable>
                     <paper-tab id="tab_setting" class="font" page-name="page-1">[[i18n.setting]]</paper-tab>
                     <paper-tab id="tab_people" class="font" page-name="page-2">รายชื่อ</paper-tab>
                     <paper-tab id="tab_invite" class="font" page-name="page-3">[[i18n.invite]]/ตอบรับ</paper-tab>
-                    <!-- <paper-tab id="tab_participant" class="font" page-name="page-4">[[i18n.participant]]</paper-tab> -->
                 </paper-tabs>
             </nylon-toolbar-selector>
 
             <iron-pages selected="{{selected}}" attr-for-selected="page-name" fallback-selection="fallback" slot="content">
                 <div page-name="page-1">
-                    <page-module-setting _params="{{_params}}" id="setting_module" module="[[module]]"></page-module-setting>
+                    <page-module-setting id="setting_module"></page-module-setting>
                 </div>
                 <div page-name="page-2">
-                    <page-module-people id="people" module="[[module]]"></page-module-people>
+                    <page-module-profile id="people"></page-module-profile>
                 </div>
                 <div page-name="page-3">
-                    <page-module-invite module="[[module]]"></page-module-invite>
+                    <page-module-invite></page-module-invite>
                 </div>
-                <!-- <div page-name="page-4">
-                    <page-participant module="[[module]]"></page-participant>
-                </div> -->
             </iron-pages>
 
         </nylon-panel-right>

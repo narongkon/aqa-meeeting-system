@@ -16,6 +16,7 @@
 <link rel="import" href="../../layout/shared-styles.html">
 
 <link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../redux/expenses-cost-redux.html">
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 
 
@@ -24,11 +25,6 @@
         <style include="shared-styles">
              :host {
                 display: block;
-            }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
             }
         </style>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
@@ -86,10 +82,11 @@
             }
 
             _openPanelRight() {
-                Nylon.$['page-expenses-cost'].$.manage_material.data = { expense_amount: 1, expense_price: 1 };
+
+                let module_id = Nylon.store.getState().expenses_cost.select.module_id
+                Nylon.dispatch('expensesCostSelectClear', { expense_amount: 0, expense_price: 0, expense_amount: 0, expense_sum: 0, module_id: module_id })
                 Nylon.$['page-expenses-cost'].$.manage_cost.$.pr.open()
             }
-
         }
         window.customElements.define(pageListCost.is, pageListCost);
     </script>

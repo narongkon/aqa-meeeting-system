@@ -7,7 +7,7 @@
 <link rel="import" href="./page-expenses-list.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/meeting/expenses/expenses-redux.html">
+<link rel="import" href="../../redux/expenses-redux.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
 
@@ -64,7 +64,7 @@
             }
 
             nylonPagesActive() {
-                Nylon.dispatch('expensesGetData')
+                Nylon.dispatch('expensesGetMeeting')
                 Nylon.dispatch('expensesGetGroup')
                 Nylon.dispatch('expensesGetLevel')
             }

@@ -14,6 +14,7 @@
 <link rel="import" href="../../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../../bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../i18n/meeting/module/module-i18n.html">
@@ -25,50 +26,44 @@
              :host {
                 display: block
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
 
         <nylon-panel-card id="pc2">
             <div slot="content">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-6">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
                         <paper-input always-float-label label="[[i18n.name]]" value="{{data.module_name}}"></paper-input>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6">
-                        <paper-dropdown-menu always-float-label label="[[i18n.zone]]" style="width: 100%;">
-                            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.region_id}}">
-                                <dom-repeat items="{{region}}">
-                                    <template>
-                                        <paper-item value="[[item.id]]">[[item.region_th]]</paper-item>
-                                    </template>
-                                </dom-repeat>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4">
+                        <vaadin-combo-box always-float-label label="[[i18n.zone]]" item-label-path="region_th" item-value-path="id" items="[[region]]"
+                            value="{{data.region.id}}" on-selected-item-changed="getObject" object-name="data.region">
+                            <template>
+                                [[item.region_th]]
+                            </template>
+                        </vaadin-combo-box>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 1.5cm;">
+                <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <paper-input always-float-label label="[[i18n.place]]" value="{{data.module_place}}"></paper-input>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
                         <paper-input always-float-label label="[[i18n.address]]" value="{{data.module_address}}"></paper-input>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 0.5cm;">
+                <div class="row" style="margin-top: 0.3cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <vaadin-date-picker label="[[i18n.start]]" value="{{data.date_start_module}}"></vaadin-date-picker>
-            
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <vaadin-date-picker label="[[i18n.end]]" value="{{data.date_end_module}}"></vaadin-date-picker>
-        
                     </div>
                 </div>
-                <div class="row" style="margin-top: 1.5cm;">
+                <div class="row" style="margin-top: 0.5cm;">
                     <div class="col-xs-12 col-sm-12 col-md-6">
                         <vaadin-upload id="upload"></vaadin-upload>
                     </div>
@@ -109,6 +104,10 @@
                         type: Object,
                         statePath: 'meeting_module.region'
                     },
+                    meeting: {
+                        type: Object,
+                        statePath: 'meeting_module.meeting'
+                    },
                     data: {
                         type: Object,
                         statePath: 'meeting_module.select'
@@ -118,10 +117,19 @@
                     }
                 };
             }
-
+            getObject(e) {
+                // console.log(e)
+                if ((e.detail.queueProperty === true)
+                    && (e.detail.value !== null)
+                    && (e.detail.value.id !== '0')) {
+                    this.set(`${e.currentTarget.getAttribute('object-name')}`, e.detail.value)
+                } else {
+                    delete this[e.currentTarget.getAttribute('object-name')]
+                }
+            }
             ready() {
                 super.ready();
-                this.set('data.meeting_id', this._params.id)
+                // this.set('data.meeting_id', this._params.id)
                 Polymer.RenderStatus.afterNextRender(this, function () {
                 });
             }
@@ -169,15 +177,17 @@
             }
 
             _closePanelRight() {
-                Nylon.$['page-meeting-module'].$.manage_module.$.pr.close()
+                Nylon.$['page-module'].$.manage_module.$.pr.close()
             }
 
             _saveData() {
-                this.set('data.meeting_id', this._params.id)
+                this.set('data.meeting', this.meeting)
+                this.set('data.meeting_id', this.meeting.id)
+                this.set('data.region_id', this.data.region.id)
+
                 if (this.radio == 'a') {
                     this.set("data.date_end_module", this.data.date_start_module)
                 }
-
 
                 if (!this.data.id || this.data.id == "") {
                     Nylon.dispatch('meetingModuleAddData', this.data)

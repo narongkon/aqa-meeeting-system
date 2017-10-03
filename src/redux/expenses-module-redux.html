@@ -7,30 +7,8 @@
                 state.meeting = action.payload
                 return state
                 break;
-            case 'EXPENSES_MODULE_GET_REGION':
-                state.region = action.payload
-                return state
-                break;
             case 'EXPENSES_MODULE_GET_DATA':
                 state.data = action.payload
-                return state
-                break;
-            case 'EXPENSES_MODULE_SELECT_DATA':
-                state.select = action.payload
-                return state
-                break;
-            case 'EXPENSES_MODULE_GET_INVITE':
-                state.invite = action.payload
-                break;
-            case 'EXPENSES_MODULE_GET_PARTICIPANT':
-                state.participant = action.payload
-                return state
-                break;
-            case 'EXPENSES_MODULE_GET_PEOPLE':
-                state.people = action.payload
-                return state
-                break;
-            default:
                 return state
                 break;
         }
@@ -39,12 +17,9 @@
 
 
     Nylon.addAction({
-        view2Con: function (arg1) {
-            return { type: arg1 }
-        },
         expensesModuleGetMeeting: function (id) {
             return dispatch => {
-                axios.get(`/meeting/module/getMeeting/${id}`).then(
+                axios.get(`/meeting?id=${id}`).then(
                     res => {
                         dispatch({ type: 'EXPENSES_MODULE_GET_MEETING', payload: res.data })
                     }
@@ -55,7 +30,7 @@
 
             var progress = Nylon.$['page-expenses-module'].$.list_module.$.pc1.progress({ position: 'top' })
             return dispatch => {
-                axios.get(`/meeting/module/getData/${id}`).then(
+                axios.get(`/module?meeting_id=${id}`).then(
                     res => {
                         progress(() => {
                             dispatch({ type: 'EXPENSES_MODULE_GET_DATA', payload: res.data })

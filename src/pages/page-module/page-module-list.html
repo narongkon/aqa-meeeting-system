@@ -9,6 +9,7 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="../../redux-mixin.html">
@@ -20,11 +21,6 @@
         <style include="shared-styles">
              :host {
                 display: block;
-            }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
             }
         </style>
 
@@ -64,7 +60,7 @@
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
-                            <paper-icon-button src="https://d30y9cdsu7xlg0.cloudfront.net/png/76005-200.png" on-click="_inviteData"></paper-icon-button>
+                            <paper-icon-button icon="communication:email" on-click="_inviteData"></paper-icon-button>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
@@ -119,39 +115,43 @@
             }
 
             _openPanelRight() {
-                Nylon.$['page-module'].$.manage_module.$.setting_module.data = { date_start_module: '2017-01-01', date_end_module: '2017-01-01' }
-                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = ''
-                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = 'none'
-                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = 'none'
-                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = 'none'
-                Nylon.$['page-module'].$.manage_module.selected = "page-1"
-                Nylon.$['page-module'].$.manage_module.$.pr.open()
+                let nylon = Nylon.$['page-module'].$.manage_module
+
+                nylon.$.tab_setting.style.display = ''
+                nylon.$.tab_people.style.display = 'none'
+                nylon.$.tab_invite.style.display = 'none'
+                nylon.selected = "page-1"
+                nylon.$.pr.open()
             }
 
             _selectData(e) {
-                Nylon.$['page-module'].$.manage_module.module = e.model.item
-                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = ''
-                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = 'none'
-                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = 'none'
-                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = 'none'
-                Nylon.$['page-module'].$.manage_module.selected = "page-1"
+                let nylon = Nylon.$['page-module'].$.manage_module
+
                 Nylon.dispatch('meetingModuleSelectData', e.model.item.id)
-                Nylon.$['page-module'].$.manage_module.$.pr.open()
+
+                nylon.module = e.model.item
+                nylon.$.tab_setting.style.display = ''
+                nylon.$.tab_people.style.display = 'none'
+                nylon.$.tab_invite.style.display = 'none'
+                nylon.selected = "page-1"
+                nylon.$.pr.open()
 
             }
 
             _inviteData(e) {
-                Nylon.$['page-module'].$.manage_module.module = e.model.item
-                Nylon.$['page-module'].$.manage_module.$.tab_setting.style.display = 'none'
-                Nylon.$['page-module'].$.manage_module.$.people._params = e.model.item.id
-                Nylon.$['page-module'].$.manage_module.$.tab_people.style.display = ''
-                Nylon.$['page-module'].$.manage_module.$.tab_invite.style.display = ''
-                // Nylon.$['page-module'].$.manage_module.$.tab_participant.style.display = ''
-                Nylon.$['page-module'].$.manage_module.selected = "page-2"
-                Nylon.dispatch('meetingModuleGetPeople', e.model.item.id)
-                Nylon.dispatch('meetingModuleGetInvite', e.model.item.id)
+                let nylon = Nylon.$['page-module'].$.manage_module
+                
+                Nylon.dispatch('meetingModuleGetModule', e.model.item.id)
+                Nylon.dispatch('meetingModuleGetProfile', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)
-                Nylon.$['page-module'].$.manage_module.$.pr.open()
+
+                nylon.module = e.model.item
+                nylon.$.people._params = e.model.item.id
+                nylon.$.tab_setting.style.display = 'none'
+                nylon.$.tab_people.style.display = ''
+                nylon.$.tab_invite.style.display = ''
+                nylon.selected = "page-2"
+                nylon.$.pr.open()
             }
 
             _index(i) {

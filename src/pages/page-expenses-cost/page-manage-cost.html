@@ -24,11 +24,6 @@
              :host {
                 display: block
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
 
         <nylon-panel-right id="pr" title="[[i18n.manage]]">
@@ -41,45 +36,26 @@
                 <div slot="content">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <vaadin-combo-box always-float-label label="วันที่" item-label-path="module_name" item-value-path="id" items="[[data.module_id]]"
-                                value="{{data.module.id}}">
+                            <vaadin-combo-box always-float-label label="โครงการย่อย" item-label-path="module_name" item-value-path="id" items="[[module]]"
+                                value="{{data.module_id}}" disabled="[[disabled]]">
                                 <template>
                                     {{item.module_name}}
                                 </template>
                             </vaadin-combo-box>
-                            <!-- <paper-dropdown-menu always-float-label label="โครงการย่อย" style="width: 100%;">
-                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.module.id}}">
-                                    <dom-repeat items="{{module}}">
-                                        <template>
-                                            <paper-item value="{{item.id}}">{{item.module_name}}</paper-item>
-                                        </template>
-                                    </dom-repeat>
-                                </paper-listbox>
-                            </paper-dropdown-menu> -->
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <vaadin-combo-box always-float-label label="วันที่" item-label-path="module_name" item-value-path="id" items="[[module]]"
-                                value="{{data.module.id}}">
+                            <vaadin-combo-box always-float-label label="ประเภทค่าใช้จ่าย" item-label-path="group_expenses_name" item-value-path="id"
+                                items="[[group_expenses]]" value="{{data.group_expenses_id}}" on-selected-item-changed="_group_expenses_change"
+                                object-name="data.group_expenses">
                                 <template>
-                                    {{item.module_name}}
+                                    {{item.group_expenses_name}}
                                 </template>
                             </vaadin-combo-box>
-                            <paper-dropdown-menu always-float-label label="ประเภทค่าใช้จ่าย" style="width: 100%;" on-change="_group_expenses_change">
-                                <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{data.group_expenses_id}}">
-                                    <dom-repeat items="{{group_expenses}}">
-                                        <template>
-                                            <paper-item value="{{item.id}}">{{item.group_expenses_name}}</paper-item>
-                                        </template>
-                                    </dom-repeat>
-                                </paper-listbox>
-                            </paper-dropdown-menu>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6">
-                            <paper-input always-float-label label="ชื่อรายการ/รหัสบัตรประชาชน (บุคคล)" value="{{data.expense_amount}}"></paper-input>
+                            <paper-input always-float-label label="[[label]]" value="{{data.expense_name}}"></paper-input>
                         </div>
                     </div>
                     <div class="row">
@@ -91,7 +67,7 @@
                             <paper-input always-float-label label="ราคา" value="{{data.expense_price}}" on-keyup="_sum" on-click="_sum" type="number"></paper-input>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-3">
-                            <paper-input always-float-label label="ผลรวม" value="[[sum]]" disabled></paper-input>
+                            <paper-input always-float-label label="ผลรวม" value="[[data.expense_sum]]" disabled></paper-input>
                         </div>
                     </div>
                 </div>
@@ -127,17 +103,26 @@
                         statePath: 'expenses_cost.select',
                         observer: '_sum'
                     },
-                    params: {
-                        type: Object
+                    _params: {
+                        type: Object,
+                        statePath: 'expenses_cost._params',
+                        observer: '_params_change'
                     },
                     module: {
                         type: Object,
-                        statePath: 'expenses_cost.module',
-                        observer: 'xxxx'
+                        statePath: 'expenses_cost.module'
                     },
                     group_expenses: {
                         type: Object,
                         statePath: 'expenses_cost.group_expenses'
+                    },
+                    disabled: {
+                        type: Boolean,
+                        value: false
+                    },
+                    label: {
+                        type: String,
+                        value: 'ชื่อรายการ/หมายเลขบัตรประชาชน'
                     }
                 };
             }
@@ -147,11 +132,29 @@
             }
 
             _group_expenses_change(e) {
-                console.log(e)
+                if ((e.detail.queueProperty === true)
+                    && (e.detail.value !== null)
+                    && (e.detail.value.id !== '0')) {
+                    this.set(`${e.currentTarget.getAttribute('object-name')}`, e.detail.value)
+                } else {
+                    delete this[e.currentTarget.getAttribute('object-name')]
+                }
+
+                if (this.data.group_expenses) {
+                    if (this.data.group_expenses.participant) {
+                        this.set('label', 'หมายเลขบัตรประชาชน')
+                    } else {
+                        this.set('label', 'ชื่อรายการ')
+                    }
+                }
+
+
             }
 
-            _sum() {
-                this.set('sum', Number(this.data.expense_amount) * Number(this.data.expense_price))
+            _sum(e) {
+                if (this.data.expense_amount && this.data.expense_price) {
+                    this.set('data.expense_sum', Number(this.data.expense_amount) * Number(this.data.expense_price))
+                }
             }
 
             _closePanelRight() {
@@ -167,6 +170,16 @@
                     Nylon.dispatch('expensesCostAddData', this.data)
                 } else {
                     Nylon.dispatch('expensesCostEditData', this.data)
+                }
+            }
+
+            _params_change(e) {
+                if (e) {
+                    if (e.mode == 'meeting') {
+                        this.set('disabled', false)
+                    } else {
+                        this.set('disabled', true)
+                    }
                 }
             }
 

@@ -32,7 +32,6 @@ exports.getData = (req, res) => {
         date_start_module: m('date_start_module').toISO8601()
       }
     })
-    // .coerceTo('array')
     .run()
     .then((result) => {
       res.json(result);

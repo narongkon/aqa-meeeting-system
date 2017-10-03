@@ -19,22 +19,17 @@
              :host {
                 display: block
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
         <div class="row">
             <div class="col-md-12">
                 <nylon-panel-card>
                     <app-toolbar slot="header">
                         <div main-title>[[i18n.number_people]] [[invite.count]] [[i18n.people]]</div>
-                        <paper-button raised class="btn-danger font" on-click="_delData">
+                        <!-- <paper-button raised class="btn-danger font" on-click="_delData">
                             <iron-icon icon="icons:clear"></iron-icon>&nbsp;&nbsp;ลบที่เลือกทั้งหมด
-                        </paper-button>
+                        </paper-button> -->
                         <paper-button raised class="btn-success font" on-click="_editData">
-                            <iron-icon icon="icons:mail"></iron-icon>&nbsp;&nbsp;[[i18n.invite]]
+                            <iron-icon icon="icons:mail"></iron-icon>&nbsp;&nbsp;ส่งคำเชิญอีกครั้ง
                         </paper-button>
                     </app-toolbar>
                     <vaadin-grid items="{{invite.participant}}" slot="content" id="grid">
@@ -54,12 +49,12 @@
                             </template>
                         </vaadin-grid-column>
                         </vaadin-grid-column>
-                        <vaadin-grid-column>
+                        <!-- <vaadin-grid-column>
                             <template class="header">ส่งคำเชิญ</template>
                             <template>
                                 [[_email(item.email)]]
                             </template>
-                        </vaadin-grid-column>
+                        </vaadin-grid-column> -->
                         <vaadin-grid-column>
                             <template class="header">ตอบรับ</template>
                             <template>

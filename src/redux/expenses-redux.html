@@ -5,17 +5,11 @@
         }
 
         switch (action.type) {
-            case 'EXPENSES_GET_DATA':
-                state.data = action.payload
+            case 'EXPENSES_GET_MEETING':
+                state.meeting = action.payload
                 return state
             case 'EXPENSES_GET_GROUP':
                 state.group = action.payload
-                return state
-            case 'EXPENSES_SELECT_DATA':
-                state.select = action.payload
-                return state
-            case 'EXPENSES_CLEAR_SELECT':
-                state.select = {}
                 return state
             case 'EXPENSES_GET_LEVEL':
                 state.level = action.payload
@@ -74,16 +68,16 @@
             }
 
         },
-        expensesGetData: function () {
+        expensesGetMeeting: function () {
             
             var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
 
             return dispatch => {
-                axios.get('/meeting/expenses')
+                axios.get('/meeting')
                     .then(
                     res => {
                         progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_DATA', payload: res.data })
+                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
                         })
                     }
                     )
@@ -102,20 +96,20 @@
             }
 
         },
-        expensesGetDataByGroup: function (id) {
+        expensesGetMeetingByGroup: function (id) {
 
             return dispatch => {
                 var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
                 axios.get(`/meeting/expenses/bygroup/${id}`).then(
                     res => {
                         progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_DATA', payload: res.data })
+                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
                         })
                     }
                 )
             }
         },
-        expensesGetDataByLevel: function (data) {
+        expensesGetMeetingByLevel: function (data) {
 
             return dispatch => {
                 var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
@@ -123,7 +117,7 @@
                 axios.get(`/meeting/expenses/bylevel/${data.group}/${data.level}`).then(
                     res => {
                         progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_DATA', payload: res.data })
+                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
                         })
                     }
                 )
