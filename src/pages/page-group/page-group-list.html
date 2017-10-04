@@ -12,22 +12,36 @@
 <link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/expenses-redux.html">
+<link rel="import" href="../../redux/group-redux.html">
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-list-cost">
+<dom-module id="page-group-list">
     <template>
         <style include="shared-styles">
              :host {
                 display: block;
             }
         </style>
+        <div class="row">
+            <div class="col-md-3">
+
+                <vaadin-combo-box always-float-label label="ประเภทค่าใช้จ่าย" item-label-path="group_expenses_name" item-value-path="id"
+                    items="[[group_expenses]]" value="{{type}}" placeholder="เลือกประเภทค่าใช้จ่าย" on-change="_type_change">
+                    <template>
+                        [[item.group_expenses_name]]
+                    </template>
+                </vaadin-combo-box>
+            </div>
+        </div>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
-                <div main-title>ผลรวมค่าใช้จ่าย</div>
+                <div main-title></div>
                 <paper-button raised class="btn-primary font" on-click="_openPanelRight">
                     <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
+                </paper-button>
+                <paper-button raised class="btn font" on-click="_backpage">
+                    <iron-icon icon="icons:backspace"></iron-icon>&nbsp;&nbsp;ย้อนกลับ
                 </paper-button>
             </app-toolbar>
             <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
@@ -38,16 +52,29 @@
                 <vaadin-grid-column>
                     <template class="header">รายการ</template>
                     <template>
-                        <div on-click="_link">[[item.group_expenses_name]]</div>
+                        <div on-click="_link">[[item.expense_name]]</div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
-                    <template class="header">จำนวน (รายการ)</template>
-                    <template>[[item.count]]</template>
+                <vaadin-grid-column width="80px" flex-grow="0">
+                    <template class="header">จำนวน</template>
+                    <template>[[item.expense_amount]]</template>
                 </vaadin-grid-column>
-                <vaadin-grid-column>
+                <vaadin-grid-column width="80px" flex-grow="0">
+                    <template class="header">ราคา</template>
+                    <template>[[item.expense_price]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column width="200px" flex-grow="0">
                     <template class="header">เป็นจำนวนทั้งสิ้น (บาท)</template>
-                    <template>[[item.sum]]</template>
+                    <template>[[item.expense_sum]]</template>
+                </vaadin-grid-column>
+                <vaadin-grid-column width="180px" flex-grow="0">
+                    <template class="header"> [[i18n.manage]] </template>
+                    <template>
+                        <div>
+                            <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
+                            <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
+                        </div>
+                    </template>
                 </vaadin-grid-column>
             </vaadin-grid>
         </nylon-panel-card>
@@ -56,8 +83,8 @@
     </template>
 
     <script>
-        class pageListCost extends ReduxMixin(Polymer.Element) {
-            static get is() { return 'page-list-cost'; }
+        class pageGroupList extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-group-list'; }
             static get properties() {
                 return {
                     i18n: {
@@ -66,20 +93,21 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'expenses.data'
+                        statePath: 'group.data'
                     },
-
                     _params: {
                         type: Object,
-                        statePath: 'expenses._params'
-                    },
-                    label: {
-                        type: String
+                        statePath: 'group._params',
+                        observer: '_params_change'
                     },
                     group_expenses: {
                         type: Object,
-                        statePath: 'expenses.group_expenses'
+                        statePath: 'group.group_expenses'
                     },
+                    type: {
+                        type: Number,
+                        value: 0
+                    }
 
                 }
             }
@@ -92,27 +120,45 @@
                 return i + 1
             }
 
-            _openPanelRight() {
-                Nylon.dispatch('expensesSelectClear', { expense_amount: 0, expense_price: 0, expense_amount: 0, expense_sum: 0, module_id: '' })
-                Nylon.$['page-expenses'].$.expenses_manage.$.pr.open()
-            }
-
             _params_change(e) {
-                if (e) {
-                    if (e.mode == 'meeting') {
-                        this.set('label', 'Meeting')
-                    } else {
-                        this.set('label', 'Module')
-                    }
-                }
+                this.set('type', Number(e.group))
             }
 
-            _link(e) {
-                console.log('item', e.model.item);
-                console.log('_params', this._params)
-                Nylon.redirect('group/' + e.model.item.id + '/' + this._params.mode + '/' + this._params.id)
+            _openPanelRight() {
+                let module_id;
+                if (this._params.mode == 'module') {
+                    module_id = this._params.id
+                } else {
+                    module_id = ''
+                }
+
+                Nylon.dispatch('groupSelectClear', {
+                    expense_amount: 0,
+                    expense_price: 0,
+                    expense_amount: 0,
+                    expense_sum: 0,
+                    module_id: module_id,
+                    group_expenses_id: Number(this._params.group)
+                })
+                Nylon.$['page-group'].$.group_manage.$.pr.open()
+            }
+
+            _selectData(e) {
+                Nylon.dispatch('groupSelectData', e.model.item.id)
+            }
+
+            _delData(e) {
+                Nylon.dispatch('groupDelData', e.model.item.id, this._params)
+            }
+
+            _type_change() {
+                Nylon.redirect('group/' + this.type + '/' + this._params.mode + '/' + this._params.id)
+            }
+
+            _backpage() {
+                Nylon.redirect('expenses/' + this._params.mode + '/' + this._params.id)
             }
         }
-        window.customElements.define(pageListCost.is, pageListCost);
+        window.customElements.define(pageGroupList.is, pageGroupList);
     </script>
 </dom-module>

@@ -189,20 +189,20 @@
                 
                 // this.set('data.module_id', this.params.id)
                 if (!this.data.id || this.data.id == "") {
-                    Nylon.dispatch('expensesAddData', this.data)
+                    Nylon.dispatch('expensesAddData', this.data, this._params)
                 } else {
-                    Nylon.dispatch('expensesEditData', this.data)
+                    Nylon.dispatch('expensesEditData', this.data, this._params)
                 }
             }
 
             _params_change(e) {
-                // if (e) {
-                //     if (e.mode == 'meeting') {
-                //         this.set('disabled', false)
-                //     } else {
-                //         this.set('disabled', true)
-                //     }
-                // }
+                if (e) {
+                    if (e.mode == 'meeting') {
+                        this.set('disabled', false)
+                    } else {
+                        this.set('disabled', true)
+                    }
+                }
             }
 
             module_change(e) {

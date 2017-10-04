@@ -22,27 +22,36 @@
              :host {
                 display: block;
             }
+
+            vaadin-grid {
+                --vaadin-grid-body-row-hover-cell: {
+                    cursor: pointer;
+                }
+            }
         </style>
-        <!-- <vaadin-combo-box id="meeting_combo_box" always-float-label label="[[i18n.level]]" item-label-path="meeting_name" item-value-path="id"
-            items="[[meeting_combo]]" value="{{path_meeting}}" on-change="meeting_combo_box_change" placeholder="ทั้งหมด">
+        <vaadin-combo-box id="meeting_combo_box" always-float-label label="โครงการ" item-label-path="meeting_name" item-value-path="id"
+            items="[[meeting_combo]]" value="{{path_meeting}}" on-change="meeting_combo_box_change" placeholder="เลือกโครงการ">
             <template>
                 [[item.meeting_name]]
             </template>
         </vaadin-combo-box>
-        <vaadin-combo-box id="module_combo_box" always-float-label label="[[i18n.level]]" item-label-path="module_name" item-value-path="id"
-            items="[[module_combo]]" value="{{path_module}}" on-change="module_combo_box_change" placeholder="ทั้งหมด">
+        <vaadin-combo-box id="module_combo_box" always-float-label label="โครงการย่อย" item-label-path="module_name" item-value-path="id"
+            items="[[module_combo]]" value="{{path_module}}" on-change="module_combo_box_change" placeholder="เลือกโครงการย่อย">
             <template>
                 [[item.module_name]]
             </template>
-        </vaadin-combo-box> -->
+        </vaadin-combo-box>
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
                 <div main-title>ผลรวมค่าใช้จ่าย</div>
                 <paper-button raised class="btn-primary font" on-click="_openPanelRight">
                     <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
                 </paper-button>
+                <paper-button raised class="btn font" on-click="_backpage">
+                    <iron-icon icon="icons:backspace"></iron-icon>&nbsp;&nbsp;ย้อนกลับ
+                </paper-button>
             </app-toolbar>
-            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]" on-active-item-changed="_link">
                 <vaadin-grid-column width="80px" flex-grow="0">
                     <template class="header"></template>
                     <template> [[_index(index)]] </template>
@@ -50,7 +59,7 @@
                 <vaadin-grid-column>
                     <template class="header">รายการ</template>
                     <template>
-                        <div on-click="_link">[[item.group_expenses_name]]</div>
+                        <div>[[item.group_expenses_name]]</div>
                     </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
@@ -63,8 +72,6 @@
                 </vaadin-grid-column>
             </vaadin-grid>
         </nylon-panel-card>
-
-
     </template>
 
     <script>
@@ -80,16 +87,24 @@
                         type: Object,
                         statePath: 'expenses.data'
                     },
-                    // meeting_combo: {
-                    //     type: Array,
-                    //     statePath: 'expenses.meeting_combo',
-                    //     observer: '_meeting_combo_change',
-                    // },
-                    // module_combo: {
-                    //     type: Array,
-                    //     statePath: 'expenses.module_combo',
-                    //     observer: '_module_combo_change',
-                    // },
+                    module: {
+                        type: Array,
+                        statePath: 'expenses.module'
+                    },
+                    meeting: {
+                        type: Array,
+                        statePath: 'expenses.meeting'
+                    },
+                    meeting_combo: {
+                        type: Array,
+                        statePath: 'expenses.meeting_combo',
+                        observer: '_meeting_combo_change',
+                    },
+                    module_combo: {
+                        type: Array,
+                        statePath: 'expenses.module_combo',
+                        observer: '_module_combo_change',
+                    },
                     combo_box: {
                         type: Array,
                         value: [{}]
@@ -118,7 +133,13 @@
             }
 
             _openPanelRight() {
-                Nylon.dispatch('expensesSelectClear', { expense_amount: 0, expense_price: 0, expense_amount: 0, expense_sum: 0, module_id: '' })
+                let module_id
+                if (this._params.mode == 'module') {
+                    module_id= this.module[0].id
+                } else {
+                    module_id = ''
+                }
+                Nylon.dispatch('expensesSelectClear', { expense_amount: 0, expense_price: 0, expense_amount: 0, expense_sum: 0, module_id: module_id })
                 Nylon.$['page-expenses'].$.expenses_manage.$.pr.open()
             }
 
@@ -132,32 +153,48 @@
                 }
             }
 
-            // _meeting_combo_change(e) {
-            //     // console.log('meeting_combo', e);
-            //     this.$.meeting_combo_box.style.display = "";
-            //     this.$.module_combo_box.style.display = "none";
-            // }
+            _meeting_combo_change(e) {
+                // console.log('meeting_combo', e);
+                this.$.meeting_combo_box.style.display = "";
+                this.$.module_combo_box.style.display = "none";
+            }
 
-            // _module_combo_change(e) {
-            //     // console.log('module_combo', e)
-            //     this.$.meeting_combo_box.style.display = "none";
-            //     this.$.module_combo_box.style.display = "";
-            // }
+            _module_combo_change(e) {
+                // console.log('module_combo', e)
+                this.$.meeting_combo_box.style.display = "none";
+                this.$.module_combo_box.style.display = "";
+            }
 
             meeting_combo_box_change(e) {
                 // console.log('meeting_combo_box_change', this.path_meeting)
-                Nylon.redirect("/expenses-cost/meeting/" + this.path_meeting)
+                // console.log(this.path_meeting)
+                if (this.path_meeting != '') {
+                    Nylon.redirect("/expenses/meeting/" + this.path_meeting)
+                    this.set('path_meeting', '')
+                }
+
             }
 
             module_combo_box_change(e) {
                 // console.log('module_combo_box_change', this.path_module)
-                Nylon.redirect("/expenses-cost/module/" + this.path_module)
+                if (this.path_module != '') {
+                    Nylon.redirect("/expenses/module/" + this.path_module)
+                    this.set('path_module', '')
+                }
             }
 
             _link(e) {
-                // console.log('item', e.model.item);
-                // console.log('_params', this._params)
-                Nylon.redirect('group/' + e.model.item.id + '/' + this._params.mode + '/' + this._params.id)
+                if (e.detail.value != null) {
+                    Nylon.redirect('group/' + e.detail.value.id + '/' + this._params.mode + '/' + this._params.id)
+                }
+            }
+
+            _backpage() {
+                if (this._params.mode == 'meeting') {
+                    Nylon.redirect('meeting')
+                } else {
+                    Nylon.redirect('module/' + this.meeting.id)
+                }
             }
         }
         window.customElements.define(pageExpensesList.is, pageExpensesList);

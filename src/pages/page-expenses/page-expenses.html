@@ -25,22 +25,21 @@
             <app-toolbar>
                 <div main-title>
                     <div id="title_module"> [[title.meeting_name]] ประจำปี [[title.meeting_year]]</div>
-                    <!-- <div> [[title.module_name]]</div> -->
+                    <div> [[title.module_name]]</div>
                 </div>
             </app-toolbar class="toolbar-header">
-            <paper-tabs id="meeting_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
+            <!-- <paper-tabs id="meeting_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
                 <template is="dom-repeat" items="[[meeting_combo]]">
-                    <!-- <div>First name: <span>{{item.first}}</span></div> -->
                     <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx">โครงการ[[item.meeting_name]]</paper-tab>
                 </template>
-                <!-- <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab> -->
             </paper-tabs>
             <paper-tabs id="module_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
                 <template is="dom-repeat" items="[[module_combo]]">
-                    <!-- <div>First name: <span>{{item.first}}</span></div> -->
                     <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx2">โครงการย่อย[[item.module_name]]</paper-tab>
                 </template>
-                <!-- <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab> -->
+            </paper-tabs> -->
+            <paper-tabs id="module_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
+                <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab>
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
@@ -64,7 +63,8 @@
                         statePath: 'i18n.pageMeetingExpenses'
                     },
                     selected: {
-                        type: String
+                        type: String,
+                        value: 'page-1'
                     },
                     module: {
                         type: Object,
@@ -83,12 +83,12 @@
                     meeting_combo: {
                         type: Array,
                         statePath: 'expenses.meeting_combo',
-                        observer: '_meeting_combo_change',
+                        // observer: '_meeting_combo_change',
                     },
                     module_combo: {
                         type: Array,
                         statePath: 'expenses.module_combo',
-                        observer: '_module_combo_change',
+                        // observer: '_module_combo_change',
                     },
 
                 };
@@ -160,17 +160,17 @@
                 }
             }
 
-            _meeting_combo_change(e) {
-                // console.log('meeting_combo', e);
-                this.$.meeting_combo_box.style.display = "";
-                this.$.module_combo_box.style.display = "none";
-            }
+            // _meeting_combo_change(e) {
+            //     // console.log('meeting_combo', e);
+            //     this.$.meeting_combo_box.style.display = "";
+            //     this.$.module_combo_box.style.display = "none";
+            // }
 
-            _module_combo_change(e) {
-                // console.log('module_combo', e)
-                this.$.meeting_combo_box.style.display = "none";
-                this.$.module_combo_box.style.display = "";
-            }
+            // _module_combo_change(e) {
+            //     // console.log('module_combo', e)
+            //     this.$.meeting_combo_box.style.display = "none";
+            //     this.$.module_combo_box.style.display = "";
+            // }
 
         }
 

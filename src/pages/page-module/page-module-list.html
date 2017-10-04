@@ -30,6 +30,9 @@
                 <paper-button raised class="btn-primary font" on-click="_openPanelRight">
                     <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;[[i18n.add]]
                 </paper-button>
+                <paper-button raised class="btn font" on-click="_backpage">
+                    <iron-icon icon="icons:backspace"></iron-icon>&nbsp;&nbsp;ย้อนกลับ
+                </paper-button>
             </app-toolbar>
             <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
                 <vaadin-grid-column width="50px" flex-grow="0">
@@ -163,6 +166,9 @@
                 Nylon.redirect("/expenses/module/" + e.model.item.id)
             }
 
+            _backpage() {
+                Nylon.redirect('meeting')
+            }
         }
         window.customElements.define(pageModuleList.is, pageModuleList);
     </script>

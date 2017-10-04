@@ -1,8 +1,8 @@
 module.exports = function (app) {
     var controller = require('../controllers/expenses.controller')
     app.route('/')
-        // .get(controller.list)
+        .get(controller.list)
         .post(controller.insert)
-        // .put(controller.update)
-        // .delete(controller.delete);
+        .put(controller.update)
+        .delete(controller.delete);
 }

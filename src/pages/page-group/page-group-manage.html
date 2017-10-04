@@ -47,7 +47,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-6">
                             <vaadin-combo-box always-float-label label="ประเภทค่าใช้จ่าย" item-label-path="group_expenses_name" item-value-path="id"
                                 items="[[group_expenses]]" value="{{data.group_expenses_id}}" on-selected-item-changed="_group_expenses_change"
-                                object-name="data.group_expenses">
+                                object-name="data.group_expenses" disabled>
                                 <template>
                                     {{item.group_expenses_name}}
                                 </template>
@@ -101,26 +101,26 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'expenses.select',
+                        statePath: 'group.select',
                         observer: '_sum'
                     },
                     _params: {
                         type: Object,
-                        statePath: 'expenses._params',
+                        statePath: 'group._params',
                         observer: '_params_change'
                     },
                     meeting: {
                         type: Object,
-                        statePath: 'expenses.meeting'
+                        statePath: 'group.meeting'
                     },
                     module: {
                         type: Object,
-                        statePath: 'expenses.module',
+                        statePath: 'group.module',
                         observer: 'module_change'
                     },
                     group_expenses: {
                         type: Object,
-                        statePath: 'expenses.group_expenses'
+                        statePath: 'group.group_expenses'
                     },
                     disabled: {
                         type: Boolean,
@@ -157,6 +157,10 @@
 
             }
 
+            module_change() {
+                console.log('XXX')
+            }
+
 
             _module_change(e) {
                 if ((e.detail.queueProperty === true)
@@ -173,6 +177,14 @@
                 if (this.data.expense_amount && this.data.expense_price) {
                     this.set('data.expense_sum', Number(this.data.expense_amount) * Number(this.data.expense_price))
                 }
+                if (this._params) {
+                    if (this._params.mode == 'module') {
+                        this.set('disabled', true)
+                    } else {
+                        this.set('disabled', false)
+                    }
+                }
+
             }
 
             _closePanelRight() {
@@ -186,12 +198,12 @@
                 this.set('data.expense_price', Number(this.data.expense_price))
                 // console.log('Data', this.data)
                 // console.log(this.meeting)
-                
+
                 // this.set('data.module_id', this.params.id)
                 if (!this.data.id || this.data.id == "") {
-                    Nylon.dispatch('expensesAddData', this.data)
+                    Nylon.dispatch('groupAddData', this.data, this._params)
                 } else {
-                    Nylon.dispatch('expensesEditData', this.data)
+                    Nylon.dispatch('groupEditData', this.data, this._params)
                 }
             }
 

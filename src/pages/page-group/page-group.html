@@ -9,7 +9,7 @@
 <link rel="import" href="./page-group-manage.html">
 
 <link rel="import" href="../../redux-mixin.html">
-<link rel="import" href="../../redux/expenses-redux.html">
+<link rel="import" href="../../redux/group-redux.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
 
@@ -25,7 +25,7 @@
             <app-toolbar>
                 <div main-title>
                     <div id="title_module"> [[title.meeting_name]] ประจำปี [[title.meeting_year]]</div>
-                    <!-- <div> [[title.module_name]]</div> -->
+                    <div> [[title.module_name]]</div>
                 </div>
             </app-toolbar class="toolbar-header">
             <paper-tabs id="meeting_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
@@ -34,10 +34,10 @@
 
         </nylon-toolbar-selector>
         <div class="container">
-            <page-list-cost id="list_meeting"></page-list-cost>
+            <page-group-list id="group_list"></page-group-list>
         </div>
 
-        <!-- <page-manage-cost id="expenses_manage"></page-manage-cost> -->
+        <page-group-manage id="group_manage"></page-group-manage>
     </template>
 
     <script>
@@ -53,25 +53,72 @@
                         type: Object,
                         statePath: 'i18n.pageMeetingExpenses'
                     },
+                    module: {
+                        type: Object,
+                        statePath: 'group.module',
+                        observer: 'module_change'
+                    },
+                    meeting: {
+                        type: Object,
+                        statePath: 'group.meeting',
+                        observer: 'meeting_change'
+                    },
+                    title: {
+                        type: Object,
+                        value: {}
+                    },
                 };
             }
 
             ready() {
                 super.ready();
-                
+
                 Polymer.RenderStatus.afterNextRender(this, function () {
 
                 });
             }
 
- 
+
 
             nylonPagesActive() {
-                console.log(this._params);
+                Nylon.store.getState().group._params = this._params
+                Nylon.dispatch('groupGetGroupExpenses')
+                Nylon.dispatch('groupGetData', this._params)
+                Nylon.dispatch('groupGetArrayModule', this._params)
+            }
+
+            module_change(e) {
+                let id = this._params.id
+                if (this._params.mode == 'module') {
+                    id = e[0].meeting_id
+
+                    for (var x in e) {
+                        if (e[x].id == this._params.id) {
+                            this.set('title.meeting_name', 'ค่าใช้จ่ายโครงการ : ' + e[x].meeting.meeting_name)
+                            this.set('title.meeting_year', e[x].meeting.meeting_year)
+                            this.set('title.module_name', 'โครงการย่อย : ' + e[x].module_name)
+
+                            Nylon.dispatch('expensesGetComboModule', e[x].meeting_id)
+                            Nylon.dispatch('expensesGetMeeting', e[x].meeting_id)
+
+                        }
+                    }
+                }
+
+                Nylon.dispatch('groupGetMeeting', id)
             }
 
             _index(i) {
                 return i + 1;
+            }
+
+            meeting_change(e) {
+                if (this._params.mode == 'meeting') {
+                    // console.log('Meeting Change', e)
+                    this.set('title.meeting_name', 'ค่าใช้จ่ายโครงการ : ' + e.meeting_name)
+                    this.set('title.meeting_year', e.meeting_year)
+                    this.set('title.module_name', '')
+                }
             }
 
         }
