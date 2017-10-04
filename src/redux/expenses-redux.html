@@ -1,21 +1,43 @@
 <script>
     Nylon.addReducer('expenses', function (state, action) {
         state = state || {
+            module_id: undefined,
             select: {}
         }
 
         switch (action.type) {
+            case 'EXPENSES_GET_MODULE':
+                state.module = action.payload
+                return state
+                break;
             case 'EXPENSES_GET_MEETING':
                 state.meeting = action.payload
                 return state
-            case 'EXPENSES_GET_GROUP':
-                state.group = action.payload
+                break;
+            case 'EXPENSES_MEETING_COMBO':
+                state.meeting_combo = action.payload
                 return state
-            case 'EXPENSES_GET_LEVEL':
-                state.level = action.payload
+                break;
+            case 'EXPENSES_MODULE_COMBO':
+                state.module_combo = action.payload
                 return state
-            default:
+                break;
+            case 'EXPENSES_GET_EXPENSES':
+                state.data = action.payload
                 return state
+                break;
+            case 'EXPENSES_SELECT_EXPENSES':
+                state.select = action.payload
+                return state
+                break;
+            case 'EXPENSES_GET_GROUP_EXPENSES':
+                state.group_expenses = action.payload
+                return state
+                break;
+            case 'EXPENSES_CLEAR_SELECT':
+                state.select = action.payload
+                return state
+                break;
         }
         return state
     })
@@ -23,106 +45,118 @@
 
     Nylon.addAction({
 
-        expensesGetGroup: function () {
+        expensesGetArrayModule: function (id) {
             return dispatch => {
-                axios.get('/meeting/expenses/group').then(
+                axios.get(`/module/getarray?id=${id}`).then(
                     res => {
-                        dispatch({ type: 'EXPENSES_GET_GROUP', payload: res.data })
-                    }
-                )
-                    .catch(
-                    err => {
-                        progress(() => {
-                            console.log({ err })
-                            Nylon.$['page-meeting'].$.list_meeting.$.pc1.notify({
-                                status: 'error',
-                                msg: err.response.data.msg,
-                                position: 'top'
-                            })
-                        })
-                    }
-                    )
-            }
-
-        },
-        expensesGetLevel: function () {
-            
-            return dispatch => {
-                axios.get('/meeting/expenses/level').then(
-                    res => {
-                        dispatch({ type: 'EXPENSES_GET_LEVEL', payload: res.data })
-                    }
-                )
-                    .catch(
-                    err => {
-                        progress(() => {
-                            console.log({ err })
-                            Nylon.$['page-meeting'].$.list_meeting.$.pc1.notify({
-                                status: 'error',
-                                msg: err.response.data.msg,
-                                position: 'top'
-                            })
-                        })
-                    }
-                    )
-            }
-
-        },
-        expensesGetMeeting: function () {
-            
-            var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
-
-            return dispatch => {
-                axios.get('/meeting')
-                    .then(
-                    res => {
-                        progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
-                        })
-                    }
-                    )
-                    .catch(
-                    err => {
-                        progress(() => {
-                            console.log({ err })
-                            Nylon.$['page-meeting-expenses'].$.list_meeting.$.pc1.notify({
-                                status: 'error',
-                                msg: err.response.data.msg,
-                                position: 'top'
-                            })
-                        })
-                    }
-                    )
-            }
-
-        },
-        expensesGetMeetingByGroup: function (id) {
-
-            return dispatch => {
-                var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
-                axios.get(`/meeting/expenses/bygroup/${id}`).then(
-                    res => {
-                        progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
-                        })
+                        dispatch({ type: 'EXPENSES_GET_MODULE', payload: res.data })
                     }
                 )
             }
         },
-        expensesGetMeetingByLevel: function (data) {
 
+        expensesGetModuleByMeeting: function (id) {
             return dispatch => {
-                var progress = Nylon.$['page-expenses'].$.list_meeting.$.pc1.progress({ position: 'top' })
-
-                axios.get(`/meeting/expenses/bylevel/${data.group}/${data.level}`).then(
+                axios.get(`/module?meeting_id=${id}`).then(
                     res => {
-                        progress(() => {
-                            dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
-                        })
+                        dispatch({ type: 'EXPENSES_GET_MODULE', payload: res.data })
                     }
                 )
             }
-        }
+        },
+
+        expensesGetMeeting: function (id) {
+            return dispatch => {
+                axios.get(`/meeting?id=${id}`).then(
+                    res => {
+                        // console.log(res.data)
+                        dispatch({ type: 'EXPENSES_GET_MEETING', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesAllMeeting: function () {
+            return dispatch => {
+                // console.log('expensesAllMeeting');
+                axios.get(`/meeting`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_MEETING_COMBO', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesAllModuleByMeeting: function (id) {
+            return dispatch => {
+                axios.get(`/module?meeting_id=${id}`).then(
+                    res => {
+                        console.log(res.data)
+                        // dispatch({ type: 'EXPENSES_GET_ALL_MEETING', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesGetGroupExpenses: function (id) {
+            return dispatch => {
+                axios.get('/group/expenses').then(
+                    res => {
+                        // console.log(res.data)
+                        dispatch({ type: 'EXPENSES_GET_GROUP_EXPENSES', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesGetExpenses: function (id) {
+            return dispatch => {
+                axios.get(`/meeting/expenses/getExpenses/${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_GET_EXPENSES', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesSelectClear: function (data) {
+            return dispatch => {
+                dispatch({ type: 'EXPENSES_SELECT_EXPENSES', payload: data })
+            }
+        },
+
+        expensesGetComboModule: function (id) {
+            return dispatch => {
+                axios.get(`/module?meeting_id=${id}`).then(
+                    res => {
+                        dispatch({ type: 'EXPENSES_MODULE_COMBO', payload: res.data })
+                    }
+                )
+            }
+        },
+
+        expensesAddData: function (data) {
+            return dispatch => {
+
+            }
+        },
+
+        expensesGetData: function (data) {
+            return dispatch => {
+                if (data.mode == 'meeting') {
+                    console.log(data);
+                    axios.get(`/expenses?meeting_id=${data.id}`).then(
+                        res => {
+                            console.log(res.data);
+                            // dispatch({ type: 'EXPENSES_MODULE_COMBO', payload: res.data })
+                        }
+                    )
+                } else {
+
+                }
+
+            }
+        },
     })
 
 </script>

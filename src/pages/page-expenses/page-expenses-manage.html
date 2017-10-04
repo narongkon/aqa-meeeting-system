@@ -108,9 +108,14 @@
                         statePath: 'expenses_cost._params',
                         observer: '_params_change'
                     },
+                    meeting: {
+                        type: Object,
+                        statePath: 'expenses_cost.meeting'
+                    },
                     module: {
                         type: Object,
-                        statePath: 'expenses_cost.module'
+                        statePath: 'expenses_cost.module',
+                        observer: 'module_change'
                     },
                     group_expenses: {
                         type: Object,
@@ -162,9 +167,13 @@
             }
 
             _saveData() {
+                this.set('data.meeting_id', this.meeting.id)
+                this.set('data.meeting', this.meeting)
                 this.set('data.expense_amount', Number(this.data.expense_amount))
                 this.set('data.expense_price', Number(this.data.expense_price))
-                this.set('data.expense_group', 1)
+                // console.log('Data', this.data)
+                // console.log(this.meeting)
+                
                 this.set('data.module_id', this.params.id)
                 if (!this.data.id || this.data.id == "") {
                     Nylon.dispatch('expensesCostAddData', this.data)
@@ -174,13 +183,17 @@
             }
 
             _params_change(e) {
-                if (e) {
-                    if (e.mode == 'meeting') {
-                        this.set('disabled', false)
-                    } else {
-                        this.set('disabled', true)
-                    }
-                }
+                // if (e) {
+                //     if (e.mode == 'meeting') {
+                //         this.set('disabled', false)
+                //     } else {
+                //         this.set('disabled', true)
+                //     }
+                // }
+            }
+
+            module_change(e) {
+                // console.log(e);
             }
 
         }

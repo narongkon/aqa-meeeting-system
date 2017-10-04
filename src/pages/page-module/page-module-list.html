@@ -60,6 +60,7 @@
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
+                            <paper-icon-button on-click="_link" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
                             <paper-icon-button icon="communication:email" on-click="_inviteData"></paper-icon-button>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
@@ -140,7 +141,7 @@
 
             _inviteData(e) {
                 let nylon = Nylon.$['page-module'].$.manage_module
-                
+
                 Nylon.dispatch('meetingModuleGetModule', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetProfile', e.model.item.id)
                 Nylon.dispatch('meetingModuleGetParticipant', e.model.item.id)
@@ -156,6 +157,10 @@
 
             _index(i) {
                 return i + 1;
+            }
+
+            _link(e) {
+                Nylon.redirect("/expenses/module/" + e.model.item.id)
             }
 
         }

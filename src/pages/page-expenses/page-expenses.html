@@ -3,8 +3,10 @@
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../components/nylon-toolbar-selector/nylon-toolbar-selector.html">
 <link rel="import" href="../../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="./page-expenses-list.html">
+<link rel="import" href="./page-expenses-manage.html">
 
 <link rel="import" href="../../redux-mixin.html">
 <link rel="import" href="../../redux/expenses-redux.html">
@@ -17,26 +19,35 @@
              :host {
                 display: block
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
 
         <nylon-toolbar-selector>
             <app-toolbar>
-                <div main-title>[[i18n.manage_meeting]]</div>
+                <div main-title>
+                    <div id="title_module"> [[title.meeting_name]] ประจำปี [[title.meeting_year]]</div>
+                    <div> [[title.module_name]]</div>
+                </div>
             </app-toolbar class="toolbar-header">
-            <paper-tabs selected="0" scrollable>
-                <paper-tab class="font">กำหนดการ</paper-tab>
+            <paper-tabs id="meeting_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
+                <template is="dom-repeat" items="[[meeting_combo]]">
+                    <!-- <div>First name: <span>{{item.first}}</span></div> -->
+                    <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx">โครงการ[[item.meeting_name]]</paper-tab>
+                </template>
+                <!-- <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab> -->
+            </paper-tabs>
+            <paper-tabs id="module_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
+                <template is="dom-repeat" items="[[module_combo]]">
+                    <!-- <div>First name: <span>{{item.first}}</span></div> -->
+                    <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx2">[[item.module_name]]</paper-tab>
+                </template>
+                <!-- <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab> -->
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-expenses-list id="list_meeting"></page-expenses-list>
+            <page-list-cost id="list_meeting"></page-list-cost>
         </div>
 
-
+        <page-manage-cost id="expenses_manage"></page-manage-cost>
     </template>
 
     <script>
@@ -52,6 +63,35 @@
                         type: Object,
                         statePath: 'i18n.pageMeetingExpenses'
                     },
+                    selected: {
+                        type: String,
+                        value: 'page-1'
+                    },
+                    module: {
+                        type: Object,
+                        statePath: 'expenses.module',
+                        observer: '_module_change'
+                    },
+                    meeting: {
+                        type: Object,
+                        statePath: 'expenses.meeting',
+                        observer: '_meeting_change'
+                    },
+                    title: {
+                        type: Object,
+                        value: {}
+                    },
+                    meeting_combo: {
+                        type: Array,
+                        statePath: 'expenses.meeting_combo',
+                        observer: '_meeting_combo_change',
+                    },
+                    module_combo: {
+                        type: Array,
+                        statePath: 'expenses.module_combo',
+                        observer: '_module_combo_change',
+                    },
+
                 };
             }
 
@@ -63,10 +103,75 @@
                 });
             }
 
+            _xxx(e) {
+                // console.log(e.model.item);
+                Nylon.redirect("/expenses/meeting/" + e.model.item.id)
+            }
+
+            _xxx2(e) {
+                Nylon.redirect("/expenses/module/" + e.model.item.id)
+            }
+
             nylonPagesActive() {
-                Nylon.dispatch('expensesGetMeeting')
-                Nylon.dispatch('expensesGetGroup')
-                Nylon.dispatch('expensesGetLevel')
+                if (this._params.mode == 'module') {
+                    Nylon.store.getState().expenses._params = this._params
+                    Nylon.dispatch('expensesGetArrayModule', this._params.id)
+                    Nylon.dispatch('expensesGetData', this._params)
+                    this.set('selected', this._params.id)
+                } else {
+                    Nylon.store.getState().expenses._params = this._params
+                    Nylon.dispatch('expensesGetMeeting', this._params.id)
+                    Nylon.dispatch('expensesAllMeeting')
+                    Nylon.dispatch('expensesGetModuleByMeeting', this._params.id)
+                    Nylon.dispatch('expensesGetData', this._params)
+                    this.set('selected', this._params.id)
+                }
+
+                Nylon.dispatch('expensesGetGroupExpenses', this._params.id)
+
+            }
+
+            _index(i) {
+                return i + 1;
+            }
+
+            _module_change(e) {
+                if (this._params.mode == 'module') {
+                    // console.log('Module Change', e)
+                    for (var x in e) {
+                        if (e[x].id == this._params.id) {
+                            this.set('title.meeting_name', 'ค่าใช้จ่ายโครงการ : ' + e[x].meeting.meeting_name)
+                            this.set('title.meeting_year', e[x].meeting.meeting_year)
+                            this.set('title.module_name', 'โครงการย่อย : ' + e[x].module_name)
+
+                            Nylon.dispatch('expensesGetComboModule', e[x].meeting_id)
+                            Nylon.dispatch('expensesGetMeeting', e[x].meeting_id)
+
+                        }
+                    }
+
+                }
+            }
+
+            _meeting_change(e) {
+                if (this._params.mode == 'meeting') {
+                    // console.log('Meeting Change', e)
+                    this.set('title.meeting_name', 'ค่าใช้จ่ายโครงการ : ' + e.meeting_name)
+                    this.set('title.meeting_year', e.meeting_year)
+                    this.set('title.module_name', '')
+                }
+            }
+
+            _meeting_combo_change(e) {
+                // console.log('meeting_combo', e);
+                this.$.meeting_combo_box.style.display = "";
+                this.$.module_combo_box.style.display = "none";
+            }
+
+            _module_combo_change(e) {
+                // console.log('module_combo', e)
+                this.$.meeting_combo_box.style.display = "none";
+                this.$.module_combo_box.style.display = "";
             }
 
         }

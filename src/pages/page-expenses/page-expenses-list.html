@@ -9,95 +9,57 @@
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../../layout/shared-styles.html">
 
 <link rel="import" href="../../redux-mixin.html">
+<link rel="import" href="../../redux/expenses-redux.html">
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 
 
-<dom-module id="page-expenses-list">
+<dom-module id="page-list-cost">
     <template>
         <style include="shared-styles">
              :host {
                 display: block;
             }
-
-            .font {
-                font-family: 'CSChatThaiUI', 'tahoma', sans-serif;
-                -webkit-font-smoothing: antialiased;
-            }
         </style>
-        <div class="row">
-            <div class="col-md-3">
-                <vaadin-combo-box always-float-label label="[[i18n.group]]" item-label-path="group_meeting_name" item-value-path="id" items="[[group]]"
-                    value="{{dropdown.group}}" on-change="_dropdown_group_change" placeholder="ทั้งหมด">
-                    <template>
-                        [[item.group_meeting_name]]
-                    </template>
-                </vaadin-combo-box>
-            </div>
-            <div class="col-md-3">
-                <vaadin-combo-box id="dropdown_level" always-float-label label="[[i18n.level]]" item-label-path="group_work_name" item-value-path="id"
-                    items="[[level]]" value="{{dropdown.level}}" on-change="_dropdown_level_change" placeholder="ทั้งหมด">
-                    <template>
-                        [[item.group_work_name]]
-                    </template>
-                </vaadin-combo-box>
-            </div>
-        </div>
+        <!-- <vaadin-combo-box id="meeting_combo_box" always-float-label label="[[i18n.level]]" item-label-path="meeting_name" item-value-path="id"
+            items="[[meeting_combo]]" value="{{path_meeting}}" on-change="meeting_combo_box_change" placeholder="ทั้งหมด">
+            <template>
+                [[item.meeting_name]]
+            </template>
+        </vaadin-combo-box>
+        <vaadin-combo-box id="module_combo_box" always-float-label label="[[i18n.level]]" item-label-path="module_name" item-value-path="id"
+            items="[[module_combo]]" value="{{path_module}}" on-change="module_combo_box_change" placeholder="ทั้งหมด">
+            <template>
+                [[item.module_name]]
+            </template>
+        </vaadin-combo-box> -->
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
-                <div main-title></div>
+                <div main-title>ผลรวมค่าใช้จ่าย</div>
+                <paper-button raised class="btn-primary font" on-click="_openPanelRight">
+                    <iron-icon icon="add-circle-outline"></iron-icon>&nbsp;&nbsp;เพิ่ม
+                </paper-button>
             </app-toolbar>
-            <vaadin-grid slot="content" sub-slot="grid" items="[[data]]">
+            <vaadin-grid slot="content" sub-slot="grid" items="[[group_expenses]]">
                 <vaadin-grid-column width="80px" flex-grow="0">
                     <template class="header"></template>
                     <template> [[_index(index)]] </template>
                 </vaadin-grid-column>
                 <vaadin-grid-column>
-                    <template class="header"> [[i18n.name]] </template>
-                    <template>
-                        [[item.meeting_name]]
-                    </template>
+                    <template class="header">รายการ</template>
+                    <template>[[item.group_expenses_name]]</template>
                 </vaadin-grid-column>
-                <vaadin-grid-column width="120px" flex-grow="0">
-                    <template class="header"> [[i18n.type]]</template>
-                    <template>
-                        <div>[[_type(item.meeting_type)]]</div>
-                    </template>
+                <vaadin-grid-column>
+                    <template class="header">จำนวน (รายการ)</template>
+                    <template></template>
                 </vaadin-grid-column>
-                <vaadin-grid-column width="200px" flex-grow="0">
-                    <template class="header">[[i18n.group]]</template>
-                    <template>
-                        <div>[[item.group_meeting_name]]</div>
-                    </template>
-                </vaadin-grid-column>
-                <vaadin-grid-column width="100px" flex-grow="0">
-                    <template class="header"> [[i18n.year]] </template>
-                    <template>
-                        <div>[[item.meeting_year]]</div>
-                    </template>
-                </vaadin-grid-column>
-                <vaadin-grid-column width="100px" flex-grow="0">
-                    <template class="header">ค่าใช้จ่าย</template>
-                    <template>
-                        <div>
-                            <paper-icon-button on-click="_linkData2" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
-                        </div>
-                    </template>
-                </vaadin-grid-column>
-                <vaadin-grid-column width="100px" flex-grow="0">
-                    <template class="header">โครงการย่อย</template>
-                    <template>
-                        <div>
-                            <paper-icon-button on-click="_linkData" icon="list"></paper-icon-button>
-                        </div>
-                    </template>
+                <vaadin-grid-column>
+                    <template class="header">เป็นจำนวนทั้งสิ้น (บาท)</template>
+                    <template></template>
                 </vaadin-grid-column>
             </vaadin-grid>
         </nylon-panel-card>
@@ -106,8 +68,8 @@
     </template>
 
     <script>
-        class pageExpensesList extends ReduxMixin(Polymer.Element) {
-            static get is() { return 'page-expenses-list'; }
+        class pageListCost extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-list-cost'; }
             static get properties() {
                 return {
                     i18n: {
@@ -116,90 +78,84 @@
                     },
                     data: {
                         type: Object,
-                        statePath: 'expenses.meeting'
+                        statePath: 'expenses.data'
                     },
-                    group: {
-                        type: Object,
-                        statePath: 'expenses.group'
+                    // meeting_combo: {
+                    //     type: Array,
+                    //     statePath: 'expenses.meeting_combo',
+                    //     observer: '_meeting_combo_change',
+                    // },
+                    // module_combo: {
+                    //     type: Array,
+                    //     statePath: 'expenses.module_combo',
+                    //     observer: '_module_combo_change',
+                    // },
+                    combo_box: {
+                        type: Array,
+                        value: [{}]
                     },
-                    level: {
+                    _params: {
                         type: Object,
-                        statePath: 'expenses.level'
+                        statePath: 'expenses._params',
+                        observer: '_params_change'
                     },
-                    dropdown: {
+                    label: {
+                        type: String
+                    },
+                    group_expenses: {
                         type: Object,
-                        value: {
-                            group: '',
-                            level: ''
-                        },
-                        observer: '_dropdown_change'
-                    }
+                        statePath: 'expenses.group_expenses'
+                    },
+
                 }
             }
+
             ready() {
                 super.ready()
-                this.$.dropdown_level.style.visibility = "hidden"
-            }
-
-            _dropdown_change(e) {
-                this.$.dropdown_level.style.visibility = "hidden"
-            }
-
-            _delData(e) {
-                Nylon.confirm({
-                    status: 'waring',
-                    title: 'ยืนยันการลบ',
-                    msg: 'หากต้องการลบให้กดปุ่ม ok'
-                }, (confirm) => {
-                    Nylon.dispatch('meetingMeetingDelData', e.model.item.id)
-                })
             }
 
             _index(i) {
                 return i + 1
             }
 
-            _dropdown_group_change() {
-                this.set('dropdown.level', '')
-                if (this.dropdown.group == 'C' || this.dropdown.group == 'B') {
-                    this.$.dropdown_level.style.visibility = "visible"
-                } else {
-                    this.$.dropdown_level.style.visibility = "hidden"
-
-                }
-
-                if (this.dropdown.group == '') {
-                    Nylon.dispatch('expensesGetMeeting')
-                } else {
-                    Nylon.dispatch('expensesGetMeetingByGroup', this.dropdown.group)
-                }
+            _openPanelRight() {
+                // let module_id = Nylon.store.getState().expenses.select.module_id
+                Nylon.dispatch('expensesCostSelectClear', { expense_amount: 0, expense_price: 0, expense_amount: 0, expense_sum: 0, module_id: '' })
+                Nylon.$['page-expenses'].$.expenses_manage.$.pr.open()
             }
 
-            _dropdown_level_change() {
-                if (this.dropdown.level == '') {
-                    Nylon.dispatch('expensesGetMeetingByGroup', this.dropdown.group)
-                } else {
-                    Nylon.dispatch('expensesGetMeetingByLevel', this.dropdown)
+            _params_change(e) {
+                if (e) {
+                    if (e.mode == 'meeting') {
+                        this.set('label', 'Meeting')
+                    } else {
+                        this.set('label', 'Module')
+                    }
                 }
             }
 
-            _linkData(e) {
-                Nylon.redirect("/expenses-module/" + e.model.item.id)
+            // _meeting_combo_change(e) {
+            //     // console.log('meeting_combo', e);
+            //     this.$.meeting_combo_box.style.display = "";
+            //     this.$.module_combo_box.style.display = "none";
+            // }
+
+            // _module_combo_change(e) {
+            //     // console.log('module_combo', e)
+            //     this.$.meeting_combo_box.style.display = "none";
+            //     this.$.module_combo_box.style.display = "";
+            // }
+
+            meeting_combo_box_change(e) {
+                // console.log('meeting_combo_box_change', this.path_meeting)
+                Nylon.redirect("/expenses-cost/meeting/" + this.path_meeting)
             }
 
-            _linkData2(e) {
-                Nylon.redirect("/expenses-cost/meeting/" + e.model.item.id)
+            module_combo_box_change(e) {
+                // console.log('module_combo_box_change', this.path_module)
+                Nylon.redirect("/expenses-cost/module/" + this.path_module)
             }
-
-            _type(e) {
-                if (e == 'exam') {
-                    return 'ทดสอบ'
-                } else {
-                    return 'อมรม'
-                }
-            }
-
         }
-        window.customElements.define(pageExpensesList.is, pageExpensesList);
+        window.customElements.define(pageListCost.is, pageListCost);
     </script>
 </dom-module>

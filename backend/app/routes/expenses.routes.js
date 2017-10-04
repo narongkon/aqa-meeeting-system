@@ -1,6 +1,5 @@
 module.exports = function (app) {
-    var controller = require('../controllers/module.controller')
-    app.get('/getarray', controller.getarray)
+    var controller = require('../controllers/expenses.controller')
     app.route('/')
         .get(controller.list)
         .post(controller.insert)

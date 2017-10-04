@@ -86,18 +86,12 @@
                         <div>[[item.meeting_year]]</div>
                     </template>
                 </vaadin-grid-column>
-                <vaadin-grid-column width="100px" flex-grow="0">
-                        <template class="header"> โครงการย่อย </template>
-                        <template>
-                            <div>
-                                <paper-icon-button icon="list" on-click="_linkData"></paper-icon-button>
-                            </div>
-                        </template>
-                    </vaadin-grid-column>
-                <vaadin-grid-column width="100px" flex-grow="0">
+                <vaadin-grid-column width="200px" flex-grow="0">
                     <template class="header"> [[i18n.manage]] </template>
                     <template>
                         <div>
+                            <paper-icon-button icon="list" on-click="_link"></paper-icon-button>
+                            <paper-icon-button on-click="_link2" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
@@ -162,9 +156,12 @@
                 })
             }
 
-            _linkData(e) {
+            _link(e) {
                 Nylon.redirect("/module/" + e.model.item.id)
-                // location.href = "/meeting-module/" + e.model.item.id;
+            }
+
+            _link2(e) {
+                Nylon.redirect("/expenses/meeting/" + e.model.item.id)
             }
 
             _openPanelRight() {
@@ -192,6 +189,7 @@
                     Nylon.dispatch('meetingMeetingGetDataByGroup', this.dropdown.group)
                 }
             }
+
             _dropdown_level_change() {
 
                 if (this.dropdown.level == '') {

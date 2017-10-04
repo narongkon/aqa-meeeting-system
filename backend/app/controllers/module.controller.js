@@ -21,6 +21,18 @@ exports.list = function (req, res) {
         })
 }
 
+exports.getarray = (req, res) => {
+    const r = req.r;
+    r.table('module').getAll(req.query.id)
+        .run()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            res.status(500).send(err);
+        })
+}
+
 exports.insert = function (req, res) {
     const r = req.r;
     req.body = Object.assign(req.body, {
