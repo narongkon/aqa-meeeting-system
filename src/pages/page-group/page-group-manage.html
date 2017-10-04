@@ -18,7 +18,7 @@
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-expenses-manage">
+<dom-module id="page-group-manage">
     <template>
         <style include="shared-styles">
              :host {
@@ -87,10 +87,10 @@
     </template>
 
     <script>
-        class pageExpensesManage extends ReduxMixin(Polymer.Element) {
+        class pageGroupManage extends ReduxMixin(Polymer.Element) {
 
             static get is() {
-                return 'page-expenses-manage';
+                return 'page-group-manage';
             }
 
             static get properties() {
@@ -211,6 +211,6 @@
 
         }
 
-        window.customElements.define(pageExpensesManage.is, pageExpensesManage);
+        window.customElements.define(pageGroupManage.is, pageGroupManage);
     </script>
 </dom-module>

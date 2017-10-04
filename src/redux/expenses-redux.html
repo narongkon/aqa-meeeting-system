@@ -6,6 +6,10 @@
         }
 
         switch (action.type) {
+            case 'EXPENSES_GET_DATA':
+                state.data = action.payload
+                return state
+                break;
             case 'EXPENSES_GET_MODULE':
                 state.module = action.payload
                 return state
@@ -137,6 +141,29 @@
 
         expensesAddData: function (data) {
             return dispatch => {
+                // console.log(data)
+                let _params = Nylon.store.getState().expenses._params
+                // console.log('data', data)
+                axios.post(`/expenses`, data).then(
+                    res => {
+                        if (_params.mode == 'meeting') {
+                            Nylon.$['page-expenses'].$.expenses_manage.$.pr.close()
+                            Nylon.toast({
+                                msg: 'เพิ่มเสร็จสิ้น'
+                            })
+                        } else {
+                            Nylon.$['page-expenses'].$.expenses_manage.$.pr.close()
+                            Nylon.toast({
+                                msg: 'เพิ่มเสร็จสิ้น'
+                            })
+                        }
+
+                        Nylon.dispatch('expensesGetData', _params)
+                    }
+                )
+
+
+
 
             }
         },
@@ -144,14 +171,19 @@
         expensesGetData: function (data) {
             return dispatch => {
                 if (data.mode == 'meeting') {
-                    console.log(data);
-                    axios.get(`/expenses?meeting_id=${data.id}`).then(
+                    let id = data.id
+                    axios.get(`/group/expenses/data?meeting_id=${id}`).then(
                         res => {
-                            console.log(res.data);
-                            // dispatch({ type: 'EXPENSES_MODULE_COMBO', payload: res.data })
+                            dispatch({ type: 'EXPENSES_GET_DATA', payload: res.data })
                         }
                     )
                 } else {
+                    let id = data.id
+                    axios.get(`/group/expenses/data?module_id=${id}`).then(
+                        res => {
+                            dispatch({ type: 'EXPENSES_GET_DATA', payload: res.data })
+                        }
+                    )
 
                 }
 

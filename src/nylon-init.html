@@ -8,6 +8,7 @@
 <link rel="lazy-import" href="pages/page-meeting/page-meeting.html">
 <link rel="lazy-import" href="pages/page-module/page-module.html">
 <link rel="lazy-import" href="pages/page-expenses/page-expenses.html">
+<link rel="lazy-import" href="./pages/page-group/page-group.html">
 <link rel="lazy-import" href="pages/page-404/page-404.html">
 
 <dom-module id="nylon-init">
@@ -27,6 +28,7 @@
         <page-meeting path="/meeting"></page-meeting>
         <page-module path="/module/:id"></page-module>
         <page-expenses path="/expenses/:mode/:id"></page-expenses>
+        <page-group path="/group/:group/:mode/:id"></page-group>
         <page-404 path="*"></page-404>
       </nylon-pages>
     </layout-main>

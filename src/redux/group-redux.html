@@ -1,0 +1,43 @@
+<script>
+    Nylon.addReducer('group', function (state, action) {
+        state = state || {
+            select: {}
+        }
+
+        switch (action.type) {
+            case 'MEETING_GET_DATA':
+                state.data = action.payload
+                return state
+
+        }
+        return state
+    })
+
+
+    Nylon.addAction({
+
+        meetingMeetingGetGroup: function () {
+            return dispatch => {
+                axios.get('/group/meeting').then(
+                    res => {
+                        dispatch({ type: 'MEETING_GET_GROUP', payload: res.data })
+                    }
+                )
+                    .catch(
+                    err => {
+                        progress(() => {
+                            console.log({ err })
+                            Nylon.$['page-meeting'].$.list_meeting.$.pc1.notify({
+                                status: 'error',
+                                msg: err.response.data.msg,
+                                position: 'top'
+                            })
+                        })
+                    }
+                    )
+            }
+
+        },
+        
+    })
+</script>

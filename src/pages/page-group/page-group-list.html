@@ -16,25 +16,13 @@
 <link rel="import" href="../../i18n/meeting/meeting/meeting-i18n.html">
 <link rel="import" href="../../layout/shared-styles.html">
 
-<dom-module id="page-expenses-list">
+<dom-module id="page-list-cost">
     <template>
         <style include="shared-styles">
              :host {
                 display: block;
             }
         </style>
-        <!-- <vaadin-combo-box id="meeting_combo_box" always-float-label label="[[i18n.level]]" item-label-path="meeting_name" item-value-path="id"
-            items="[[meeting_combo]]" value="{{path_meeting}}" on-change="meeting_combo_box_change" placeholder="ทั้งหมด">
-            <template>
-                [[item.meeting_name]]
-            </template>
-        </vaadin-combo-box>
-        <vaadin-combo-box id="module_combo_box" always-float-label label="[[i18n.level]]" item-label-path="module_name" item-value-path="id"
-            items="[[module_combo]]" value="{{path_module}}" on-change="module_combo_box_change" placeholder="ทั้งหมด">
-            <template>
-                [[item.module_name]]
-            </template>
-        </vaadin-combo-box> -->
         <nylon-panel-card id="pc1" style="margin-top: 0.5cm;">
             <app-toolbar slot="header">
                 <div main-title>ผลรวมค่าใช้จ่าย</div>
@@ -68,8 +56,8 @@
     </template>
 
     <script>
-        class pageExpensesList extends ReduxMixin(Polymer.Element) {
-            static get is() { return 'page-expenses-list'; }
+        class pageListCost extends ReduxMixin(Polymer.Element) {
+            static get is() { return 'page-list-cost'; }
             static get properties() {
                 return {
                     i18n: {
@@ -80,20 +68,7 @@
                         type: Object,
                         statePath: 'expenses.data'
                     },
-                    // meeting_combo: {
-                    //     type: Array,
-                    //     statePath: 'expenses.meeting_combo',
-                    //     observer: '_meeting_combo_change',
-                    // },
-                    // module_combo: {
-                    //     type: Array,
-                    //     statePath: 'expenses.module_combo',
-                    //     observer: '_module_combo_change',
-                    // },
-                    combo_box: {
-                        type: Array,
-                        value: [{}]
-                    },
+
                     _params: {
                         type: Object,
                         statePath: 'expenses._params'
@@ -132,34 +107,12 @@
                 }
             }
 
-            // _meeting_combo_change(e) {
-            //     // console.log('meeting_combo', e);
-            //     this.$.meeting_combo_box.style.display = "";
-            //     this.$.module_combo_box.style.display = "none";
-            // }
-
-            // _module_combo_change(e) {
-            //     // console.log('module_combo', e)
-            //     this.$.meeting_combo_box.style.display = "none";
-            //     this.$.module_combo_box.style.display = "";
-            // }
-
-            meeting_combo_box_change(e) {
-                // console.log('meeting_combo_box_change', this.path_meeting)
-                Nylon.redirect("/expenses-cost/meeting/" + this.path_meeting)
-            }
-
-            module_combo_box_change(e) {
-                // console.log('module_combo_box_change', this.path_module)
-                Nylon.redirect("/expenses-cost/module/" + this.path_module)
-            }
-
             _link(e) {
-                // console.log('item', e.model.item);
-                // console.log('_params', this._params)
+                console.log('item', e.model.item);
+                console.log('_params', this._params)
                 Nylon.redirect('group/' + e.model.item.id + '/' + this._params.mode + '/' + this._params.id)
             }
         }
-        window.customElements.define(pageExpensesList.is, pageExpensesList);
+        window.customElements.define(pageListCost.is, pageListCost);
     </script>
 </dom-module>

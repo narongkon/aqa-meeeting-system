@@ -25,7 +25,7 @@
             <app-toolbar>
                 <div main-title>
                     <div id="title_module"> [[title.meeting_name]] ประจำปี [[title.meeting_year]]</div>
-                    <div> [[title.module_name]]</div>
+                    <!-- <div> [[title.module_name]]</div> -->
                 </div>
             </app-toolbar class="toolbar-header">
             <paper-tabs id="meeting_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
@@ -38,16 +38,16 @@
             <paper-tabs id="module_combo_box" selected="[[selected]]" attr-for-selected="page-name" scrollable>
                 <template is="dom-repeat" items="[[module_combo]]">
                     <!-- <div>First name: <span>{{item.first}}</span></div> -->
-                    <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx2">[[item.module_name]]</paper-tab>
+                    <paper-tab class="font" page-name="[[item.id]]" on-click="_xxx2">โครงการย่อย[[item.module_name]]</paper-tab>
                 </template>
                 <!-- <paper-tab id="tab_setting" class="font" page-name="page-1">ค่าใช้จ่าย</paper-tab> -->
             </paper-tabs>
         </nylon-toolbar-selector>
         <div class="container">
-            <page-list-cost id="list_meeting"></page-list-cost>
+            <page-expenses-list id="list_meeting"></page-expenses-list>
         </div>
 
-        <page-manage-cost id="expenses_manage"></page-manage-cost>
+        <page-expenses-manage id="expenses_manage"></page-expenses-manage>
     </template>
 
     <script>
@@ -64,8 +64,7 @@
                         statePath: 'i18n.pageMeetingExpenses'
                     },
                     selected: {
-                        type: String,
-                        value: 'page-1'
+                        type: String
                     },
                     module: {
                         type: Object,
@@ -104,7 +103,6 @@
             }
 
             _xxx(e) {
-                // console.log(e.model.item);
                 Nylon.redirect("/expenses/meeting/" + e.model.item.id)
             }
 
