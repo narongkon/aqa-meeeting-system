@@ -41,6 +41,7 @@ exports.insert = function (req, res) {
             res.status(500).send(err.message);
         })
 }
+
 exports.update = function (req, res) {
     const r = req.r;
     req.body = Object.assign(req.body, {
@@ -59,6 +60,7 @@ exports.update = function (req, res) {
             res.status(500).send(err.message);
         })
 }
+
 exports.delete = function (req, res) {
     const r = req.r;
     r.table('meeting')

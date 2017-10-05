@@ -91,7 +91,7 @@
                     <template>
                         <div>
                             <paper-icon-button icon="list" on-click="_link"></paper-icon-button>
-                            <paper-icon-button on-click="_link2" src="https://cdn3.iconfinder.com/data/icons/analytics-5/500/Analytics-46-512.png"></paper-icon-button>
+                            <paper-icon-button on-click="_link2" src="https://image.flaticon.com/icons/svg/32/32632.svg"></paper-icon-button>
                             <paper-icon-button icon="create" on-click="_selectData"></paper-icon-button>
                             <paper-icon-button icon="delete" on-click="_delData"></paper-icon-button>
                         </div>
@@ -150,7 +150,7 @@
                 Nylon.confirm({
                     status: 'waring',
                     title: 'ยืนยันการลบ',
-                    msg: 'หากต้องการลบให้กดปุ่ม ok'
+                    msg: 'หากต้องการลบให้กดปุ่ม OK'
                 }, (confirm) => {
                     Nylon.dispatch('meetingMeetingDelData', e.model.item.id)
                 })
